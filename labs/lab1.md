@@ -1,6 +1,11 @@
 # Lab 1: Microcontroller
 
 ## Overview
+The goal of Lab 1 was to accustom us to the many functionalities of the Arduino UNO 
+and the Arduino IDE, such as using analog and digital input/outputs and driving 
+peripheral devices (LED, Servos, etc). The finished product was to create 
+an assembled robot that drives autonomously.
+
 
 ### Materials
 * 1 Arduino Uno
@@ -24,6 +29,7 @@
 
 
 
+
 ### Changing LED Brightness
 
 ## Servos
@@ -31,4 +37,7 @@
 ### Servo Alone
 
 ### Servo by Potentiometer
+
+## Final 
+
 
