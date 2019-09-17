@@ -56,15 +56,55 @@ and tested the output readings through serial communication.
 
 ![potentiometer setup](lab1/media/potentiometer_setup.jpg)
 
-A snippet of the outputs printed to COM3 is shown below.
+```c
+// This program allows us to continuous read the voltage across a voltage divider by alternating the potentiometer
+
+int VOLT_DIVIDE = A0;
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize digital pin VOLT_DIVIDE as an output.
+  pinMode(VOLT_DIVIDE, INPUT);
+  Serial.begin(9600);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  Serial.println(analogRead(VOLT_DIVIDE));    // Print out the value being read from the analog pin
+  delay(500);                                 // wait for half a second
+}
+```
+
+A snippet of the outputs printed to COM3 using the code above is shown below.
 
 ![potentiometer output](lab1/media/potentiometer_output.jpg)
 
-### Changing LED Brightness
+We were also tasked with adjusting the brightness of an LED with the potentiometer.
+A clip of that is shown below, along with the modified code that was used.
 
-## Servos
+<iframe width="560" height="315" src="https://www.youtube.com/embed/P90ZEs6cvP0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-### Servo Alone
+```c
+// This program allows us to control the brightness of an LED by turning the potentiometer
+
+int VOLT_DIVIDE = A5;
+int LED = 3;
+int v = 0;
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(VOLT_DIVIDE, INPUT);
+  pinMode(LED, OUTPUT);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  v = analogRead(VOLT_DIVIDE);
+  analogWrite(LED, v/2);
+}
+```
+## Driving a Servos
 
 ### Servo by Potentiometer
 
