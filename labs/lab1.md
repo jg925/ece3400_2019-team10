@@ -44,15 +44,17 @@ void loop() {
   digitalWrite(EXTERNAL_LED, LOW);    // turn the LED off by making the voltage LOW
   delay(1000);                       // wait for a second
 }
-
 ```
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/X57n8F3q364" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-## Potentiometer
+## Reading from a Potentiometer
 
+In the second section of the lab, we were tasked with assembling the robot with 
+a potentiometer. We first set up the potentiometer like in the following picture 
+and tested the output readings through serial communication.
 
-
+![potentiometer setup](lab1/media/potentiometer.jpg)
 
 ### Changing LED Brightness
 
