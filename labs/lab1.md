@@ -62,7 +62,8 @@ We then tested the output readings through serial communication. A snippet of th
 
 
 ```c
-// This program allows us to continuous read the voltage across a voltage divider by alternating the potentiometer
+// This program allows us to continuous read the voltage 
+// across a voltage divider by alternating the potentiometer
 
 int VOLT_DIVIDE = A0;
 
@@ -81,7 +82,10 @@ void loop() {
 ```
 
 We were also tasked with adjusting the brightness of an LED with the potentiometer.
-A clip of that is shown below, along with the modified code that was used.
+To do this, we left our potentiometer on the board as it was in the previous section. We then
+wired a red LED to digital output 3 through a 330Ω resistors. We selected output 3 because it has pulse width modulation
+capabilities, which we need to vary the brightness of the LED as we turn the potentiometer. Finally, we modified the code from the previous section so that we now write to port 3 based on the voltage reading.
+A clip of the results are shown below, along with the modified code that was used.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/P90ZEs6cvP0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -105,7 +109,7 @@ void loop() {
   analogWrite(LED, v/2);
 }
 ```
-## Driving a Servos
+## Driving Servos
 In this next portion of the lab, we were tasked with driving a servos using the Arduino UNO.
 The Servos motors would be the motors running the wheels of our robot later on.
 
