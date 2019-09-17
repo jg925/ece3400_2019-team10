@@ -105,9 +105,17 @@ void loop() {
 }
 ```
 ## Driving a Servos
+In this next portion of the lab, we were tasked with driving a servos using the Arduino UNO.
+The Servos motors would be the motors running the wheels of our robot later on.
 
-### Servo by Potentiometer
+<iframe width="560" height="315" src="https://www.youtube.com/embed/WLWtf4ng6Ug" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-## Final 
+After testing the Servos alone, we used a potentiometer to adjust the speed and direction 
+at which the Servos motor was rotating.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ou17E-c4ugQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Driving Autonomously
+ 
 
 
