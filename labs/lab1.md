@@ -6,7 +6,6 @@ and the Arduino IDE, such as using analog and digital input/outputs and driving
 peripheral devices (LED, Servos, etc). The finished product was to create 
 an assembled robot that drives autonomously.
 
-
 ### Materials
 * 1 Arduino Uno
 * 1 USB A/B Cable
@@ -26,7 +25,8 @@ and turn it off for 1 second, looping repeatedly. A video is displayed below sho
 
 Next, we took the Blink sketch and modified it to light up an external red LED.
 To do this, we placed a red LED on the breadboard, wired it through a 330Ω resistor to limit the current through the LED,
-and connected it to an output pin on the Arduino. We also changed the setup function. The final code is displayed below, along with a video showing the results.
+and connected it to an output pin on the Arduino. We also changed the setup function. 
+The final code is displayed below, along with a video showing the results.
 
 ```c
 // A simple Arduino program to make an external LED blink
@@ -52,11 +52,18 @@ void loop() {
 ## Reading from a Potentiometer
 
 In the second section of the lab, we were tasked with using a potentiometer to figure out 
-how to operate the analog input ports of the Arduino. We first wired up the potentiometer as shown in the following picture: power to 5V, ground to ground, and the output signal through a parallel combination of 330Ω resistors. The resistor that connects to ground acts as the other half of a voltage divider, while the resistor that connects to an analog input port on the Arduino board acts as a current limiter. A simple schematic is shown below. 
+how to operate the analog input ports of the Arduino. We first wired up the potentiometer 
+as shown in the following picture: power to 5V, ground to ground, and the output signal 
+through a parallel combination of 330Ω resistors. The resistor that connects to ground 
+acts as the other half of a voltage divider, while the resistor that connects to an 
+analog input port on the Arduino board acts as a current limiter. A simple schematic 
+is shown below. 
 
 ![potentiometer setup](lab1/media/potentiometer_setup.jpg)
 
-We then tested the output readings through serial communication. A snippet of the output stream printed to COM3 as we turned the potentiometer is shown below, as is the code we used to read the voltage level.
+We then tested the output readings through serial communication. A snippet of the output 
+stream printed to COM3 as we turned the potentiometer is shown below, as is the code we 
+used to read the voltage level.
 
 ![potentiometer output](lab1/media/potentiometer_output.jpg)
 
@@ -84,7 +91,11 @@ void loop() {
 We were also tasked with adjusting the brightness of an LED with the potentiometer.
 To do this, we left our potentiometer on the board as it was in the previous section. We then
 wired a red LED to digital output 3 through a 330Ω resistor. We selected output 3 because it has pulse width modulation
-capabilities, which we need to vary the brightness of the LED as we turn the potentiometer. Finally, we modified the code from the previous section so that we now write to port 3 based on the voltage reading. We divided the voltage by 2 and wrote that value to the LED because based on some experimenting, that mapping produced the greatest change in brightness as the potentiometer was turned.
+capabilities, which we need to vary the brightness of the LED as we turn the potentiometer. 
+Finally, we modified the code from the previous section so that we now write to port 3 
+based on the voltage reading. We divided the voltage by 2 and wrote that value to the 
+LED because based on some experimenting, that mapping produced the greatest change in 
+brightness as the potentiometer was turned.
 A clip of the results are shown below, along with the modified code that was used.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/P90ZEs6cvP0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -113,7 +124,13 @@ void loop() {
 In this next portion of the lab, we were tasked with driving a servo using the Arduino UNO.
 The servos will be the driving the wheels of our robot later on.
 
-For our first task, we wired a servo up to the Arduino as follows: power to 5V, ground to ground, and input of the servo through a 330Ω resistor to a PWM-capable digital output on the Arduino. We then played with some values to send from the Arduino to the servo to see how it works. We found that from 0-80 and from 100-180, the servo was at roughly the same speed (but in opposite directions for the two ranges), and that from 80-100, each value noticeably altered the speed of the servo. Finally, we created a for loop to sweep the full range of values to the servo. The results of this sweep, as well as the code used, are shown below.
+For our first task, we wired a servo up to the Arduino as follows: power to 5V, ground to ground, 
+and input of the servo through a 330Ω resistor to a PWM-capable digital output on the Arduino. 
+We then played with some values to send from the Arduino to the servo to see how it works. We 
+found that from 0-80 and from 100-180, the servo was at roughly the same speed (but in opposite 
+directions for the two ranges), and that from 80-100, each value noticeably altered the speed 
+of the servo. Finally, we created a for loop to sweep the full range of values to the servo. 
+The results of this sweep, as well as the code used, are shown below.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/WLWtf4ng6Ug" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -139,7 +156,13 @@ void loop() {
 ```
 
 After testing the servo alone, we used a potentiometer to adjust the speed and direction 
-at which the servo motor was rotating. We wired up the potentiometer up exactly as it was in the previous section. We also took our code from the previous section that was used to change the LED's brightness using the potentiometer and modified it slightly. We chose to multiply the voltage by 2 and write that value since the Arduino read voltages in the 30-60 range. Thus, doubling the voltage would put us in the 60-120 range, enabling the servo to rotate in both directions. A clip of the results are shown below, along with the modified code that was used.
+at which the servo motor was rotating. We wired up the potentiometer up exactly as it was 
+in the previous section. We also took our code from the previous section that was used to 
+change the LED's brightness using the potentiometer and modified it slightly. We chose to 
+multiply the voltage by 2 and write that value since the Arduino read voltages in the 
+30-60 range. Thus, doubling the voltage would put us in the 60-120 range, enabling the 
+servo to rotate in both directions. A clip of the results are shown below, along with 
+the modified code that was used.
 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ou17E-c4ugQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -169,5 +192,5 @@ void loop() {
 
 ## Driving Autonomously
  
-
+<iframe width="560" height="315" src="https://www.youtube.com/embed/kf4MASRxF84" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
