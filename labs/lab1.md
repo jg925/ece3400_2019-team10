@@ -54,7 +54,11 @@ In the second section of the lab, we were tasked with assembling the robot with
 a potentiometer. We first set up the potentiometer like in the following picture 
 and tested the output readings through serial communication.
 
-![potentiometer setup](lab1/media/potentiometer.jpg)
+![potentiometer setup](lab1/media/potentiometer_setup.jpg)
+
+A snippet of the outputs printed to COM3 is shown below.
+
+![potentiometer output](lab1/media/potentiometer_output.jpg)
 
 ### Changing LED Brightness
 
