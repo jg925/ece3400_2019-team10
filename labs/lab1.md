@@ -20,14 +20,13 @@ an assembled robot that drives autonomously.
 ## Using and Modifying the Blink Sketch
 
 The first task was to use the provided Blink example code to light up an internal LED for 1 second 
-and turn it off for 1 second, looping repeatedly. 
+and turn it off for 1 second, looping repeatedly. A video is displayed below showing the results.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ZpkMIolsPc0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Next, we took the Blink sketch and modified it to light up an external red LED.
-To do this, we changed the setup function, placed a red LED on the breadboard,
-wired it through a 330Ω, and then connected it to an output pin on the Arduino.
-The final code for this is shown below.
+To do this, we placed a red LED on the breadboard, wired it through a 330Ω resistor to limit the current through the LED,
+and connected it to an output pin on the Arduino. We also changed the setup function. The final code for this is displayed below, along with a video showing the results.
 
 ```c
 // A simple Arduino program to make an external LED blink
