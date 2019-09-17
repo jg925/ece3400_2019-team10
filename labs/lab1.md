@@ -14,7 +14,7 @@ an assembled robot that drives autonomously.
 * 1 Pushbutton
 * 1 LED (red)
 * 1 Potentiometer
-* Several resistors (kOhm range)
+* Several resistors (kΩ range)
 * 1 Solderless breadboard
 
 ## Modifying the Blink Sketch
