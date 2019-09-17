@@ -145,7 +145,8 @@ at which the servo motor was rotating. We wired up the potentiometer up exactly 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ou17E-c4ugQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ```c
-// This program allows us to control the rate at which the Servo rotates by twisting the potentiometer
+// This program allows us to control the rate at which 
+// the Servo rotates by twisting the potentiometer
 
 #include <Servo.h>
 
