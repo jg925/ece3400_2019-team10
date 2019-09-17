@@ -26,7 +26,7 @@ and turn it off for 1 second, looping repeatedly. A video is displayed below sho
 
 Next, we took the Blink sketch and modified it to light up an external red LED.
 To do this, we placed a red LED on the breadboard, wired it through a 330Ω resistor to limit the current through the LED,
-and connected it to an output pin on the Arduino. We also changed the setup function. The final code for this is displayed below, along with a video showing the results.
+and connected it to an output pin on the Arduino. We also changed the setup function. The final code is displayed below, along with a video showing the results.
 
 ```c
 // A simple Arduino program to make an external LED blink
@@ -51,9 +51,11 @@ void loop() {
 
 ## Reading from a Potentiometer
 
-In the second section of the lab, we were tasked with assembling the robot with 
-a potentiometer. We first set up the potentiometer like in the following picture 
-and tested the output readings through serial communication.
+In the second section of the lab, we were tasked with using a potentiometer to figure out 
+how the analog input ports of the Arduino work. We first wired up the potentiometer as in the following picture, hooking
+power to 5V, ground to ground, and the output signal through a 330Ω resistor (to limit the current that goes to the Arduino) wired to
+an analog input port. We then tested the output readings through serial communication. A snippet of the output stream printed to COM3 as we turned the potentiometer is shown below.
+
 
 ![potentiometer setup](lab1/media/potentiometer_setup.jpg)
 
@@ -75,8 +77,6 @@ void loop() {
   delay(500);                                 // wait for half a second
 }
 ```
-
-A snippet of the outputs printed to COM3 using the code above is shown below.
 
 ![potentiometer output](lab1/media/potentiometer_output.jpg)
 
