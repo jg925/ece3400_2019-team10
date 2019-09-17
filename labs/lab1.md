@@ -111,7 +111,7 @@ void loop() {
 ```
 ## Driving A Servo
 In this next portion of the lab, we were tasked with driving a servo using the Arduino UNO.
-The Servo motors would be the motors running the wheels of our robot later on.
+The servos will be the driving the wheels of our robot later on.
 
 For our first task, we wired a servo up to the Arduino as follows: power to 5V, ground to ground, and input of the servo through a 330Ω resistor to a PWM-capable digital output on the Arduino. We then played with some values to send from the Arduino to the servo to see how it works. We found that from 0-80 and from 100-180, the servo was at roughly the same speed (but in opposite directions for the two ranges), and that from 80-100, each value noticeably altered the speed of the servo. Finally, we created a for loop to sweep the full range of values to the servo. The results of this sweep, as well as the code used, are shown below.
 
@@ -138,8 +138,8 @@ void loop() {
 }
 ```
 
-After testing the Servos alone, we used a potentiometer to adjust the speed and direction 
-at which the Servos motor was rotating. We wired up the potentiometer up exactly as it was in the previous section. We also took our code from the previous section that was used to change the LED's brightness using the potentiometer and modified it slightly. We chose to multiply the voltage by 2 and write that value since the Arduino read voltages in the 30-60 range. Thus, doubling the voltage would put us in the 60-120 range, enabling the servo to rotate in both directions. A clip of the results are shown below, along with the modified code that was used.
+After testing the servo alone, we used a potentiometer to adjust the speed and direction 
+at which the servo motor was rotating. We wired up the potentiometer up exactly as it was in the previous section. We also took our code from the previous section that was used to change the LED's brightness using the potentiometer and modified it slightly. We chose to multiply the voltage by 2 and write that value since the Arduino read voltages in the 30-60 range. Thus, doubling the voltage would put us in the 60-120 range, enabling the servo to rotate in both directions. A clip of the results are shown below, along with the modified code that was used.
 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ou17E-c4ugQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
