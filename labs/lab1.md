@@ -84,7 +84,7 @@ void loop() {
 We were also tasked with adjusting the brightness of an LED with the potentiometer.
 To do this, we left our potentiometer on the board as it was in the previous section. We then
 wired a red LED to digital output 3 through a 330Ω resistor. We selected output 3 because it has pulse width modulation
-capabilities, which we need to vary the brightness of the LED as we turn the potentiometer. Finally, we modified the code from the previous section so that we now write to port 3 based on the voltage reading.
+capabilities, which we need to vary the brightness of the LED as we turn the potentiometer. Finally, we modified the code from the previous section so that we now write to port 3 based on the voltage reading. We divided the voltage by 2 and wrote that value to the LED because based on some experimenting, that mapping produced the greatest change in brightness as the potentiometer was turned.
 A clip of the results are shown below, along with the modified code that was used.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/P90ZEs6cvP0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -113,7 +113,7 @@ void loop() {
 In this next portion of the lab, we were tasked with driving a servo using the Arduino UNO.
 The Servo motors would be the motors running the wheels of our robot later on.
 
-For our first task, we wired a servo up to the Arduino as follows: power to 5V, ground to ground, and input of the servo through a 330Ω resistor to a PWM-capable digital output on the Arduino. We then played with some values to see how the servo works. Finally, we created a for loop to sweep the full range of values to the servo. The results of this sweep, as well as the code used, are shown below.
+For our first task, we wired a servo up to the Arduino as follows: power to 5V, ground to ground, and input of the servo through a 330Ω resistor to a PWM-capable digital output on the Arduino. We then played with some values to send from the Arduino to the servo to see how it works. We found that from 0-80 and from 100-180, the servo was at roughly the same speed (but in opposite directions for the two ranges), and that from 80-100, each value noticeably altered the speed of the servo. Finally, we created a for loop to sweep the full range of values to the servo. The results of this sweep, as well as the code used, are shown below.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/WLWtf4ng6Ug" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -139,9 +139,32 @@ void loop() {
 ```
 
 After testing the Servos alone, we used a potentiometer to adjust the speed and direction 
-at which the Servos motor was rotating.
+at which the Servos motor was rotating. We wired up the potentiometer up exactly as it was in the previous section. We also took our code from the previous section that was used to change the LED's brightness using the potentiometer and modified it slightly. We chose to multiply the voltage by 2 and write that value since the Arduino read voltages in the 30-60 range. Thus, doubling the voltage would put us in the 60-120 range, enabling the servo to rotate in both directions. A clip of the results are shown below, along with the modified code that was used.
+
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ou17E-c4ugQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+```c
+// This program allows us to control the rate at which the Servo rotates by twisting the potentiometer
+
+#include <Servo.h>
+
+Servo SERVO;
+int VOLT_DIVIDE = A5;
+int v = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+  SERVO.attach(3);
+  pinMode(VOLT_DIVIDE, INPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  v = analogRead(VOLT_DIVIDE);
+  SERVO.write(v*2);
+}
+```
 
 ## Driving Autonomously
  
