@@ -52,10 +52,14 @@ void loop() {
 ## Reading from a Potentiometer
 
 In the second section of the lab, we were tasked with using a potentiometer to figure out 
-how to operate the analog input ports of the Arduino. We first wired up the potentiometer as shown in the following picture: power to 5V, ground to ground, and the output signal through a parallel combination of 330Ω resistors. The resistor that connects to ground acts as the other half of a voltage divider, while the resistor that connects to an analog input port on the Arduino board acts as a current limiter. A simple schematic is shown below. We then tested the output readings through serial communication. A snippet of the output stream printed to COM3 as we turned the potentiometer is shown below.
-
+how to operate the analog input ports of the Arduino. We first wired up the potentiometer as shown in the following picture: power to 5V, ground to ground, and the output signal through a parallel combination of 330Ω resistors. The resistor that connects to ground acts as the other half of a voltage divider, while the resistor that connects to an analog input port on the Arduino board acts as a current limiter. A simple schematic is shown below. 
 
 ![potentiometer setup](lab1/media/potentiometer_setup.jpg)
+
+We then tested the output readings through serial communication. A snippet of the output stream printed to COM3 as we turned the potentiometer is shown below, as is the code we used to read the voltage level.
+
+![potentiometer output](lab1/media/potentiometer_output.jpg)
+
 
 ```c
 // This program allows us to continuous read the voltage across a voltage divider by alternating the potentiometer
@@ -75,8 +79,6 @@ void loop() {
   delay(500);                                 // wait for half a second
 }
 ```
-
-![potentiometer output](lab1/media/potentiometer_output.jpg)
 
 We were also tasked with adjusting the brightness of an LED with the potentiometer.
 A clip of that is shown below, along with the modified code that was used.
