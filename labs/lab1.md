@@ -83,7 +83,7 @@ void loop() {
 
 We were also tasked with adjusting the brightness of an LED with the potentiometer.
 To do this, we left our potentiometer on the board as it was in the previous section. We then
-wired a red LED to digital output 3 through a 330Ω resistors. We selected output 3 because it has pulse width modulation
+wired a red LED to digital output 3 through a 330Ω resistor. We selected output 3 because it has pulse width modulation
 capabilities, which we need to vary the brightness of the LED as we turn the potentiometer. Finally, we modified the code from the previous section so that we now write to port 3 based on the voltage reading.
 A clip of the results are shown below, along with the modified code that was used.
 
@@ -109,11 +109,34 @@ void loop() {
   analogWrite(LED, v/2);
 }
 ```
-## Driving Servos
-In this next portion of the lab, we were tasked with driving a servos using the Arduino UNO.
-The Servos motors would be the motors running the wheels of our robot later on.
+## Driving A Servo
+In this next portion of the lab, we were tasked with driving a servo using the Arduino UNO.
+The Servo motors would be the motors running the wheels of our robot later on.
+
+For our first task, we wired a servo up to the Arduino as follows: power to 5V, ground to ground, and input of the servo through a 330Ω resistor to a PWM-capable digital output on the Arduino. We then played with some values to see how the servo works. Finally, we created a for loop to sweep the full range of values to the servo. The results of this sweep, as well as the code used, are shown below.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/WLWtf4ng6Ug" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+```c
+// We used this program to experiment with how the Servo motor rotates to figure out how it functions
+
+#include <Servo.h>
+
+Servo SERVO;
+
+void setup() {
+  // put your setup code here, to run once:
+  SERVO.attach(3);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  for (int pos = 180; pos >=0; pos -=1) { // to sweep the voltage, found on Arduino Servo Library
+    SERVO.write(pos);
+    delay(40);
+  }
+}
+```
 
 After testing the Servos alone, we used a potentiometer to adjust the speed and direction 
 at which the Servos motor was rotating.
