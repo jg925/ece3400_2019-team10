@@ -191,6 +191,61 @@ void loop() {
 ```
 
 ## Driving Autonomously
- 
+The last task in this lab was to build a robot that drives autonomously. We had to determine the correct servo speeds
+to have the robot make 90 degree left and right turns that followed a grid. We ultimately decided to have it drive
+in a figure eight. The code and video are shown below.
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/kf4MASRxF84" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+```c
+// This program will eventually allow the robot to autonomously move in a figure eight
+
+#include <Servo.h>
+
+Servo right;
+Servo left;
+
+int right_pin = 11;
+int left_pin = 10;
+
+void leftTurn(int t) {
+  left.write(0);
+  right.write(60);
+  delay(t);
+}
+
+void rightTurn(int t) {
+  left.write(120);
+  right.write(180);
+  delay(t);
+}
+
+void moveForward(int t) {
+  left.write(180);
+  right.write(0);
+  delay(t);
+}
+
+void rightSquare() {
+  for (int i = 0; i < 4; i++) {
+    moveForward(3000);
+    rightTurn(670);
+  }
+}
+
+void leftSquare() {
+  for (int i = 0; i < 4; i++) {
+    moveForward(3000);
+    leftTurn(670);
+  }
+}
+
+void figureEight() {
+  for (int i = 0; i < 4; i++) {
+    moveForward(3000);
+    leftTurn(668);
+  }
+
+  for (int i = 0; i < 4; i++) {
+    moveForward(3000);
+```
