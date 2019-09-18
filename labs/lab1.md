@@ -1,4 +1,4 @@
-# Lab 1: Microcontroller
+# Lab 1: Microcontrollers
 
 ## Overview
 The goal of Lab 1 was to accustom us to the many functionalities of the Arduino UNO 
