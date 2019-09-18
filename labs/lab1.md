@@ -26,7 +26,9 @@ and turn it off for 1 second, looping repeatedly. A video is displayed below sho
 Next, we took the Blink sketch and modified it to light up an external red LED.
 To do this, we placed a red LED on the breadboard, wired it through a 330Ω resistor to limit the current through the LED,
 and connected it to an output pin on the Arduino. We also changed the setup function. 
-The final code is displayed below, along with a video showing the results.
+The a video showing the results is displayed below, along with final code.
+
+<iframe width="560" height="315" align="center" src="https://www.youtube.com/embed/X57n8F3q364" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ```c
 // A simple Arduino program to make an external LED blink
@@ -46,8 +48,6 @@ void loop() {
   delay(1000);                       // wait for a second
 }
 ```
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/X57n8F3q364" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Reading from a Potentiometer
 
