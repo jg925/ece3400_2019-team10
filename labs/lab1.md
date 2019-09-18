@@ -60,7 +60,7 @@ analog input port on the Arduino board acts as a current limiter. A simple schem
 is shown below. 
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_setup.jpg">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_setup.jpg" height="600" width="400">
 
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/circuit.png">
 </p>
