@@ -28,7 +28,7 @@ To do this, we placed a red LED on the breadboard, wired it through a 330Ω resi
 and connected it to an output pin on the Arduino. We also changed the setup function. 
 The a video showing the results is displayed below, along with final code.
 
-<iframe width="560" height="315" align="center" src="https://www.youtube.com/embed/X57n8F3q364" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" style="float:center" src="https://www.youtube.com/embed/X57n8F3q364" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ```c
 // A simple Arduino program to make an external LED blink
