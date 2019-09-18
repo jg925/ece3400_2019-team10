@@ -57,7 +57,7 @@ as shown in the following picture: power to 5V, ground to ground, and the output
 through a parallel combination of 330Ω resistors. The resistor that connects to ground 
 acts as the other half of a voltage divider, while the resistor that connects to an 
 analog input port on the Arduino board acts as a current limiter. A simple schematic 
-is shown below. 
+is also shown below. 
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_setup.jpg" height="320" width="480">
@@ -70,7 +70,7 @@ stream printed to COM3 as we turned the potentiometer is shown below, as is the 
 used to read the voltage level.
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg" height="320" width="480">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg" height="2880" width="560">
 </p>
 
 
