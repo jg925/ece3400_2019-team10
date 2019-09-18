@@ -59,15 +59,16 @@ acts as the other half of a voltage divider, while the resistor that connects to
 analog input port on the Arduino board acts as a current limiter. A simple schematic 
 is shown below. 
 
-->![potentiometer setup](lab1/media/potentiometer_setup.jpg)<-
-
-->![circuit schematic](lab1/media/circuit.png)<-
+<p align="center">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_setup.jpg">
+</p>
+![circuit schematic](lab1/media/circuit.png)
 
 We then tested the output readings through serial communication. A snippet of the output 
 stream printed to COM3 as we turned the potentiometer is shown below, as is the code we 
 used to read the voltage level.
 
-->![potentiometer output](lab1/media/potentiometer_output.jpg)<-
+![potentiometer output](lab1/media/potentiometer_output.jpg)
 
 
 ```c
