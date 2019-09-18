@@ -61,13 +61,13 @@ is shown below.
 
 ![potentiometer setup](lab1/media/potentiometer_setup.jpg#center)
 
-![circuit schematic](lab1/media/circuit.png)
+![circuit schematic](lab1/media/circuit.png#center)
 
 We then tested the output readings through serial communication. A snippet of the output 
 stream printed to COM3 as we turned the potentiometer is shown below, as is the code we 
 used to read the voltage level.
 
-![potentiometer output](lab1/media/potentiometer_output.jpg)
+![potentiometer output](lab1/media/potentiometer_output.jpg#center)
 
 
 ```c
