@@ -59,7 +59,7 @@ acts as the other half of a voltage divider, while the resistor that connects to
 analog input port on the Arduino board acts as a current limiter. A simple schematic 
 is shown below. 
 
-![potentiometer setup](lab1/media/potentiometer_setup.jpg)
+![potentiometer setup](lab1/media/potentiometer_setup.jpg#center)
 
 ![circuit schematic](lab1/media/circuit.png)
 
