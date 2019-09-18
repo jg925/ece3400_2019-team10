@@ -21,7 +21,7 @@ an assembled robot that drives autonomously.
 The first task was to use the provided Blink example code to light up an internal LED for 1 second 
 and turn it off for 1 second, looping repeatedly. A video is displayed below showing the results.
 
--><iframe width="560" height="315" src="https://www.youtube.com/embed/ZpkMIolsPc0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><-
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ZpkMIolsPc0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Next, we took the Blink sketch and modified it to light up an external red LED.
 To do this, we placed a red LED on the breadboard, wired it through a 330Ω resistor to limit the current through the LED,
