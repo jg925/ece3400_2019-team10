@@ -2,6 +2,7 @@ theme: jekyll-theme-cayman
 title: Team 10 Second-hand Salt
 description: This site will contain all of the project updates and information for ECE 3400. 
 
+show_downloads: true
 plugins:
   - jekyll-relative-links
 relative_links:
