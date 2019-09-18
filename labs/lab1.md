@@ -60,9 +60,9 @@ analog input port on the Arduino board acts as a current limiter. A simple schem
 is shown below. 
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_setup.jpg" height="400" width="600">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_setup.jpg" height="320" width="480">
 
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/circuit.png">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/circuit.png" height="320" width="480">
 </p>
 
 We then tested the output readings through serial communication. A snippet of the output 
@@ -70,7 +70,7 @@ stream printed to COM3 as we turned the potentiometer is shown below, as is the 
 used to read the voltage level.
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg" height="320" width="480">
 </p>
 
 
