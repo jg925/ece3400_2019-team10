@@ -70,7 +70,7 @@ stream printed to COM3 as we turned the potentiometer is shown below, as is the 
 used to read the voltage level.
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg" height="2880" width="560">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg" height="280" width="560">
 </p>
 
 
