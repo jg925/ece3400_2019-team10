@@ -61,7 +61,7 @@ is shown below.
 
 ![potentiometer setup](lab1/media/potentiometer_setup.jpg)
 
-![circuit schematic](lab1/media/circuit.jpg)
+![circuit schematic](lab1/media/circuit.png)
 
 We then tested the output readings through serial communication. A snippet of the output 
 stream printed to COM3 as we turned the potentiometer is shown below, as is the code we 
