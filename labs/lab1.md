@@ -61,14 +61,17 @@ is shown below.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_setup.jpg">
+
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/circuit.png">
 </p>
-![circuit schematic](lab1/media/circuit.png)
 
 We then tested the output readings through serial communication. A snippet of the output 
 stream printed to COM3 as we turned the potentiometer is shown below, as is the code we 
 used to read the voltage level.
 
-![potentiometer output](lab1/media/potentiometer_output.jpg)
+<p align="center">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg">
+</p>
 
 
 ```c
