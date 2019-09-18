@@ -70,7 +70,7 @@ stream printed to COM3 as we turned the potentiometer is shown below, as is the 
 used to read the voltage level.
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg" height="280" width="560">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab1/media/potentiometer_output.jpg" height="290" width="530">
 </p>
 
 
@@ -96,7 +96,7 @@ void loop() {
 
 We were also tasked with adjusting the brightness of an LED with the potentiometer.
 To do this, we left our potentiometer on the board as it was in the previous section. We then
-wired a red LED to digital output 3 through a 330Ω resistor. We selected output 3 because it has pulse width modulation
+wired a red LED to digital output 3 through a 330Ω resistor. We selected port 3 because it has pulse width modulation
 capabilities, which we need to vary the brightness of the LED as we turn the potentiometer. 
 Finally, we modified the code from the previous section so that we now write to port 3 
 based on the voltage reading. We divided the voltage by 2 and wrote that value to the 
@@ -127,7 +127,7 @@ void loop() {
 }
 ```
 ## Driving A Servo
-In this next portion of the lab, we were tasked with driving a servo using the Arduino UNO.
+In this next portion of the lab, we were tasked with driving a servo using the Arduino.
 The servos will be the driving the wheels of our robot later on.
 
 For our first task, we wired a servo up to the Arduino as follows: power to 5V, ground to ground, 
