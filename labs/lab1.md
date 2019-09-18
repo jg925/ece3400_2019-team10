@@ -21,7 +21,7 @@ an assembled robot that drives autonomously.
 The first task was to use the provided Blink example code to light up an internal LED for 1 second 
 and turn it off for 1 second, looping repeatedly. A video is displayed below showing the results.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ZpkMIolsPc0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/ZpkMIolsPc0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 Next, we took the Blink sketch and modified it to light up an external red LED.
 To do this, we placed a red LED on the breadboard, wired it through a 330Ω resistor to limit the current through the LED,
@@ -59,15 +59,15 @@ acts as the other half of a voltage divider, while the resistor that connects to
 analog input port on the Arduino board acts as a current limiter. A simple schematic 
 is shown below. 
 
-![potentiometer setup](lab1/media/potentiometer_setup.jpg)
+<p align="center">![potentiometer setup](lab1/media/potentiometer_setup.jpg)</p>
 
-![circuit schematic](lab1/media/circuit.png)
+<p align="center">![circuit schematic](lab1/media/circuit.png)</p>
 
 We then tested the output readings through serial communication. A snippet of the output 
 stream printed to COM3 as we turned the potentiometer is shown below, as is the code we 
 used to read the voltage level.
 
-![potentiometer output](lab1/media/potentiometer_output.jpg)
+<p align="center">![potentiometer output](lab1/media/potentiometer_output.jpg)</p>
 
 
 ```c
@@ -100,7 +100,7 @@ LED because based on some experimenting, that mapping produced the greatest chan
 brightness as the potentiometer was turned.
 A clip of the results are shown below, along with the modified code that was used.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/P90ZEs6cvP0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/P90ZEs6cvP0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 ```c
 // This program allows us to control the brightness of an LED by turning the potentiometer
@@ -134,7 +134,7 @@ directions for the two ranges), and that from 80-100, each value noticeably alte
 of the servo. Finally, we created a for loop to sweep the full range of values to the servo. 
 The results of this sweep, as well as the code used, are shown below.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/WLWtf4ng6Ug" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/WLWtf4ng6Ug" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 ```c
 // We used this program to experiment with how the Servo motor rotates to figure out how it functions
@@ -167,7 +167,7 @@ servo to rotate in both directions. A clip of the results are shown below, along
 the modified code that was used.
 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ou17E-c4ugQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/ou17E-c4ugQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 ```c
 // This program allows us to control the rate at which 
@@ -197,7 +197,7 @@ The last task in this lab was to build a robot that drives autonomously. We had 
 to have the robot make 90 degree left and right turns that followed a grid. We ultimately decided to have it drive
 in a figure eight. The code and video are shown below.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/kf4MASRxF84" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/kf4MASRxF84" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 ```c
 // This program will eventually allow the robot to autonomously move in a figure eight
