@@ -197,9 +197,11 @@ void loop() {
 ```
 
 ## Driving Autonomously
-The last task in this lab was to build a robot that drives autonomously. We had to determine the correct servo speeds
-to have the robot make 90 degree left and right turns that followed a grid. We ultimately decided to have it drive
-in a figure eight. The code and video are shown below.
+The last task in this lab was to build a robot that drives autonomously. 
+
+We first had to assemble the robot. This was not a very enjoyable experience since we were in the last lab section and had to fight for the best of the scraps. For example, there were two ball bearings left for us to choose from, but one was too short and the other one was too tall. We had originally attached the smaller one to our robot but eventually found a saw to cut the tall one down to the right size so we ended up using that. Furthermore, there seemed to be a shortage of nuts and screws of varying sizes. All of this took a lot of time to sort out and inhibited us from performing at a higher level as a team.
+
+Once we had painstakingly assembled Axel (we named our robot Axel), the rest was relatively straightforward. We ultimately decided to have him drive in a figure eight. We had to determine the correct servo speeds to have the robot make 90 degree left and right turns that followed a grid. It took a little trial and error, but it didn't take long at all. When coding the program, we decided to create simple functions and then build upon them in larger functions so that we wouldn't have to change much through our experimentation. This helped to make the code extremely readable and reusable. The final code and video results are shown below.
 
 <p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/kf4MASRxF84" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
