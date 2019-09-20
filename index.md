@@ -18,7 +18,7 @@ Lab 4
 
 # Milestones
 
-Milestone 1
+[Milestone 1](milestones/milestone1.md)
 
 Milestone 2
 
