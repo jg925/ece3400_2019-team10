@@ -4,8 +4,8 @@
 
 Servo left;
 Servo right;
-int right_pin = 11;
-int left_pin = 10;
+int right_pin = 10;
+int left_pin = 11;
 
 int LEFT_LINE_SENSOR = A5;
 int RIGHT_LINE_SENSOR = A4;
@@ -13,7 +13,7 @@ int RIGHT_LINE_SENSOR = A4;
 int count = 0;
 
 // this integer is the boundary between "white" and "not white"
-int threshold = 450;
+int threshold = 666;
 
 int left_sensor_value = 0;
 int right_sensor_value = 0;
@@ -28,26 +28,14 @@ void slightLeft() {
   right.write(0);
 }
 
-void leftTurn(int t) {
-  left.write(0);
-  right.write(60);
-  delay(t);
-}
-
-void rightTurn(int t) {
+void rotateRight() {
   left.write(120);
-  right.write(180);
-  delay(t);
+  right.write(60);
 }
 
 void rotateLeft() {
-  left.write(92);
-  right.write(60);
-}
-
-void rotateRight() {
-  left.write(120);
-  right.write(88);
+  left.write(60);
+  right.write(120);
 }
 
 void moveForward() {
@@ -60,40 +48,73 @@ void halt() {
   right.write(90);
 }
 
-void figureEight(int left, int right) {
-  if (left < threshold && right < threshold) {
+void stopOnWhite() {
+  if (analogRead(LEFT_LINE_SENSOR) < threshold && analogRead(RIGHT_LINE_SENSOR) < threshold) {
+    halt();
+  } else {
+    moveForward();
+  }
+}
+
+
+void rightTurn() {
+}
+
+void leftTurn(){
+}
+
+void figureEight() {
+  left_sensor_value = analogRead(LEFT_LINE_SENSOR);
+  right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
+  //if both sensors on white
+  if (left_sensor_value < threshold && right_sensor_value < threshold) {
+    moveForward();
+    delay(100);
+    Serial.println("in");
     // both sensors detect white
     if (count == 8) {
     // zero out count
       count=0;
-    } else if (count < 4) {
+    } 
+    if (count < 4) {
     // right turn rotate 
-      while (right < threshold) {
+      while (right_sensor_value > threshold) {
+        right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
         rotateRight();
-        right = analogRead(RIGHT_LINE_SENSOR);
-
+      }
+      while (left_sensor_value > threshold) {
+        left_sensor_value = analogRead(LEFT_LINE_SENSOR);
+        rotateRight();
       }
       count++;
-    } else if (count > 8) {
+    } else {
     // left turn rotate
-      while (left < threshold) {
+      while (left_sensor_value > threshold) {
+        left_sensor_value = analogRead(LEFT_LINE_SENSOR);
         rotateLeft();
-        left = analogRead(LEFT_LINE_SENSOR);
-
-      }  
+      }
+      while (right_sensor_value > threshold) {
+        right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
+        rotateLeft();
+      } 
       count++;
     }
-  } else if (left < threshold && right >= threshold) {
+    Serial.println(count);
+  }
+  //left on white, right on black
+  else if (left_sensor_value < threshold && right_sensor_value >= threshold) {
     // left detects white, right detects black
-    while (left < threshold) {
+    while (left_sensor_value < threshold) {
       slightLeft();
-      left = analogRead(LEFT_LINE_SENSOR);
+      left_sensor_value = analogRead(LEFT_LINE_SENSOR);
     }    
-  } else if (left >= threshold && right < threshold) {
+  } 
+  //right on white, left on black
+  else if (left_sensor_value >= threshold && right_sensor_value < threshold) {
     // left detects black, right detects white
-    while (right < threshold) {
+    while (right_sensor_value < threshold) {
       slightRight();
-      right = analogRead(RIGHT_LINE_SENSOR);
+      right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
     }
   } else {
     // both sensors detect black
@@ -112,7 +133,10 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  left_sensor_value = analogRead(LEFT_LINE_SENSOR);
-  right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
-  figureEight(left_sensor_value, right_sensor_value);
+  //left_sensor_value = analogRead(LEFT_LINE_SENSOR);
+  //right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
+  //rightTurn();
+  //moveForward();
+  //stopOnWhite();
+  //figureEight();
 }

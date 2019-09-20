@@ -1,6 +1,6 @@
 // function to test the line sensor
 
-int LINE_SENSOR = A5;
+int LINE_SENSOR = A4;
 
 void setup() {
   // put your setup code here, to run once:
