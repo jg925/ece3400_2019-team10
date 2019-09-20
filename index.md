@@ -1,9 +1,7 @@
 # Introduction
 
-Members: Jinny Gui, Joy Thean, Daniel Buscaglia, and Ryan McMahon
-
 ![Team Photo](teamphoto.jpg)
-A photo of the team with our robot, Axel!
+A photo of the team with our robot! Back row (from left to right): Joy Thean, Ryan McMahon, Daniel Buscaglia, Jinny Gui. Front Row: Axel.
 
 [Team Contract](https://drive.google.com/file/d/1-kGICPlhbmg0IWlSnd9KlUpACal9PjoH/view?usp=sharing)
 

@@ -41,7 +41,6 @@ The a video showing the results is displayed below, along with final code.
 int EXTERNAL_LED = 13;
 // the setup function runs once when you press reset or power the board
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
   pinMode(EXTERNAL_LED, OUTPUT);
 }
 
@@ -81,13 +80,12 @@ used to read the voltage level.
 
 ```c
 // This program allows us to continuous read the voltage 
-// across a voltage divider by alternating the potentiometer
+// across a voltage divider by turning the potentiometer
 
 int VOLT_DIVIDE = A0;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
-  // initialize digital pin VOLT_DIVIDE as an output.
   pinMode(VOLT_DIVIDE, INPUT);
   Serial.begin(9600);
 }
@@ -120,7 +118,6 @@ int v = 0;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
   pinMode(VOLT_DIVIDE, INPUT);
   pinMode(LED, OUTPUT);
 }
@@ -180,7 +177,7 @@ the modified code that was used.
 
 ```c
 // This program allows us to control the rate at which 
-// the Servo rotates by twisting the potentiometer
+// the Servo rotates by turning the potentiometer
 
 #include <Servo.h>
 
@@ -225,7 +222,7 @@ our experimentation. This helped to make the code extremely readable and reusabl
 <p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/kf4MASRxF84" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 ```c
-// This program will eventually allow the robot to autonomously move in a figure eight
+// This program allows the robot to "autonomously" move in a figure eight
 
 #include <Servo.h>
 
@@ -292,4 +289,4 @@ void loop() {
 ```
 
 ## Conclusion
-While this lab was relatively straightforward and even fun at times, the assembly part was extremely frustrating. However, the hard part is over and we're excited to continue work on Axel.
+While this lab was relatively straightforward and even fun at times, the assembly part was extremely frustrating. However, the hardest part is over and we're excited to continue work on Axel.

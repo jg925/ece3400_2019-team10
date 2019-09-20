@@ -1,4 +1,4 @@
-#Milestone 1:
+# Milestone 1: Line Following and Figure Eight
 
 This first milestone of the final project was leveraged by the 
 
