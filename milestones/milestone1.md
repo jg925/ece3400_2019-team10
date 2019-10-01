@@ -7,7 +7,7 @@ them as close to the ground as possible near the front of the robot. We made sur
 to space them apart so that they were a bit more than the width of the tape apart.
 
 <p align="center">
-  <img src="milestones/teamphoto.jpg">
+  <img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/milestones/teamphoto.jpg">
 </p>
 
 The following code block shows the algorithm we used to help the robot navigate. 
