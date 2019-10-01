@@ -6,9 +6,7 @@ made with tape on a black background. We chose to use two line sensors, and atta
 them as close to the ground as possible near the front of the robot. We made sure
 to space them apart so that they were a bit more than the width of the tape apart.
 
-<p align="center">
-  <img src="https://drive.google.com/file/d/1-NpvEGlbmAMoSkECuLhtsKSUI6fcNYlv/view?usp=sharing" width="320" height="480">
-</p>
+![hello](teamphoto.jpg)
 
 The following code block shows the algorithm we used to help the robot navigate. 
 Since we were using 2 line sensors, we had if, else if statements to check each 
