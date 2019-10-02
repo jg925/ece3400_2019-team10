@@ -6,11 +6,11 @@ The milestone that was achieved involved having our robot first follow and trave
 line of white tape on a black floor and then traverse a figure eight while still following
 the tape on the ground.
 
-This first milestone of the final project required us to rely on the skills
+This first milestone required us to rely on the skills
 learned in Lab 1 and utilize line sensors to have the robot follow a while line
 made with tape on a black background. We chose to use two line sensors, and attached
 them as close to the ground as possible near the front of the robot. We made sure
-to space them apart so that they were a bit more than the width of the tape apart. You can
+to space them apart so that they straddled the tape. You can
 see our placement in the photo below; the sensors are attached to the extenders on either side
 of the ball bearing.
 
