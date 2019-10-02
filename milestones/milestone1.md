@@ -116,18 +116,26 @@ turns for count values 0-3 and left turns for count values 4-7. After every sequ
 four lefts, we zeroed out the count variable to allow the navigation of multiple figure eights. To have
 the robot execute a turn, we created helper functions rotateRight and rotateLeft which write the same
 value to both servos, allowing the robot's wheels to rotate in opposite directions with the same speed.
-Since every junction is made up of 90 degree angles, we let the robot rotate for 7 milliseconds which
+Since every junction is made up of 90 degree angles, we let the robot rotate for 700 milliseconds which
 is about the amount of time needed to make a 90 degree turn. After the turn is finished, the count is
 incremented and the figureEight function is done executing. On the next call to this function, the robot
 will simply perform the line-following logic that we previously implemented. This is because now that
 the turn is finished, the line sensors are no longer detecting white and all of the turn logic will be
-skipped.
+skipped. A video showing a successful figure eight traversal as well as code showing the algorithm we used to 
+help the robot navigate are below.
+
+<p align="center">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/FR61TYuzD8M" frameborder="0" allow="accelerometer; autoplay; 
+  encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
+
 
 ```c
-// // This program allows the robot to traverse a figure eight.
+// This program allows the robot to traverse a figure eight.
 
 #include <Servo.h>
 
+// Servo and connection setup.
 Servo left;
 Servo right;
 int right_pin = 6;
@@ -135,9 +143,11 @@ int left_pin = 5;
 int LEFT_LINE_SENSOR = A5;
 int RIGHT_LINE_SENSOR = A4;
 
+// Initiate counter to determine turn direction.
 int count = 0;
 
 // this integer is the boundary between "white" and "not white"
+// (NB: values less than the threshold indicate white).
 int threshold = 666;
 
 int left_sensor_value;
@@ -209,7 +219,7 @@ void figureEight() {
     }
   }
   
-  else if (left_sensor_value >= threshold && right_sensor_value >= threshold) {
+  else {
     // both sensors detect black
     moveForward();
   }
@@ -229,9 +239,3 @@ void loop() {
   figureEight();
 }
 ```
-
-The following video shows Axel relying on line sensors to follow a Figure Eight.
-
-<p align="center">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/FR61TYuzD8M" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</p>
