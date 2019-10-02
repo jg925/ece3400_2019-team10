@@ -4,9 +4,7 @@
 
 The milestone that was achieved involved having our robot first follow and traverse a 
 line of white tape on a black floor and then traverse a figure eight while still following
-the tape on the ground.
-
-In order to reach this milestone, we had to rely on the Arduino coding skills
+the tape on the ground. In order to reach this milestone, we had to rely on the Arduino coding skills
 learned in Lab 1 while utilizing input from line sensors to ensure the robot stayed on track.
 We chose to use two line sensors, and attached
 them as close to the ground as possible near the front of the robot. We made sure
