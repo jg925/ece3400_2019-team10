@@ -84,11 +84,6 @@ void moveForward() {
   right_motor.write(0);
 }
 
-void halt() {
-  left_motor.write(90);
-  right_motor.write(90);
-}
-
 void setup() {
   // put your setup code here, to run once:
   pinMode(LEFT_LINE_SENSOR, INPUT);
