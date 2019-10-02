@@ -12,6 +12,8 @@ of the ball bearing.
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/milestones/teamphoto.jpg" height="420" width="360">
 </p>
 
+## The Line Following Logic and Result
+
 Since we were using two line sensors, we used multiple conditional statements to check each 
 possible condition for the robot's placement relative to the white lines. If both
 line sensors were detecting black, it meant that the robot was on the correct path
@@ -24,7 +26,7 @@ detecting black again. These slight turns are executed while the robot is still 
 Finally, we have a condition that checks for both sensors on white, indicating the robot has
 reached an intersection. This was useful for debugging and became more prevalent in the second
 part of the milestone. A video showing a successful line traversal as well as code showing the
-algorithm we used to help the robot navigate are shown below.
+algorithm we used to help the robot navigate are below.
 
 <p align="center">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/-ANTz5VJQi0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
