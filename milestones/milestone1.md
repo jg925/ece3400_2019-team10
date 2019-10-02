@@ -1,5 +1,11 @@
 # Milestone 1: Line Following and Figure Eight
 
+## Introduction
+
+The milestone that was achieved involved having our robot first follow and traverse a 
+line of white tape on a black floor and then traverse a figure eight while still following
+the tape on the ground.
+
 This first milestone of the final project required us to rely on the skills
 learned in Lab 1 and utilize line sensors to have the robot follow a while line
 made with tape on a black background. We chose to use two line sensors, and attached
@@ -12,7 +18,7 @@ of the ball bearing.
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/milestones/teamphoto.jpg" height="420" width="360">
 </p>
 
-## The Line-Following Logic
+## Line Following
 
 Since we were using two line sensors, we used multiple conditional statements to check each possible
 condition for the robot's placement relative to the white lines. If both line sensors were detecting
