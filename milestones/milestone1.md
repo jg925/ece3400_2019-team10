@@ -5,7 +5,8 @@ learned in Lab 1 and utilize line sensors to have the robot follow a while line
 made with tape on a black background. We chose to use two line sensors, and attached
 them as close to the ground as possible near the front of the robot. We made sure
 to space them apart so that they were a bit more than the width of the tape apart. You can
-see our placement in the photo below.
+see our placement in the photo below; the sensors are attached to the extenders on either side
+of the ball bearing.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/milestones/teamphoto.jpg" height="420" width="360">
