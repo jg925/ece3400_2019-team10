@@ -61,11 +61,13 @@ void move() {
     // left detects white, right detects black
     while (left_sensor_value < threshold) {
       slightLeft();
+      left_sensor_value = analogRead(LEFT_LINE_SENSOR);
     }    
   } else if (left_sensor_value >= threshold && right_sensor_value < threshold) {
     // left detects black, right detects white
     while (right_sensor_value < threshold) {
       slightRight();
+      right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
     }
   } else {
     // both sensors detect black
