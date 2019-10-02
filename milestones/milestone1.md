@@ -27,8 +27,8 @@ left sensor was detecting black, then the right sensor must be drifting left ove
 robot would make a slight right turn until both sensors were detecting black again. These slight
 turns are executed while the robot is still moving forward so that speed is not sacrificed. Finally, we have a condition that checks
 for both sensors on white, indicating the robot has reached an intersection. This was useful for
-debugging and became more prevalent in the second part of the milestone, but in this section, we tell
-the robot to keep moving forward. A video showing a successful
+debugging and became more prevalent in the second part of the milestone, but we tell
+the robot to keep moving forward if this condition exists for this section. A video showing a successful
 line traversal as well as code showing the algorithm we used to help the robot navigate are below.
 
 <p align="center">
