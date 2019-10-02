@@ -31,17 +31,18 @@ done while the robot was still moving forward.
 
 #include <Servo.h>
 
+// Servo and connection setup.
 Servo left_motor;
 Servo right_motor;
 int right_pin = 6;
 int left_pin = 5;
-
 int LEFT_LINE_SENSOR = A5;
 int RIGHT_LINE_SENSOR = A4;
 
-// this integer is the boundary between "white" and "not white"
+// This integer is the boundary between "white" and "not white."
 int threshold = 666;
 
+// To store the values read from the line sensors.
 int left_sensor_value;
 int right_sensor_value;
 
@@ -49,9 +50,8 @@ void move() {
   left_sensor_value = analogRead(LEFT_LINE_SENSOR);
   right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
   if (left_sensor_value < threshold && right_sensor_value < threshold) {
-    // both sensors detect white
+    // both sensors detect white (to be used in turning later)
     moveForward();
-    halt();
   } else if (left_sensor_value < threshold && right_sensor_value >= threshold) {
     // left detects white, right detects black
     while (left_sensor_value < threshold) {
@@ -99,11 +99,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //move();
-  moveForward();
-  delay(1000);
-  halt();
-  delay(1000);
+  move();
 }
 ```
 
