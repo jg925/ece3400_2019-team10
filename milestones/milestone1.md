@@ -39,7 +39,8 @@ int left_pin = 5;
 int LEFT_LINE_SENSOR = A5;
 int RIGHT_LINE_SENSOR = A4;
 
-// This integer is the boundary between "white" and "not white."
+// This integer is the boundary between "white" and "not white"
+// (NB: values less than the threshold indicate white).
 int threshold = 666;
 
 // To store the values read from the line sensors.
