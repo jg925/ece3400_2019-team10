@@ -13,14 +13,18 @@ of the ball bearing.
 </p>
 
 The following code block shows the algorithm we used to help the robot navigate. 
-Since we were using 2 line sensors, we had if, else if statements to check each 
+Since we were using two line sensors, we used multiple conditional statements to check each 
 possible condition for the robot's placement relative to the white lines. If both
-line sensors were detecting black, it meant that the robot was on the line and would
-move forward. If only the right sensor was detecting black, then the robot would 
+line sensors were detecting black, it meant that the robot was on the correct path
+and would move forward. If only the right sensor was detecting black, then the
+left sensor must be drifting right over the line, so the robot would 
 make a slight left turn until the left sensor was also detecting black. Likewise, 
-if only the left sensor was detecting black, then the robot would make a slight
-right turn until both sensors were detecting black again. These slight turns were
-done while the robot was still moving forward.  
+if only the left sensor was detecting black, then the right sensor must be drifting
+left over the line, so the robot would make a slight right turn until both sensors were
+detecting black again. These slight turns are executed while the robot is still moving forward.
+Finally, we have a condition that checks for both sensors on white, indicating the robot has
+reached an intersection. This was useful for debugging and became more prevalent in the second
+part of the milestone.
 
 <p align="center">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/-ANTz5VJQi0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
