@@ -16,6 +16,8 @@ of the ball bearing.
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/milestones/teamphoto.jpg" height="420" width="360">
 </p>
 
+Since this milestone involved almost entirely software, we all contributed to the creation of the algorithms through the entirety of this project. However, Jinny and Joy primarily debugged the figure eight as Dan and Ryan moved to begin work on the second lab.
+
 ## Line Following
 
 Since we were using two line sensors, we used multiple conditional statements to check each possible
@@ -110,7 +112,7 @@ void loop() {
 }
 ```
 
-## Figure Eight Logic
+## Figure Eight
 
 To have our robot navigate a figure eight, we set up a series of conditional statements within the
 first if statement that checks if both line sensors detect white – meaning that the robot is at a
@@ -244,3 +246,9 @@ void loop() {
   figureEight();
 }
 ```
+
+## Conclusion
+
+Overall, this milestone wasn't too difficult. We did, however, encounter a few problems. For a decent amount of time, our motors weren't behaving as expected and were spinning when we thought they should have stopped. We realized the values we were writing to the servos were incorrect and quickly fixed that mistake. Another issue was not being able to detect an intersection. After many trials and postulations, we came to the conclusion that a combination of dirty tape and shadows were the perpetrators. Once we moved to a cleaner area of the floor and didn't stand too close and block light, the detection worked without a problem. Our final issue was that we would be infinitely turning right once we hit the intersection. After some troubleshooting, we realized this was because we didn't continue to read from our sensors once we hit a while loop and thus were stuck forever. We fixed that and finally our robot was able to do what it was born to do.
+
+At the end of this milestone, our robot, Axel, was successfully able to track lines and complete figure eights.
