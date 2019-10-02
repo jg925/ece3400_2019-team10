@@ -12,7 +12,7 @@ of the ball bearing.
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/milestones/teamphoto.jpg" height="420" width="360">
 </p>
 
-## The Line Following Logic and Result
+## The Line-Following Logic
 
 Since we were using two line sensors, we used multiple conditional statements to check each 
 possible condition for the robot's placement relative to the white lines. If both
@@ -106,6 +106,8 @@ void loop() {
   move();
 }
 ```
+
+## Figure Eight Logic
 
 The following video shows Axel relying on line sensors to follow a Figure Eight.
 
