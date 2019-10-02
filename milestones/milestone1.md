@@ -112,7 +112,7 @@ void loop() {
 
 
 ```c
-// Program to allow the robot to complete a figure eight.
+// // This program allows the robot to traverse a figure eight.
 
 #include <Servo.h>
 
@@ -120,17 +120,16 @@ Servo left;
 Servo right;
 int right_pin = 6;
 int left_pin = 5;
-
 int LEFT_LINE_SENSOR = A5;
 int RIGHT_LINE_SENSOR = A4;
 
 int count = 0;
 
 // this integer is the boundary between "white" and "not white"
-int threshold = 650;
+int threshold = 666;
 
-int left_sensor_value = 0;
-int right_sensor_value = 0;
+int left_sensor_value;
+int right_sensor_value;
 
 void slightRight() {
   left.write(180);
