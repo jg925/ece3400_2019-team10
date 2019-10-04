@@ -16,7 +16,11 @@
 int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
   if ( six > FFT_threshold && seven > FFT_threshold ) {
     if ( six > five && six > eight && seven > five && seven > eight ) {
-      return 1;
+      // checking that six and seven are a local maximum
+      if ( six - seven < 10 && six - five > 10 && six - seven > 0) {
+        // checking that shape of curve is correct
+        return 1;
+      }
     }
   }
   else {
