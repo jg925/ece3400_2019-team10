@@ -4,8 +4,8 @@
 
 Servo left_motor;
 Servo right_motor;
-int right_pin = 11;
-int left_pin = 10;
+int right_pin = 6;
+int left_pin = 5;
 
 int LEFT_LINE_SENSOR = A5;
 int RIGHT_LINE_SENSOR = A4;
@@ -74,7 +74,7 @@ void loop() {
   moveForward();
   delay(1000);
   halt();
-  delay(10000);
+  delay(1000);
 }
 
 
