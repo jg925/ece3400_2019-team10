@@ -22,6 +22,7 @@ and building the circuitry for both the band pass amplifier and the Schmitt Trig
 * Oscilloscope
 * DC Power Supply
 * Digital Multimeter
+* Frequency Generator App for Cell Phone
 
 ## Amplifying Band Pass Circuit
 
@@ -42,11 +43,12 @@ carefully selected the capacitor values (and modified the resistor values) so th
 550 Hz and 1050 Hz. While the lower break frequency is a little low, we didn't have the components to make a working
 filter that had a pass band that was so narrow. Our final circuit design is shown below.
 
-
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/MicrophoneAmplifier.png">
 </p>
 
+We then built the circuit on a breadboard and tested it by playing different frequencies using an app on a cell phone.
+The results are shown in the video below.
 
 <p align="center">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/1Nl6ceJsTIU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
