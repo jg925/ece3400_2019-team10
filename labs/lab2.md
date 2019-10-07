@@ -61,8 +61,7 @@ The results are shown in the video below.
 For our other circuit, we decided to design a Schmitt Trigger that would be used in detecting walls.
 We had very little experience with Schmitt Triggers so we used <a href="https://howtomechatronics.com/how-it-works/electrical-engineering/schmitt-trigger/">this website</a> as a reference. Our final circuit design is shown below, along with a
 schematic explaining how it works. We designed the circuit so that it outputs either 0V or 5V. When the output is 0V,
-the mini circuit on the left is used to determine the threshold voltage while the circuit on the right is used when the output
-is 5V to determine the threshold. Because of its intended use, we made the high to low threshold 600 mV and the low to high threshold
+the voltage divider on the left is used to determine the threshold voltage, while the voltage divider on the right is used when the output is 5V. Because of its intended use, we made the high to low threshold 600 mV and the low to high threshold
 400 mV. These values were determined by experimenting with the voltage level that the IR sensors output when they detect an
 object.
 
@@ -70,6 +69,9 @@ object.
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/SchmittTrigger.png">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/SchmittExplanation.png">
 </p>
+
+Two videos are shown below. The first video displays the behavior of the circuit when sweeping a DC input. The second
+video displays the behaviour of the circuit when it takes in the output of the IR sensor.
 
 <p align="center">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/KV99awF2qbQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
