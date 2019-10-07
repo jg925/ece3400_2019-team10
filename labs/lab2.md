@@ -111,7 +111,13 @@ void loop() {
   }
 }
 ```
+To analyze the tone that was played, we copy and paste the values printed onto the output to a spreadsheet for
+graphical analysis. The following graphs show the consistency of the pitch recordings for the 950 Hz tone and 
+the differences between pitches. 
 
+![FFT of 950 Hz](lab2/charts/fft_950.png)
+![FFT of different pitches](lab2/charts/diff_freq.png)
+ 
 ## Implementing Schmitt Trigger
 
 For our other circuit, we decided to design a Schmitt Trigger that would be used in detecting walls.
