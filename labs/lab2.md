@@ -58,6 +58,14 @@ The results are shown in the video below.
 
 ## Implementing Schmitt Trigger
 
+For our other circuit, we decided to design a Schmitt Trigger that would be used in detecting walls.
+We had very little experience with Schmitt Triggers so we used <a href="https://howtomechatronics.com/how-it-works/electrical-engineering/schmitt-trigger/">this website</a> as a reference. 
+
+<p align="center">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/SchmittTrigger.png">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/SchmittExplanation.png">
+</p>
+
 <p align="center">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/KV99awF2qbQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
