@@ -27,7 +27,7 @@ circuit schematic are shown below.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/08635-03-L.jpg" height="300" width="300">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/220px-Electret_condenser_microphone_schematic.png" height="300" width="300">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/220px-Electret_condenser_microphone_schematic.png" height="250" width="300">
 </p>
 
 <p align="center">
