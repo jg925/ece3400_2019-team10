@@ -123,8 +123,8 @@ the differences between pitches.
 ![FFT of 950 Hz](lab2/charts/fft_950.png)
 ![FFT of different pitches](lab2/charts/diff_freq.png)
 
-The graphs show a subset of the 128 bins for clarity. W saw there was a clear shift in the graph
-as the dominant frequency changed, so we used that to construct our algorithm. Additionally, tere was a
+The graphs show a subset of the 128 bins for clarity. We saw there was a clear shift in the graph
+as the dominant frequency changed, so we used that to construct our algorithm. Additionally, there was a
 distinct pattern to the 950 Hz tone that could be used to distinguish it from the 850 Hz or the 1050 Hz
 tones. These subtle differences helped guide the creation of the algorithm for detecting the 950 Hz tone.
 In our implementation, we also used a counter. This was to reduce the effect of noise and ensure our algorithm
@@ -167,8 +167,8 @@ void loop() {
 }
 ```
 
-The following video shows that the 950 Hz frequency is able to be correctly detected. One video shows what happens
-when a 950 Hz tone is played, and the other shows what happens when an 850 Hz tone is played.
+The following video shows that the 950 Hz frequency is able to be correctly detected. The first video shows what happens
+when a 950 Hz tone is played, and the second shows what happens when an 850 Hz tone is played.
 
 <p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/HY07C-CH3QI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
