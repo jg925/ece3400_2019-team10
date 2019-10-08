@@ -182,5 +182,9 @@ video displays the behaviour of the circuit when it takes in the output of the I
 ## Conclusion
 This lab was challenging as it involved combining knowledge of circuits and signals to properly build a filter for
 the microphone that would enable an easier analysis of the FFT signals. In addition, the challenge of building the
-Schmitt Trigger and making sure it functioned properly also took some effort. Overall, it was a meaningful lab
+Schmitt Trigger and making sure it functioned properly also took some effort. We had some issues building the second order
+band pass amplifying circuit. First, we originally designed the circuit such that when we calculated the break frequencies,
+we used angular frequency (in rad/s) instead of frequency (in Hz) and that caused some headaches when we looked at the frequency
+response of the circuit. Once we corrected the components to the correct values we needed for the proper break frequencies, 
+our op amp had around a 2V DC offset on the output that we (and the TAs) couldn't figure out. However, this did not inhibit the FFT algorithm's ability to detect the correct frequencies so it didn't end up being much of a problem after all. While designing the Schmitt Trigger, we had to use lots of online resources to understand what was going on (see the link in that section above) but once we understood how the Schmitt Trigger actually works, it became quite simple. Overall, it was a meaningful lab
 that will ultimately steer us towards our ultimate goal.  
