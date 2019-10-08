@@ -121,7 +121,7 @@ the differences between pitches.
 The graphs show a subset of the 128 bins for clarity. We noticed that there was a certain pattern to the 
 950 Hz tone that was seen in the 850 Hz or the 1050 Hz. These subtle differences helped guide the creation
 of the algorithm for detecting the 950 Hz tone. The following code snippet shows the modifications to the code
-that allowed for the detection of the 950 Hz tone.
+above that allowed for the detection of the 950 Hz tone.
 
 ```c
 ...
@@ -148,11 +148,9 @@ void loop() {
     ...
     
     int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 100 );
-    if ( max == 1 && detect_count >= 90)
-    {
+    if ( max == 1 && detect_count >= 90) {
       Serial.println("950 Hz");
       detect_count = 0;
-      //Serial.println(detect_count);
     }
     else if ( max == 1 ) {
       detect_count++;
@@ -160,6 +158,13 @@ void loop() {
   }
 }
 ```
+
+The following video shows that the 950 Hz frequency is able to be correctly detected. One video shows what happens
+when a 950 Hz tone is played, and the other shows what happens when an 850 Hz tone is played.
+<p align="center">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HY07C-CH3QI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xcg0s0v5csI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 ## Implementing Schmitt Trigger
 
