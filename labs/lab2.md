@@ -179,7 +179,7 @@ video displays the behaviour of the circuit when it takes in the output of the I
 
 <p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/hOAEnnWUPrM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
-The video below shows the Schmitt Trigger circuit using output from the IR sensor working with our code. We had a one second delay after every reading so we could see what values were being printed. As we are using an inverting trigger, the sensor should read "1" when there are no walls detected and "0" when they are detected. While the output on the computer screen can be difficult to see due to the pixelation of the video, the circuit works exactly as expected and nicely fits in with our code, which was quite simple and is shown below as well.
+The video below shows the Schmitt Trigger circuit using output from the IR sensor working with our code. We had a one second delay after every reading so we could see what values were being printed. As we are using an inverting trigger, the sensor should read "1" when there are no walls detected and "0" when they are detected. While the output on the computer screen can be difficult to see due to the pixelation of the video, the circuit works exactly as expected and will make our code extremely simple. The test code is shown below as well.
 
 <p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/ERu0vwRGqaw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
