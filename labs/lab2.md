@@ -179,6 +179,10 @@ video displays the behaviour of the circuit when it takes in the output of the I
 
 <p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/hOAEnnWUPrM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
+<p align="center">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ERu0vwRGqaw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
+
 ## Conclusion
 This lab was challenging as it involved combining knowledge of circuits and signals to properly build a filter for
 the microphone that would enable an easier analysis of the FFT signals. In addition, the challenge of building the
