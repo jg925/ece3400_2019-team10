@@ -4,27 +4,41 @@
 
 Servo left;
 Servo right;
+
+// servo pins
 int right_pin = 6;
 int left_pin = 5;
 
+// line sensor pins
 int LEFT_LINE_SENSOR = A5;
 int RIGHT_LINE_SENSOR = A4;
 
-//int count = 0;
-
-// this integer is the boundary between "white" and "not white"
-int threshold = 650;
-
-int left_sensor_value = 0;
-int right_sensor_value = 0;
-
+// IR sensor pins
 #define right_ir_sensor 2
 #define left_ir_sensor A2
 #define front_ir_sensor A1
 
+// boundary between "white" and "black"
+int threshold = 650;
+
+// initialization of line sensor values
+int left_sensor_value = 0;
+int right_sensor_value = 0;
+
+// initialization of IR sensor values
 int right_detect;
 int left_detect;
 int front_detect;
+
+void halt() {
+  left.write(90);
+  right.write(90);
+}
+
+void moveForward() {
+  left.write(180);
+  right.write(0);
+}
 
 void slightRight() {
   left.write(180);
@@ -36,32 +50,14 @@ void slightLeft() {
   right.write(0);
 }
 
-void rotateLeft() {
-  left.write(60);
-  right.write(60);
-}
-
 void rotateRight() {
   left.write(120);
   right.write(120);
 }
 
-void moveForward() {
-  left.write(180);
-  right.write(0);
-}
-
-void halt() {
-  left.write(90);
-  right.write(90);
-}
-
-void stopOnWhite() {
-  if (analogRead(LEFT_LINE_SENSOR) < threshold && analogRead(RIGHT_LINE_SENSOR) < threshold) {
-    halt();
-  } else {
-    moveForward();
-  }
+void rotateLeft() {
+  left.write(60);
+  right.write(60);
 }
 
 void right90Turn() {
@@ -87,16 +83,6 @@ void navigate() {
   Serial.println("RIGHTSENSOR");
   Serial.println(right_sensor_value);
 
-//  // right IR sensor read + distance calculation
-//  float rvolts = analogRead(right_ir_sensor)*0.0048828125;  // value from sensor * (5/1024)
-//  int rdistance = 13*pow(rvolts, -1); // worked out from datasheet graph
-//
-//  // left IR sensor read + distance calculation
-//  float lvolts = analogRead(left_ir_sensor)*0.0048828125;  // value from sensor * (5/1024)
-//  int ldistance = 13*pow(lvolts, -1); // worked out from datasheet graph
-//  //delay(1000); // slow down serial port
-//
-  
   // if both sensors on white
   if (left_sensor_value < threshold && right_sensor_value < threshold) {
     
@@ -190,7 +176,7 @@ void navigate() {
     }
   }
   
-  // left on white, right on black
+  // left on white, right on black --> slight left adjust
   else if (left_sensor_value < threshold && right_sensor_value >= threshold) {
     // left detects white, right detects black
     while (left_sensor_value < threshold) {
@@ -199,7 +185,7 @@ void navigate() {
     }    
   }
   
-  // right on white, left on black
+  // right on white, left on black --> slight right adjust
   else if (left_sensor_value >= threshold && right_sensor_value < threshold) {
     // left detects black, right detects white
     while (right_sensor_value < threshold) {
@@ -208,7 +194,7 @@ void navigate() {
     }
   }
   
-  // both sensors detect black
+  // both sensors detect black --> go straight
   else if (left_sensor_value >= threshold && right_sensor_value >= threshold) {
     Serial.println("FORWARD");
     moveForward();
@@ -229,36 +215,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   //halt();
-//  int rightsensor = digitalRead(right_ir_sensor);
-//  int leftsensor = digitalRead(left_ir_sensor);
-  //int frontsensor = digitalRead(front_ir_sensor);
-  
-//  float fvolts = analogRead(front_ir_sensor)*0.0048828125;  // value from sensor * (5/1024)
-//  int fdistance = 13*pow(fvolts, -1); // worked out from datasheet graph
-//  //delay(1000); // slow down serial port
-//
-//  if (fdistance <= 20) {
-//    front_detect = 0;
-//  } else {
-//    front_detect = 1;
-//  }
-
-  //delay(1000);
-
-    // left IR sensor read + distance calculation
-//  float lvolts = analogRead(left_ir_sensor)*0.0048828125;  // value from sensor * (5/1024)
-//  int ldistance = 13*pow(lvolts, -1); // worked out from datasheet graph
-//  //delay(1000); // slow down serial port
-//
-//  if (ldistance <= 20) {
-//    left_detect = 0;
-//  } else {
-//    left_detect = 1;
-//  }
-//
-//  Serial.println(ldistance);
-//  Serial.println(left_detect);
-//  delay(1000);
   
   navigate();
 }
