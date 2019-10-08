@@ -111,6 +111,60 @@ void loop() {
   }
 }
 ```
+To analyze the tone that was played, we copy and paste the values printed onto the output to a spreadsheet for
+graphical analysis. The following graphs show the consistency of the pitch recordings for the 950 Hz tone and 
+the differences between pitches. 
+
+![FFT of 950 Hz](lab2/charts/fft_950.png)
+![FFT of different pitches](lab2/charts/diff_freq.png)
+
+The graphs show a subset of the 128 bins for clarity. We noticed that there was a certain pattern to the 
+950 Hz tone that was seen in the 850 Hz or the 1050 Hz. These subtle differences helped guide the creation
+of the algorithm for detecting the 950 Hz tone. The following code snippet shows the modifications to the code
+above that allowed for the detection of the 950 Hz tone.
+
+```c
+...
+
+int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
+  if ( six > FFT_threshold && seven > FFT_threshold ) {
+    if ( six > five && six > eight && seven > five && seven > eight ) {
+      // checking that six and seven are a local maximum
+      if ( six - seven < 10 && six - five > 10 && six - seven > 0) {
+        // checking that shape of curve is correct
+        return 1;
+      }
+    }
+  }
+  else {
+    return 0;
+  }
+}
+...
+
+void loop() {
+  while(1) { //reduces jitter
+
+    ...
+    
+    int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 100 );
+    if ( max == 1 && detect_count >= 90) {
+      Serial.println("950 Hz");
+      detect_count = 0;
+    }
+    else if ( max == 1 ) {
+      detect_count++;
+    }
+  }
+}
+```
+
+The following video shows that the 950 Hz frequency is able to be correctly detected. One video shows what happens
+when a 950 Hz tone is played, and the other shows what happens when an 850 Hz tone is played.
+<p align="center">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HY07C-CH3QI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xcg0s0v5csI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 ## Implementing Schmitt Trigger
 

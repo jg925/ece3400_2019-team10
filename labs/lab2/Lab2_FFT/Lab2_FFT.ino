@@ -13,6 +13,8 @@
 
 #include <FFT.h> // include the library
 
+int detect_count = 0;
+
 int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
   if ( six > FFT_threshold && seven > FFT_threshold ) {
     if ( six > five && six > eight && seven > five && seven > eight ) {
@@ -56,8 +58,14 @@ void loop() {
     fft_mag_log(); // take the output of the fft
     sei();
     int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 100 );
-    if ( max == 1 ) {
-      Serial.println("yeet");
+    if ( max == 1 && detect_count >= 90)
+    {
+      Serial.println("950 Hz");
+      detect_count = 0;
+      //Serial.println(detect_count);
+    }
+    else if ( max == 1 ) {
+      detect_count++;
     }
   }
 }
