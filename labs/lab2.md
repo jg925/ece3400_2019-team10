@@ -200,18 +200,18 @@ void setup() {
 }
 
 void loop() {
-left_sensor_value = digitalRead(left_wall_sensor);
-right_sensor_value = digitalRead(right_wall_sensor);
-center_sensor_value = digitalRead(center_wall_sensor);
+  left_sensor_value = digitalRead(left_wall_sensor);
+  right_sensor_value = digitalRead(right_wall_sensor);
+  center_sensor_value = digitalRead(center_wall_sensor);
 
-Serial.println("LEFT:");
-Serial.println(left_sensor_value);
-Serial.println("RIGHT:");
-Serial.println(right_sensor_value);
-Serial.println("CENTER:");
-Serial.println(center_sensor_value);
+  Serial.println("LEFT:");
+  Serial.println(left_sensor_value);
+  Serial.println("RIGHT:");
+  Serial.println(right_sensor_value);
+  Serial.println("CENTER:");
+  Serial.println(center_sensor_value);
 
-delay(1000);
+  delay(1000);
 }
 ```
 
