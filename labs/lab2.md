@@ -185,6 +185,8 @@ The video below shows the Schmitt Trigger circuit using output from the IR senso
 </p>
 
 ```c
+// This program lets us read from the Schmitt Triggers
+// and print the values to the screen.
 
 int left_wall_sensor = 2;
 int right_wall_sensor = 3;
