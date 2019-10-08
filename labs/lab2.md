@@ -41,7 +41,8 @@ lower the gain of undesired frequencies; after all, the end goal is to detect a 
 could trigger false positives. Thus, we converted our inverting amplifier into a second order band pass filter. We
 carefully selected the capacitor values (and modified the resistor values) so that the break frequencies were around
 550 Hz and 1050 Hz. While the lower break frequency is a little low, we didn't have the components to make a working
-filter that had a pass band that was so narrow. Our final circuit design is shown below.
+filter that had a pass band that was so narrow. However, 550 Hz is high enough to drown out plenty of background noise.
+Our final circuit design is shown below.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/MicrophoneAmplifier.png">
