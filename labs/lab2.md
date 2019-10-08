@@ -62,15 +62,6 @@ recording 256 real and 256 imaginary values for the FFT. To see what the FFT bin
 of the 256 values because the 2nd half (128 values) is a mirrored image of the first half.
 
 ```c
-/*
-  fft_adc.pde
-  guest openmusiclabs.com 8.18.12
-  example sketch for testing the fft library.
-  it takes in data on ADC0 (Analog0) and processes them
-  with the fft. the data is sent out over the serial
-  port at 115.2kb.  there is a pure data patch for
-  visualizing the data.
-*/
 
 #define LOG_OUT 1 // use the log output function
 #define FFT_N 256 // set to 256 point fft
