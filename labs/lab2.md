@@ -72,7 +72,7 @@ The FFT library allows us to efficiently compute the DFT, which then allows us t
 components of our signal and determine when 950 Hz is being played. By modifying the sample code provided
 by the Arduino FFT Library's website, we were able to print the amplitude output values for each of the bins of 
 to the serial output. The provided algorithm collects 512 values, recording 256 real and 256 imaginary. To
-see what the FFT bins collected, we print only half of the 256 values because the 2nd half (128 values) is
+see what the FFT bins collected, we print only half of the 256 values because the 2nd half (128 values) is 
 a mirrored image of the first half. The code to print out the value in each of the frequency bins can be seen
 below.
 
