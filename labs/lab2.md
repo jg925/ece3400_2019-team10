@@ -152,9 +152,10 @@ void loop() {
 
 The following video shows that the 950 Hz frequency is able to be correctly detected. One video shows what happens
 when a 950 Hz tone is played, and the other shows what happens when an 850 Hz tone is played.
-<p align="center">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/HY07C-CH3QI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/xcg0s0v5csI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/HY07C-CH3QI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/xcg0s0v5csI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
 ## Implementing Schmitt Trigger
