@@ -55,11 +55,25 @@ The results are shown in the video below.
 </p>
 
 ## The FFT Algorithm
-In order to correctly analyze the audio picked up by the microphone, we needed to use the Arduino FFT Library.
-Modifying the sample code provided by the Arduino FFT Library's website, we were able to print through the serial
-output, what the amplitude output values were for each of the bins of the FFT. The algorithm collects 512 values, 
-recording 256 real and 256 imaginary values for the FFT. To see what the FFT bins collected, we print only half 
-of the 256 values because the 2nd half (128 values) is a mirrored image of the first half.
+In order to correctly analyze the audio picked up by the microphone, we used Arduino FFT Library. In this 
+library, we were provided tools that allowed us to calculate the discrete Fourier transform (DFT) of the 
+signal our microphone was picking up. Applying the DFT transforms our signal from the time domain to the
+frequency domain. The frequency components can then be analyzed to determine the dominant frequencies the
+microphone was picking up at that time. 
+
+However, computing the DFT is a very slow process. Using Big-O notation, a standard DFT algorithm runs in 
+O(n<sup>2</sup>) time. To speed this up, we used a fast Fourier Transform (FFT) algorithm, which is a class
+of algorithms that can compute the DFT in O(n logn) time. The FFT works by minimizing the number of computations
+required using a divide-and-conquer algorithm. The FFT divides the signal up and computes the DFT on the
+smaller parts. By adding up all the smaller DFTs, the DFT of the full signal can be found.
+
+The FFT library allows us to efficiently compute the DFT, which then allows us to analyze the frequency 
+components of our signal and determine when 950 Hz is being played. By modifying the sample code provided
+by the Arduino FFT Library's website, we were able to print the amplitude output values for each of the bins of 
+to the serial output. The provided algorithm collects 512 values, recording 256 real and 256 imaginary. To
+see what the FFT bins collected, we print only half of the 256 values because the 2nd half (128 values) is
+a mirrored image of the first half. The code to print out the value in each of the frequency bins can be seen
+below.
 
 ```c
 
@@ -102,17 +116,20 @@ void loop() {
   }
 }
 ```
-To analyze the tone that was played, we copy and paste the values printed onto the output to a spreadsheet for
-graphical analysis. The following graphs show the consistency of the pitch recordings for the 950 Hz tone and 
+To analyze the tone that was played, we graphed the amplitude of each bin versus the number of frequency bins.
+The following graphs show the consistency of the pitch recordings for the 950 Hz tone and 
 the differences between pitches. 
 
 ![FFT of 950 Hz](lab2/charts/fft_950.png)
 ![FFT of different pitches](lab2/charts/diff_freq.png)
 
-The graphs show a subset of the 128 bins for clarity. We noticed that there was a certain pattern to the 
-950 Hz tone that was seen in the 850 Hz or the 1050 Hz. These subtle differences helped guide the creation
-of the algorithm for detecting the 950 Hz tone. The following code snippet shows the modifications to the code
-above that allowed for the detection of the 950 Hz tone.
+The graphs show a subset of the 128 bins for clarity. W saw there was a clear shift in the graph
+as the dominant frequency changed, so we used that to construct our algorithm. Additionally, tere was a
+distinct pattern to the 950 Hz tone that could be used to distinguish it from the 850 Hz or the 1050 Hz
+tones. These subtle differences helped guide the creation of the algorithm for detecting the 950 Hz tone.
+In our implementation, we also used a counter. This was to reduce the effect of noise and ensure our algorithm
+only detected 950 Hz when a tone was being played, and not just from hearing background noise. The following code
+snippet shows the modifications to the code above that allowed us to correctly detect the 950 Hz tone.
 
 ```c
 ...
