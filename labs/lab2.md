@@ -196,7 +196,7 @@ void setup() {
   Serial.begin(9600); // use the serial port
   pinMode(left_wall_sensor, INPUT);
   pinMode(right_wall_sensor, INPUT);
-  pinMode(center_wall_center, INPUT);
+  pinMode(center_wall_sensor, INPUT);
 }
 
 void loop() {
@@ -214,6 +214,9 @@ Serial.println(center_sensor_value);
 delay(1000);
 }
 ```
+
+This circuit is invaluable, as it allows us to free up some analog pins for future use (for example, to detect other
+robots).
 
 ## Conclusion
 This lab was challenging as it involved combining knowledge of circuits and signals to properly build a filter for
