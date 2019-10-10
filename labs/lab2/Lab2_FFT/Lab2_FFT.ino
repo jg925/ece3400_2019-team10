@@ -17,13 +17,13 @@ int detect_count = 0;
 
 int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
   if ( six > FFT_threshold && seven > FFT_threshold ) {
-    if ( six > five && six > eight && seven > five && seven > eight ) {
+    //if ( six > five && six > eight && seven > five && seven > eight ) {
       // checking that six and seven are a local maximum
-      if ( six - seven < 10 && six - five > 10 && six - seven > 0) {
+      //if ( six - seven < 10 && six - five > 10 && six - seven > 0) {
         // checking that shape of curve is correct
         return 1;
-      }
-    }
+      //}
+    //}
   }
   else {
     return 0;
@@ -58,7 +58,7 @@ void loop() {
     fft_mag_log(); // take the output of the fft
     sei();
     int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 100 );
-    if ( max == 1 && detect_count >= 90)
+    if ( max == 1 && detect_count >= 5)
     {
       Serial.println("950 Hz");
       detect_count = 0;
