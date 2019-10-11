@@ -13,49 +13,12 @@
 </p>
 
 ```c
-// Program to allow the robot to nagivate walls
+// This program allows the robot to nagivate any arbitrary set of walls.
 
 ... // Declarations
 
-void moveForward() {
-  left.write(180);
-  right.write(0);
-}
-
-void slightRight() {
-  left.write(180);
-  right.write(85);
-}
-
-void slightLeft() {
-  left.write(95);
-  right.write(0);
-}
-
-void rotateRight() {
-  left.write(120);
-  right.write(120);
-}
-
-void rotateLeft() {
-  left.write(60);
-  right.write(60);
-}
-
-void right90Turn() {
-  rotateRight();
-  delay(725);
-}
-
-void left90Turn() {
-  rotateLeft();
-  delay(725);
-}
-
-void right180Turn() {
-  rotateRight();
-  delay(1450);
-}
+... // moving commands (i.e. forward, turn left/right/around, 
+    // slight left/right to correct during straightaways, etc.
 
 void navigate() {
 
