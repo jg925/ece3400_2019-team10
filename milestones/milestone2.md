@@ -17,8 +17,8 @@
 
 ... // Declarations
 
-... // moving commands (i.e. forward, turn left/right/around, 
-    // slight left/right to correct during straightaways, etc.
+... // Moving commands (i.e. forward, turn left/right/around, 
+... // slight left/right to correct during straightaways, etc.)
 
 void navigate() {
 
@@ -29,13 +29,8 @@ void navigate() {
     moveForward();
     delay(500);
 
-    // right IR sensor read + distance calculation
     right_detect = digitalRead(right_ir_sensor);  // 0 when detecting
-  
-    // left IR sensor read + distance calculation
     left_detect = digitalRead(left_ir_sensor);   // 0 when detecting
-  
-    // front IR sensor read + distance calculation
     front_detect = digitalRead(front_ir_sensor);  // 0 when detecting
 
     // case 0: no walls --> turn right
