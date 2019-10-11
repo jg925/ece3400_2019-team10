@@ -6,17 +6,15 @@ The milestone that was achieved involved having our robot first successfully cir
 
 ## INSERT IMAGE OF ROBOT WITH SENSORS HERE
 
-Dan and Joy were the two that worked on this milestone. Jinny and Ryan worked on the FFT analysis of Lab 2 during this time. They also began working on the robot detection section of this milestone before that part was switched to Milestone 3.
+Joy and Dan were the two that worked on this milestone. Jinny and Ryan worked on the FFT analysis of Lab 2 during this time. They also began working on the robot detection section of this milestone before that part was switched to Milestone 3.
 
 ## Wall Following
 
-<p align="center">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/r7wxAMWEsIM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</p>
+This milestone was extremely easy because of the work we completed in Lab 2. Our Schmitt Triggers convert the analog output from the IR sensors into a digital 0 or 1 and this allowed us to use a series of simple if-statements to check for certain conditions to be met (and also allowed us to free up three analog ports on the Arduino). As suggested, we used right-hand wall following to navigate our robot. 
 
-<p align="center">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/ZjsPwd34qOY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</p>
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/r7wxAMWEsIM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+
+<p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/ZjsPwd34qOY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 ```c
 // This program allows the robot to nagivate any arbitrary set of walls.
