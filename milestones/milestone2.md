@@ -35,25 +35,21 @@ void navigate() {
 
     // case 0: no walls --> turn right
     if (right_detect && left_detect && front_detect) {
-      Serial.println("NO WALLS");
       right90Turn();
     }
     
     // case 1: right wall, left wall, front wall --> turn around
     else if (!right_detect && !left_detect && !front_detect) {
-      Serial.println("180 TURN");
       right180Turn();
     }
     
     // case 2: left wall, front wall --> turn right
     else if (right_detect && !left_detect && !front_detect) {
-      Serial.println("RIGHT TURN");
       right90Turn();
     }
 
     // case 3: right wall, front wall --> turn left
     else if (!right_detect && left_detect && !front_detect) {
-      Serial.println("LEFT TURN");
       left90Turn();
     }
 
