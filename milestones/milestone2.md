@@ -4,9 +4,9 @@
 
 The milestone that was achieved involved having our robot first successfully circle an arbitrary set of walls and then demonstrate that our robot does line tracking and avoids walls at the same time. In order to reach this milestone, we had to rely on the Arduino coding and breadboard wiring skills learned in Labs 1 and 2 to utilize input from line sensors as well as infrared wall sensors to ensure the robot stayed on track while not hitting a wall. We chose to use three IR sensors, and attached them on the sides of the top platform. We made sure to place them such that they are approximately at right angles from each other. You can see our placement in the photos below.
 
-<p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132111.jpg" height="360" width="500"></p>
+<p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132111.jpg"></p>
 
-<p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132149.jpg" height="360" width="500"></p>
+<p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132149.jpg"></p>
 
 Joy and Dan were the two that worked on this milestone. Jinny and Ryan worked on the FFT analysis of Lab 2 during this time. They also began working on the robot detection section of this milestone before that part was switched to Milestone 3.
 
