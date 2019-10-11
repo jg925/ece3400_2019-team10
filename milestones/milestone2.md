@@ -119,4 +119,4 @@ Overall, this milestone wasn’t very difficult at all. We did, however, encount
 
 At the end of this milestone, our robot was successfully able to circle walls and track lines together using right-hand wall following. We will leave you with a final head-on updated picture of Axel. Enjoy!
 
-<p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132217.jpg" height="400" width="500"></p>
+<p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132217.jpg" height="300" width="500"></p>
