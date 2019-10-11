@@ -13,7 +13,7 @@ see our placement in the photo below; the sensors are attached to the extenders 
 of the ball bearing.
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132111.jpg" height="420" width="360">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/milestones/teamphoto.jpg" height="420" width="360">
 </p>
 
 Since this milestone involved almost entirely software, we all contributed to the creation of the algorithms through the entirety of this project. However, Jinny and Joy primarily debugged the figure eight as Dan and Ryan moved to begin work on the second lab.
