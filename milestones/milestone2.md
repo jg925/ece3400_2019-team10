@@ -10,7 +10,11 @@ Joy and Dan were the two that worked on this milestone. Jinny and Ryan worked on
 
 ## Wall Following
 
-This milestone was extremely easy because of the work we completed in Lab 2. Our Schmitt Triggers convert the analog output from the IR sensors into a digital 0 or 1 and this allowed us to use a series of simple if-statements to check for certain conditions to be met (and also allowed us to free up three analog ports on the Arduino). As suggested, we used right-hand wall following to navigate our robot. 
+This milestone was extremely easy because of the work we completed in Lab 2. Our Schmitt Triggers convert the analog output from the IR sensors into a digital 0 or 1 and this allowed us to use a series of simple if- and elif-statements to check for certain conditions to be met (and also allowed us to free up three analog ports on the Arduino). As suggested, we used right-hand wall following to navigate our robot. 
+
+We wrote very adaptable code in Milestone 1, so we were able to reuse all our code from the line following section. The only place where we had to make major changes was when both line sensors detected white, which happens when the robot reaches an intersection. Instead of simply continuing to move forward, we added logic to see where the robot should move next, which is where the IR sensors and Schmitt Triggers come into play. We designed inverting Schmitt Triggers so in order to see if a wall is detected, we check to see if a sensor reads 0. In all cases, if we can turn right, we do (in accordance with right-hand wall following). If we can't, then we look at the current wall setup and react accordingly. The full set of if- and elif-statements are shown in an abbreviated version of our code below and are labeled based on which case is true.
+
+Below are two videos showing different mazes that Axel (our robot) successfully traverses using the logic above and hardware described above. The first maze was a simple rectangle with a divider in the middle and one alcove to test turning around. The second maze was a more complicated design, featuring a rectangle with a divider, an open square, and an alcove right from the beginning.
 
 <p align="center"><iframe width="560" height="315" src="https://www.youtube.com/embed/r7wxAMWEsIM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
