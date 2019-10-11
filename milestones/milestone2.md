@@ -6,7 +6,7 @@ The milestone that was achieved involved having our robot first successfully cir
 
 <p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132111.jpg" height="400" width="500"></p>
 
-<p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132149.jpg"></p>
+<p align="center"><img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/20191011_132149.jpg" height="400" width="500"></p>
 
 Joy and Dan were the two that worked on this milestone. Jinny and Ryan worked on the FFT analysis of Lab 2 during this time. They also began working on the robot detection section of this milestone before that part was switched to Milestone 3.
 
