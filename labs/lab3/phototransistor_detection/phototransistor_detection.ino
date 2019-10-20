@@ -34,11 +34,11 @@ void loop() {
   Serial.println(photo_input);
   delay(100);
 
-  if (photo_input >= 60) {
-    moveForward();
+  if (photo_input >= 50) {
+    //moveForward();
     Serial.println("DETECT");
   } else {
-    halt();
+    //halt();
   }
   
 }
