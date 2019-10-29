@@ -1,4 +1,3 @@
-#include <StackArray.h>
 #include <Servo.h>
 
 Servo left;
@@ -222,9 +221,6 @@ struct node {
   byte frontier[3];
 };
 
-//StackArray <node> frontier;
-//StackArray <node> visited;
-
 node visited [100];
 int i = 0;
 node current;
@@ -242,64 +238,9 @@ void setup() {
   right.attach(right_pin);
   left.attach(left_pin);
 
-//  frontier.setPrinter(Serial);
-//  visited.setPrinter(Serial);
-
   // init starting position
-  current = { B0, B0, north, B111 };
+  current = { B0, B0, north, B111, {B0,B0,B0} };
 
-
-
-  /*
-
-  visited.push(current);
-
-  // left wall not detected, add neighbor to frontier set
-  if (!((current.wall & B100) && B100)) {
-    avail = { {current.pos.x-1, current.pos.y}, false, right };
-    frontier.push(avail);
-  }
-
-  // front wall not detected, add neighbor to frontier set
-  if (!((current.wall & B010) && B010)) {
-    avail = { {current.pos.x, current.pos.y+1}, false, right };
-    frontier.push(avail);
-  }
-  
-  // right wall not detected, add neighbor to frontier set
-  if (!((current.wall & B001) && B001)) {
-    avail = { {current.pos.x+1, current.pos.y}, false, right };
-    frontier.push(avail);
-  }
-  */
-
-
-
-
-
-/*
-  if (right_wall == 1 && left_wall == 0 && front_wall == 1){      // |_
-     direct = north;
-     open1 = { {0,1}, false, north };
-     open2 = { {1,0}, false, east};
-  }
-  else if (right_wall == 1 && left_wall == 0 && front_wall == 0){ //  _
-     direct = east;                                               // |    (not sure about behind)
-     open1 = { {1,0}, false, east };
-     open2 = { {0,0}, false, west }; // dummy placeholder
-  }
-  else if (right_wall == 1 && left_wall == 0 && front_wall == 0){ //  
-     direct = east;                                               // |_|
-     open1 = { {0,1}, false, north };
-     open2 = { {0,0}, false, west }; // dummy placeholder
-  }
-
-  node start = { { 0, 0 }, true, direct };
-  visited.push(start);
-  frontier.push(open1);
-  if (open2.pos.x != 0 && open2.pos.y != 0){
-    frontier.push(open2);
-  }*/
 }
 
 void loop() {
@@ -309,7 +250,6 @@ void loop() {
   int left_detect = digitalRead(left_ir_sensor);
   int front_detect = digitalRead(front_ir_sensor);
 
-  //visited.push(current);
   visited[i] = current;
   i++;
 
@@ -319,7 +259,7 @@ void loop() {
     current.walls = current.walls << 1;
   }
 
-  current.walls = current.walls << 1
+  current.walls = current.walls << 1;
   if (!front_detect) {
     current.walls = current.walls + B001;
   }
@@ -329,41 +269,74 @@ void loop() {
     current.walls = current.walls + B001;
   }
 
+  int w;
+
   // left wall not detected, add neighbor to frontier set
-  if (!((current.wall & B100) && B100)) {
-
-    if (
-    
+  if (!((current.walls & B100) && B100)) {
     node avail = { current.x-B1, current.y, west, B111 };
-
-    current.frontier[0] = [ (avail.x << 4) + avail.y ];
-    
-    //frontier.push(avail);
+    for (w = 0; w < i; w++)
+    {
+      if (avail.x == visited[w].x && avail.y==visited[w].y){
+        break;
+      }
+    }
+    if (w == i) {
+      current.frontier[1] = avail.x << 4 + avail.y;
+    }
   }
 
   // front wall not detected, add neighbor to frontier set
-  if (!((current.wall & B010) && B010)) {
+  if (!((current.walls & B010) && B010)) {
     node avail = { current.x, current.y+B1, north, B111 };
-    frontier.push(avail);
+    for (w = 0; w < i; w++)
+    {
+      if (avail.x == visited[w].x && avail.y==visited[w].y){
+        break;
+      }
+    }
+    if (w == i) {
+      current.frontier[1] = avail.x << 4 + avail.y;
+    }
   }
   
   // right wall not detected, add neighbor to frontier set
-  if (!((current.wall & B001) && B001)) {
+  if (!((current.walls & B001) && B001)) {
     node avail = { current.x+B1, current.y, east, B111 };
-    frontier.push(avail);
+    for (w = 0; w < i; w++)
+    {
+      if (avail.x == visited[w].x && avail.y==visited[w].y){
+        break;
+      }
+    }
+    if (w == i) {
+      current.frontier[2] = avail.x << 4 + avail.y;
+    }
   }
 
-  //if current location neighbors do not have visited field as true, add them to frontier set
-  if (!frontier.isEmpty()){
-    node next = frontier.pop();
-    next.vis = true;
-    visited.push(next);
+  int q;
+  for (q = 0; q < 3; q++){
+    if (current.frontier[q] != B0){
+      byte nextx = current.frontier[q]>>4;
+      byte nexty = (current.frontier[q] << 4) >> 4;
+
+      if (q == 0) {
+        turnLeft();
+        face = current.dir - 1;
+      }
+      else if (q == 2) {
+        turnRight();
+        face = current.dir + 1;
+      } else {
+        face = current.dir;
+      }
+      moveForward();  // change to navigate later
+      break;
+    }
   }
-  else {
-    halt();
+  if (q == 3) {
+    right180Turn();
+    // nextx and nexty --> node behind the robot
+    face = current.dir + 2;  
   }
-
-
-
-  
+  current = {nextx, nexty, face, B111, {B0, B0, B0} };
 }
