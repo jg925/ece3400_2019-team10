@@ -182,7 +182,7 @@ void dfs() {
       }
     }
     if ( w == visitedi ) { // if not found in visited set, add to frontier
-      current.frontier[1] = avail.x << 4 + avail.y;
+      current.frontier[0] = avail.x << 4 + avail.y;
     }
   }
 
