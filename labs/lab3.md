@@ -1,6 +1,6 @@
 # Lab 3: FPGA Video Controller
 
-## Introduction
+## Overview
 The goal of this lab was to enable communication between an Arduino
 and a DE0_NANO FPGA board. We decided to use parallel communication 
 to send data from the Arduino to the FPGA. Eventually, this data will
@@ -79,3 +79,12 @@ always @ (posedge c2) begin
 end
 ```
 
+## Conclusion
+After following the guidelines provided by the previous year's lab, the
+objectives of this lab did not seem as daunting as they were when first
+introduced. The most challenging parts of this lab were figuring out what
+each module in the verilog code was doing and choosing a communication
+method to implement. Although just changing the color of the screen is an
+accomplishment, it isn't the ultimate goal, and the next obstacle is 
+properly implementing the Image_processor so that the screen can display
+tiles and walls in specific location. 
