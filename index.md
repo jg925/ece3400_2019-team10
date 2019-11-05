@@ -10,7 +10,7 @@ A photo of the team with our robot! Back row (from left to right): Joy Thean, Ry
 
 [Lab 2](labs/lab2.md)
 
-Lab 3
+[Lab 3](labs/lab3.md)
 
 Lab 4
 
