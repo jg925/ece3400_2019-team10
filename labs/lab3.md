@@ -40,7 +40,9 @@ to implement. The circuit we constructed only consisted of several
 voltage dividers (1 per bit of communication). This was required 
 because the Arduino operates at 5 V and the FPGA operates at 3.3 V.
 
-** add circuit diagram and/or picture of our circuit **
+<p align="center">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/images/parallel_comm.jpg">
+</p>
 
 Currently, we have 7 wires from the Arduino to the FPGA: the first
 is an extra bit that we used for testing, the next 3 give us the x
