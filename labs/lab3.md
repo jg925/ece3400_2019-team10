@@ -41,7 +41,7 @@ voltage dividers (1 per bit of communication). This was required
 because the Arduino operates at 5 V and the FPGA operates at 3.3 V.
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/images/parallel_comm.jpg">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/images/parallel_comm.jpg" height=400>
 </p>
 
 Currently, we have 7 wires from the Arduino to the FPGA: the first
@@ -58,4 +58,8 @@ we are sending.
   <iframe width="560" height="315" src="https://www.youtube.com/embed/4p3xNtZWUC0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-we changed it.
+To change the color on the screen, we just wrote the necessary Arduino 
+code to set the desired digital pin outputs to high or low. Then, on the
+FPGA's side, in Verilog, DE0_NANO was modified to read from the same memory 
+address that was being written. This ensured that the entire screen would
+flash a different color according to the Arduino input to the FPGA. 
