@@ -62,4 +62,20 @@ To change the color on the screen, we just wrote the necessary Arduino
 code to set the desired digital pin outputs to high or low. Then, on the
 FPGA's side, in Verilog, DE0_NANO was modified to read from the same memory 
 address that was being written. This ensured that the entire screen would
-flash a different color according to the Arduino input to the FPGA. 
+flash a different color according to the Arduino input to the FPGA. The memory
+would contain the bit of data that was being transferred from the Arduino to 
+the FPGA to eventually control what color each pixel on the screen would be.
+
+The color was adjusted with the following code:
+```verilog
+always @ (posedge c2) begin
+    if (MEM_OUTPUT) begin
+        pixel_color <= GREEN;
+    end
+
+    else begin
+        pixel_color <= BLUE;
+    end
+end
+```
+
