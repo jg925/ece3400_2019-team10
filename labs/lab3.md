@@ -41,7 +41,7 @@ voltage dividers (1 per bit of communication). This was required
 because the Arduino operates at 5 V and the FPGA operates at 3.3 V.
 
 <p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/images/parallel_comm.jpg" height=400>
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/images/parallel_comm.jpg" height="400">
 </p>
 
 Currently, we have 7 wires from the Arduino to the FPGA: the first
