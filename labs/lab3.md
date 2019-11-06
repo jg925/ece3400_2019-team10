@@ -30,7 +30,11 @@ future. DE0_NANO instantiated the other modules together, and
 Image_processor converted the data from the Arduino into a form 
 our M9K unit could use.
 
-** add more about image_processor **
+The Image_processor took in the data from the Arduino and parsed the 
+concatenated bits into its separate parts. Then it would calculate the
+proper result to store into memory as well as the write address in memory
+at which to store this result. In addition, the Image_processor controls
+when write to the memory is enabled.
 
 ## Communicating Between Arduino and FPGA
 Initially, we planned to use serial communication, or SPI, because
