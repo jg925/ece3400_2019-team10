@@ -5,7 +5,9 @@ The goal of this lab was to enable communication between an Arduino
 and a DE0_NANO FPGA board. We decided to use parallel communication 
 to send data from the Arduino to the FPGA. Eventually, this data will
 allow us to draw important information on a computer display, such
-as wall locations and visited squares.
+as wall locations and visited squares. Ryan and Jinny focused on 
+meeting the requirements for Lab 3, whereas Joy and Daniel were
+working on the third milestone.
 
 ## Materials
  * DE0-Nano Development Board
