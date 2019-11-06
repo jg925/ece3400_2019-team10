@@ -5,9 +5,9 @@ The goal of this lab was to enable communication between an Arduino
 and a DE0_NANO FPGA board. We decided to use parallel communication 
 to send data from the Arduino to the FPGA. Eventually, this data will
 allow us to draw important information on a computer display, such
-as wall locations and visited squares. Ryan and Jinny focused on 
-meeting the requirements for Lab 3, whereas Joy and Daniel were
-working on the third milestone.
+as wall locations and visited squares. For this lab, Ryan and Jinny
+focused on meeting the requirements for Lab 3, while Joy and Daniel
+worked on the third milestone.
 
 ## Materials
  * DE0-Nano Development Board
@@ -22,7 +22,7 @@ working on the third milestone.
 ## Designing and Implementing Memory System
 We decided to use M9K memory on the FPGA board because we can store 
 much more data. Although this comes at the cost of a slower memory,
-we decided the larger memory was worth it. We were provided complete
+we decided having a larger memory was worth it. We were provided complete
 Verilog modules for the VGA Driver and M9K memory. The M9K memory 
 stores information about which pixels on the screen should be colored, 
 and the VGA driver converts this information into colors that can be
@@ -36,13 +36,14 @@ The Image_processor took in the data from the Arduino and parsed the
 concatenated bits into its separate parts. Then it would calculate the
 proper result to store into memory as well as the write address in memory
 at which to store this result. In addition, the Image_processor controls
-when write to the memory is enabled.
+when write to the memory is enabled. Separating this information into
+a separate module made our Verilog code cleaner and easier to understand.
 
 ## Communicating Between Arduino and FPGA
 Initially, we planned to use serial communication, or SPI, because
 we thought it would allow us to send data back and forth faster.
 However, we eventually realized parallel communication was much easier
-to implement. The circuit we constructed only consisted of several
+to implement. The circuit we constructed only required several
 voltage dividers (1 per bit of communication). This was required 
 because the Arduino operates at 5 V and the FPGA operates at 3.3 V.
 
@@ -56,7 +57,9 @@ coordinate, and the final 3 give us the y coordinate. Since we used
 parallel communication, we can easily change which bits correspond 
 to which values by moving wires or changing a few lines of code. In
 addition, we can add more wires to increase the bandwidth of data
-we are sending.
+we are sending. When we need to add functionality to our display in
+the future, it will be a lot easier because of our choice of parallel
+communication.
 
 ## Changing color on the screen
 
@@ -85,12 +88,21 @@ always @ (posedge c2) begin
 end
 ```
 
+In later iterations of our design, we adjusted how we read and wrote to memory,
+as well as how we changed the color on our screen to allow us to draw to specific
+"tiles", or groups of 30x30 pixels. However, to meet the requirements for this
+lab, all we really needed was to alternate the color we displayed on the screen.
+
 ## Conclusion
-After following the guidelines provided by the previous year's lab, the
+After following the guidelines provided by the previous year's lab handout, the
 objectives of this lab did not seem as daunting as they were when first
 introduced. The most challenging parts of this lab were figuring out what
 each module in the verilog code was doing and choosing a communication
 method to implement. Although just changing the color of the screen is an
 accomplishment, it isn't the ultimate goal, and the next obstacle is 
 properly implementing the Image_processor so that the screen can display
-tiles and walls in specific location. 
+tiles and walls in specific location. This lab allowed us to understand 
+the general framework of our design, so now the goal is to be able to send
+information from our robot, interpret what it means on the base station
+Arduino, send it to the FPGA through our parallel communication setup, and
+then eventually draw the correct items to the screen using this Verilog code.
