@@ -81,41 +81,70 @@ void right180Turn() {
 
 void navigate() {
     Serial.println("In navigate");
-
-    left_sensor_value = analogRead(LEFT_LINE_SENSOR);
-    right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
-    
 //    Serial.println("LEFTSENSOR");
 //    Serial.println(left_sensor_value);
 //    Serial.println("RIGHTSENSOR");
 //    Serial.println(right_sensor_value);
 
-    if (left_sensor_value < threshold && right_sensor_value < threshold) {            // left and right on white
-      Serial.println("Left and right on white: HALT");
+  //else {
+  //while (!(analogRead(LEFT_LINE_SENSOR) < threshold && analogRead(RIGHT_LINE_SENSOR) < threshold)) {
+    //Serial.println("We be out here");
+    left_sensor_value = analogRead(LEFT_LINE_SENSOR);
+    right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
+
+    // left and right on white
+    if (left_sensor_value < threshold && right_sensor_value < threshold) {
+      navigate_flag = 0;
+
       halt();
       delay(1000);
+      Serial.println("Finna halt");
       moveForward();
       delay(500);
+    } else {
 
-      dfs();
-    
-    } else if (left_sensor_value < threshold && right_sensor_value >= threshold) {    // left on white, right on black --> slight left adjust
-      while (left_sensor_value < threshold) {
-        slightLeft();
-        left_sensor_value = analogRead(LEFT_LINE_SENSOR);
-      }
-     
-    } else if (left_sensor_value >= threshold && right_sensor_value < threshold) {    // right on white, left on black --> slight right adjust
-      while (right_sensor_value < threshold) {
-        slightRight();
-        right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
-      }
-     
-    } else if (left_sensor_value >= threshold && right_sensor_value >= threshold) {   // both sensors detect black --> go straight
-      moveForward();
+      left_sensor_value = analogRead(LEFT_LINE_SENSOR);
+      right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
       
-    }
+      // left on white, right on black --> slight left adjust
+      if (left_sensor_value < threshold && right_sensor_value >= threshold) {
+        // left detects white, right detects black
+        navigate_flag = 1;
+        
+        while (left_sensor_value < threshold) {
+          slightLeft();
+          left_sensor_value = analogRead(LEFT_LINE_SENSOR);
+        }
+      }
+  
+      left_sensor_value = analogRead(LEFT_LINE_SENSOR);
+      right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
+      
+      // right on white, left on black --> slight right adjust
+      if (left_sensor_value >= threshold && right_sensor_value < threshold) {
+        navigate_flag = 1;
+        
+        while (right_sensor_value < threshold) {
+          slightRight();
+          right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
+        }
+      }
+  
+      left_sensor_value = analogRead(LEFT_LINE_SENSOR);
+      right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
+      
+      // both sensors detect black --> go straight
+      if (left_sensor_value >= threshold && right_sensor_value >= threshold) {
+       //halt();
+       //delay(5000);
+        //Serial.println("FORWARD");
+  
+        navigate_flag = 1;
+        
+        moveForward();
+      }
   }
+  //}
 }
 
 enum direction {
@@ -147,28 +176,32 @@ node avail;
 int clr[3] = { 1, 0, 2 };
 
 void dfs() {
-  
   // wall detection
   int right_detect = digitalRead( right_ir_sensor );
   int left_detect = digitalRead( left_ir_sensor );
   int front_detect = digitalRead( front_ir_sensor );
 
-  // check left wall
   current.walls = current.walls << 1;
   if ( !left_detect ) {
     current.walls = current.walls + B001;
     Serial.println("left");
   }
-
-  // check front wall
   current.walls = current.walls << 1;
+
+  right_detect = digitalRead( right_ir_sensor );
+  left_detect = digitalRead( left_ir_sensor );
+  front_detect = digitalRead( front_ir_sensor );
+  
   if ( !front_detect ) {
     current.walls = current.walls + B001;
     Serial.println("center");
   }
-
-  // check right wall
   current.walls = current.walls << 1;
+
+  right_detect = digitalRead( right_ir_sensor );
+  left_detect = digitalRead( left_ir_sensor );
+  front_detect = digitalRead( front_ir_sensor );
+  
   if ( !right_detect ) {
     current.walls = current.walls + B001;
     Serial.println("right");
@@ -180,7 +213,6 @@ void dfs() {
   int w;
   byte xtobe;
   byte ytobe;
-  
   // left wall not detected
   if (  ( current.walls & B00000100 ) != B00000100 ) {
     Serial.println("ADD LEFT IN FRONTIER");
@@ -200,14 +232,13 @@ void dfs() {
       xtobe = current.x;
       ytobe = current.y - B1;
     }
-    
     nodesmall avail = { xtobe, ytobe };
-    for (w = 0; w < visitedi; w++) {
+    for (w = 0; w < visitedi; w++)
+    {
       if ( avail.x == visited[w].x && avail.y == visited[w].y ) {
         break;
       }
     }
-    
     if ( w == visitedi ) { // if not found in visited set, add to frontier
       current.frontier[0] = (byte)(int(avail.x << 4) + int(avail.y));
     }
@@ -232,15 +263,24 @@ void dfs() {
       xtobe = current.x - B1;
       ytobe = current.y;
     }
-    
+//    Serial.println("YTOBE");
+//    Serial.println(ytobe, BIN);
+//    Serial.println("XTOBE");
+//    Serial.println(xtobe, BIN);
     nodesmall avail = { xtobe, ytobe };
-    for (w = 0; w < visitedi; w++) {
+    for (w = 0; w < visitedi; w++)
+    {
       if ( avail.x == visited[w].x && avail.y == visited[w].y ) {
         break;
       }
     }
-    
-    if ( w == visitedi ) { // if not found in visited set, add to frontier      
+    if ( w == visitedi ) { // if not found in visited set, add to frontier
+//      Serial.println("AVAIL SHIFT");
+//      Serial.println(avail.x<<4, BIN);
+//      Serial.println("TEST SHIFT");
+//      Serial.println(avail.y, BIN);
+//      Serial.println(byte(int(avail.x << 4) + int(avail.y)), BIN);
+      
       current.frontier[1] = (byte)(int(avail.x << 4) + int(avail.y));
     }
   }
@@ -264,20 +304,20 @@ void dfs() {
       xtobe = current.x;
       ytobe = current.y + B1;
     }
-    
     nodesmall avail = { xtobe, ytobe };
-    for ( w = 0; w < visitedi; w++ ) {
+    for ( w = 0; w < visitedi; w++ )
+    {
       if ( avail.x == visited[w].x && avail.y == visited[w].y ) {
         break;
       }
     }
-    
     if ( w == visitedi ) { // if not found in visited set, add to frontier
       current.frontier[2] = (byte)(int(avail.x << 4) + int(avail.y));
     }
   }
 
   // Don't want to add repeats into visited node
+
   byte flag = B0;
   for ( int z = 0; z < visitedi; z++ ) {
     if ( visited[z].x == current.x && visited[z].y == current.y ) {
@@ -285,7 +325,6 @@ void dfs() {
       break;
     }
   }
-  
   if ( flag == B0 || visitedi == 0 ) {
     visited[visitedi] = current;
     visitedi++;
@@ -296,15 +335,19 @@ void dfs() {
   Serial.println(current.frontier[1], BIN);
   Serial.println(current.frontier[2], BIN);
 
-  // Determine next direction and next place to move
+  // Next direction, next place to move
   int q;
   byte nextx;
   byte nexty;
   direction face = current.dir;
   for ( q = 0; q < 3; q++ ) {
     int temp = clr[q];
-
     if ( current.frontier[temp] != B0 ) {
+      Serial.println("NAVIGATE BOIIII");
+      navigate_flag = 1;
+      while (navigate_flag) {
+        navigate();
+      }
       if (temp == 1) {                     // open space in front of robot
         face = current.dir;
         if ( current.dir == north ) {
@@ -323,7 +366,7 @@ void dfs() {
           nextx = current.x - B1;
           nexty = current.y ;
         }
-        Serial.println("DFS: GO STRAIGHT");
+        Serial.println("Straight open; going straight");
       }
       else if (temp == 0) {                // open space to left of robot
         face = direction( ( int( current.dir ) - 1 ) % 4 );
@@ -344,7 +387,7 @@ void dfs() {
           nexty = current.y - B1;
         }
         left90Turn();
-        Serial.println("DFS: TURN LEFT");
+        Serial.println("Left open; going left");
       }
       else if (temp == 2) {                // open space to right of robot
         face = direction( ( int( current.dir ) + 1 ) % 4 );
@@ -365,7 +408,7 @@ void dfs() {
           nexty = current.y + B1;
         }
         right90Turn();
-        Serial.println("DFS: TURN RIGHT");
+        Serial.println("Right open; going right");
       }
       break;
     }
@@ -392,7 +435,10 @@ void dfs() {
       right90Turn();
       current.dir = direction( ( int( current.dir ) + 1 ) % 4 );
     }
-    
+    navigate_flag = 1;
+    while (navigate_flag) {
+      navigate();
+    }
     nextx = return_to_x;
     nexty = return_to_y;
     pathi--;
@@ -423,5 +469,5 @@ void setup() {
 }
 
 void loop() {
-  navigate;
+  dfs();
 }
