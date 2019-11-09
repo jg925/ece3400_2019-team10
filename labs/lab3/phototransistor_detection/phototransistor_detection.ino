@@ -3,6 +3,12 @@
 Servo left;
 Servo right;
 
+// ============================================================================================
+
+// Variables
+
+// ============================================================================================
+
 // servo pins
 int right_pin = 6;
 int left_pin = 5;
@@ -31,10 +37,22 @@ int front_detect;
 // phototransistor pins
 int left_robot_detect = A3;
 
+// detected robot LED
+int robot_LED_pin = 12;
+
+// robot detection vars
 int pi_arr[10];
-int count = 0;
-int threshold = 175;
+int sum = 0;
+int threshold = 250;
 int count_threshold = 5;
+int sample_size = 20;
+int robot_done = 0;
+
+// ============================================================================================
+
+// Helper functions
+
+// ============================================================================================
 
 void halt() {
   left.write(90);
@@ -79,7 +97,15 @@ void left90Turn() {
 void right180Turn() {
   rotateRight();
   delay(1450);
+
+  robot_done = 1;
 }
+
+// ============================================================================================
+
+// Line following code
+
+// ============================================================================================
 
 void navigate() {
   left_sensor_value = analogRead(LEFT_LINE_SENSOR);
@@ -158,6 +184,87 @@ void navigate() {
   
 }
 
+// ============================================================================================
+
+// Robot detection code take 1: running count
+
+// ============================================================================================
+
+void robot_detect_take1() {
+  
+  int photo_input = analogRead(left_robot_detect);
+
+  pi_arr[sample_size-1] = photo_input;
+
+  Serial.println("ARRAY START");
+  count = 0;
+  for (int i= 0; i < sample_size; i++) {
+    Serial.println(pi_arr[i]);
+    if (pi_arr[i] > threshold) {
+      count++;
+    }
+  }
+  Serial.println("ARRAY END");
+  
+  for (int i= 1; i < sample_size; i++) {
+    pi_arr[i-1] = pi_arr[i];
+  }
+
+  Serial.println(count);
+  
+  if (count >= count_threshold) {
+    Serial.println("DETECT");
+    digitalWrite(robot_LED_pin, HIGH);
+    right180Turn();
+  } else {
+    //halt();
+    digitalWrite(robot_LED_pin, LOW);   
+    navigate();
+  }
+  //delay(1000);
+
+}
+
+// ============================================================================================
+
+// Robot detection code take 2: moving average
+
+// ============================================================================================
+
+void robot_detect_take2() {
+  
+  int photo_input = analogRead(left_robot_detect);
+
+  pi_arr[sample_size-1] = photo_input;
+
+  for (int i= 1; i < sample_size; i++) {
+    pi_arr[i-1] = pi_arr[i];
+  }
+
+  for (int i= 0; i < sample_size; i++) {
+    sum += pi_arr[i];
+  }
+
+  avg = sum/sample_size;
+
+  if (avg > threshold && robot_done == 0) {
+    Serial.println("DETECT");
+    digitalWrite(robot_LED_pin, HIGH);
+    right180Turn();
+  } else {
+    digitalWrite(robot_LED_pin, LOW);
+    robot_done = 0;  
+    navigate();
+  }
+  
+}
+
+// ============================================================================================
+
+// Setup
+
+// ============================================================================================
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(left_robot_detect, INPUT);
@@ -168,70 +275,20 @@ void setup() {
   pinMode(RIGHT_LINE_SENSOR, INPUT);
   pinMode(left_ir_sensor, INPUT);
   pinMode(front_ir_sensor, INPUT);
+  pinMode(robot_LED_pin, OUTPUT);
   
 }
 
-void robot_detect() {
-  int photo_input = analogRead(left_robot_detect);
+// ============================================================================================
 
-  pi_arr[9] = photo_input;
+// Loop
 
-  Serial.println("ARRAY START");
-  count = 0;
-  for (int i= 0; i < 10; i++) {
-    Serial.println(pi_arr[i]);
-    if (pi_arr[i] > threshold) {
-      count++;
-    }
-  }
-  Serial.println("ARRAY END");
-  
-  for (int i= 1; i < 10; i++) {
-    pi_arr[i-1] = pi_arr[i];
-  }
-
-  Serial.println(count);
-  
-  if (count >= count_threshold) {
-    halt();
-    Serial.println("DETECT");
-  } else {
-    navigate();
-  }
-  delay(1000);
-}
+// ============================================================================================
 
 void loop() {
-  //halt();
-  //navigate();
-  //robot_detect();
+  halt();
 
-  int photo_input = analogRead(left_robot_detect);
-
-  pi_arr[9] = photo_input;
-
-  Serial.println("ARRAY START");
-  count = 0;
-  for (int i= 0; i < 10; i++) {
-    Serial.println(pi_arr[i]);
-    if (pi_arr[i] > threshold) {
-      count++;
-    }
-  }
-  Serial.println("ARRAY END");
-  
-  for (int i= 1; i < 10; i++) {
-    pi_arr[i-1] = pi_arr[i];
-  }
-
-  Serial.println(count);
-  
-  if (count >= count_threshold) {
-    halt();
-    Serial.println("DETECT");
-  } else {
-    navigate();
-  }
-  //delay(1000);
+  //robot_detect_take1();
+  robot_detect_take2();
   
 }
