@@ -232,10 +232,8 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
   //Serial.println(current.dir);
   //Serial.println(locfront);
 
-  // FIX THIS SHIT BOIIIIII
-
   direction curr_direct = current.dir;
-Serial.println("POSITION: ");
+  Serial.println("POSITION: ");
   Serial.println(current.pos, BIN);
   Serial.println("DIRECTION: ");
   Serial.println(current.dir);
@@ -271,8 +269,8 @@ Serial.println("POSITION: ");
   }
   //Serial.println("Locright:");
 
-//  Serial.println(locright);
-Serial.println("POSITION: ");
+  //  Serial.println(locright);
+  Serial.println("POSITION: ");
   Serial.println(current.pos, BIN);
   Serial.println("DIRECTION: ");
   Serial.println(current.dir);
@@ -283,16 +281,16 @@ Serial.println("POSITION: ");
       dir_calc = dir_calc + 4;
     }
     if (dir_calc == 1) {
-  //    Serial.println("in 1");
+      //    Serial.println("in 1");
       front_detect = digitalRead(front_ir_sensor);
       if ( front_detect && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locfront)) {
         dfs(locfront);
       }
     } else if ( dir_calc == 2 ) {
-    //  Serial.println("in 2");
+      //  Serial.println("in 2");
 
-      right_detect = digitalRead(left_ir_sensor);
-      if ( right_detect  && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locright) ) {
+      left_detect = digitalRead(left_ir_sensor);
+      if ( left_detect  && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locright) ) {
         left90Turn();
         current.dir = direction( (int(current.dir) - 1) % 4 ); // % doesn't work for negatives
         if (current.dir < 0) {
@@ -421,11 +419,12 @@ void loop() {
     } //else we're facing the right direction!
     current.dir = north;
     right_detect = digitalRead(right_ir_sensor);
-    if (right_detect) {
+    if (right_detect && maze[int(B00010000)].visited == B00000000) {
       right90Turn();
       current.dir = east;
       dfs( byte( int(current.pos) + 16 ) ); // bits are 76543210, this will increment bit 4 by 1
     }
+    halt();
     ending = 1; // We're done; switch ending to 1 so we don't keep doing stuffs
     digitalWrite(DONE_LED, HIGH); // Victory LED
   }
