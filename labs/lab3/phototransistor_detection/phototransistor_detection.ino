@@ -43,10 +43,19 @@ int robot_LED_pin = 12;
 // robot detection vars
 int pi_arr[10];
 int sum = 0;
-int threshold = 250;
+int count = 0;
+int threshold = 130;
 int count_threshold = 5;
-int sample_size = 20;
+int sample_size = 10;
 int robot_done = 0;
+int avg = 0;
+
+// start
+int START_BUTTON = 8;
+
+// initialize "beginning" which waits for button press or 950 Hz signal and "ending" which goes HIGH when we finished traversing the maze
+int beginning = 1;
+int ending = 0;
 
 // ============================================================================================
 
@@ -110,6 +119,8 @@ void right180Turn() {
 void navigate() {
   left_sensor_value = analogRead(LEFT_LINE_SENSOR);
   right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
+
+  Serial.println("navigate");
 
   if (left_sensor_value < line_threshold && right_sensor_value < line_threshold) {
     // left on white, right on white --> check for walls
@@ -177,7 +188,9 @@ void navigate() {
       right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
     }
     
-  } else if (left_sensor_value >= line_threshold && right_sensor_value >= line_threshold) {
+  //} else if (left_sensor_value >= line_threshold && right_sensor_value >= line_threshold) {
+  } else {
+    Serial.println("FORWARD ELSE");
     // both sensors detect black --> go straight
     moveForward();
   }
@@ -232,29 +245,38 @@ void robot_detect_take1() {
 // ============================================================================================
 
 void robot_detect_take2() {
+
+  if (robot_done == 0) {
+    int photo_input = analogRead(left_robot_detect);
   
-  int photo_input = analogRead(left_robot_detect);
-
-  pi_arr[sample_size-1] = photo_input;
-
-  for (int i= 1; i < sample_size; i++) {
-    pi_arr[i-1] = pi_arr[i];
+    pi_arr[sample_size-1] = photo_input;
+  
+    for (int i= 1; i < sample_size; i++) {
+      pi_arr[i-1] = pi_arr[i];
+    }
+  
+    sum = 0;
+    Serial.println("ARRAY START");
+    for (int i= 0; i < sample_size; i++) {
+      Serial.println(pi_arr[i]);
+      sum += pi_arr[i];
+    }
+    Serial.println("ARRAY END");
+  
+    avg = sum/sample_size;
+    Serial.println("AVERAGE");
+    Serial.println(avg);
   }
-
-  for (int i= 0; i < sample_size; i++) {
-    sum += pi_arr[i];
-  }
-
-  avg = sum/sample_size;
 
   if (avg > threshold && robot_done == 0) {
     Serial.println("DETECT");
     digitalWrite(robot_LED_pin, HIGH);
     right180Turn();
   } else {
+    Serial.println("ELSE");
     digitalWrite(robot_LED_pin, LOW);
-    robot_done = 0;  
     navigate();
+    robot_done = 0;
   }
   
 }
@@ -276,6 +298,7 @@ void setup() {
   pinMode(left_ir_sensor, INPUT);
   pinMode(front_ir_sensor, INPUT);
   pinMode(robot_LED_pin, OUTPUT);
+  pinMode(START_BUTTON, INPUT);
   
 }
 
@@ -286,7 +309,21 @@ void setup() {
 // ============================================================================================
 
 void loop() {
-  halt();
+  //halt();
+
+  while (beginning) { // to wait for pushbutton/950 Hz tone
+    halt();
+    if (digitalRead(START_BUTTON)) {
+      beginning = 0;
+      /*
+      for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
+        digitalWrite(DONE_LED, HIGH);
+        delay(500);
+        digitalWrite(DONE_LED, LOW);
+        delay(500);
+      }*/
+    }
+  }
 
   //robot_detect_take1();
   robot_detect_take2();
