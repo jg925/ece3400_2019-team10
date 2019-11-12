@@ -39,7 +39,7 @@ RF24 radio(9,10);
 // Hex: 1A and 1B
 
 //const uint64_t pipes[2] = { 0x0000000002LL, 0x0000000003LL };
-const uint64_t pipes[2] = { 0x000000001ALL, 0x000000001BLL };
+const uint64_t pipes[2] = { 0x0000000016LL, 0x0000000017LL };
 
 
 //
@@ -184,27 +184,33 @@ void loop(void)
     if ( radio.available() )
     {
       // Dump the payloads until we've gotten everything
-      unsigned long got_time;
+      unsigned char maze[5][5];
       bool done = false;
       while (!done)
       {
         // Fetch the payload, and see if this was the last one.
-        done = radio.read( &got_time, sizeof(unsigned long) );
+        done = radio.read( &maze, 25*sizeof(unsigned char) );
 
         // Spew it
-        printf("Got payload %lu...",got_time);
+        printf("Got payload maze");
 
         // Delay just a little bit to let the other unit
         // make the transition to receiver
         delay(20);
 
       }
+      for (int i=0;i<5;i++) {
+        for (int j=0;j<5;j++) {
+          printf(char(maze[i][j]));
+          printf("\n");
+        }
+      }
 
       // First, stop listening so we can talk
       radio.stopListening();
-
+      
       // Send the final one back.
-      radio.write( &got_time, sizeof(unsigned long) );
+      radio.write( &maze, 25*sizeof(unsigned char) );
       printf("Sent response.\n\r");
 
       // Now, resume listening so we catch the next packets.
