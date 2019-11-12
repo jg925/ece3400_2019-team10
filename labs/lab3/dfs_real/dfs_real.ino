@@ -237,6 +237,10 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
   Serial.println(current.pos, BIN);
   Serial.println("DIRECTION: ");
   Serial.println(current.dir);
+
+  Serial.println("walls");
+  Serial.println(maze[int(current.pos)].walls, BIN);
+  
   // if there's no wall in front and the location above has not been visited (and it's not out of the maze; sanity check)
   if ( front_detect && ( int(maze[int(locfront)].visited) != 1 ) && checkRange(locfront)) {
     dfs(locfront);
@@ -245,15 +249,22 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
   Serial.println(current.pos, BIN);
   Serial.println("DIRECTION: ");
   Serial.println(current.dir);
+
+  Serial.println("walls");
+  Serial.println(maze[int(current.pos)].walls, BIN);
+  
   // if there's no wall to left and the location to left has not been visited (and it's not out of the maze; sanity check)
-  //Serial.println("Locleft:");
-  //Serial.println(locleft);
+  Serial.println("Locleft:");
+  Serial.println(locleft);
+  Serial.println("Locright:");
+  Serial.println(locright);
+  
   if (current.dir != curr_direct) { // coming in from opposite direction
     right_detect = digitalRead(right_ir_sensor); // 0 when detecting
-    if ( right_detect  && ( int(maze[int(locleft)].visited) != 1 ) && checkRange(locright) ) {
+    if ( right_detect  && ( int(maze[int(locleft)].visited) != 1 ) && checkRange(locleft) ) {
       right90Turn();
       current.dir = direction( (int(current.dir) + 1) % 4 ); // % doesn't work for negatives
-      dfs(locright);
+      dfs(locleft);
     }
     // if there's no wall to right and the location to right has not been visited (and it
   } else {
@@ -274,6 +285,10 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
   Serial.println(current.pos, BIN);
   Serial.println("DIRECTION: ");
   Serial.println(current.dir);
+
+  Serial.println("walls");
+  Serial.println(maze[int(current.pos)].walls, BIN);
+  
   // if there's no wall to right and the location to right has not been visited (and it's not out of the maze; sanity check)
   if (current.dir != curr_direct) {
     int dir_calc = current.dir - curr_direct;
@@ -283,8 +298,8 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
     if (dir_calc == 1) {
       //    Serial.println("in 1");
       front_detect = digitalRead(front_ir_sensor);
-      if ( front_detect && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locfront)) {
-        dfs(locfront);
+      if ( front_detect && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locright)) {
+        dfs(locright);
       }
     } else if ( dir_calc == 2 ) {
       //  Serial.println("in 2");
@@ -310,12 +325,14 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
 
   // All paths have now been explored
 
+/*
   for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
     digitalWrite(DONE_LED, HIGH);
     delay(500);
     digitalWrite(DONE_LED, LOW);
     delay(500);
   }
+*/
 
   path.pop();
   if (!(path.isEmpty())) { // If we have somewhere to walk back to
@@ -423,6 +440,7 @@ void loop() {
       right90Turn();
       current.dir = east;
       dfs( byte( int(current.pos) + 16 ) ); // bits are 76543210, this will increment bit 4 by 1
+      right90Turn();
     }
     halt();
     ending = 1; // We're done; switch ending to 1 so we don't keep doing stuffs
