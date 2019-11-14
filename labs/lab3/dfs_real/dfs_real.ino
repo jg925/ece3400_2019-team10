@@ -172,9 +172,7 @@ int navigate() {
   return 0;
 }
 
-
-void dfs( byte location ) { // NOTE: location must be an open location for us to go to and we must be facing that location.
-
+void movetoLocation (byte location) {
   int go_on = 0;
   while ( go_on != 1 ) { // Want to navigate to next intersection at location
     go_on = navigate();
@@ -184,29 +182,78 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
   current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
   path.push(location); // Add current location to the path
   maze[int(location)].visited = B00000001; // Mark location as visited
+}
 
-  // Properly assign wall bits (same as old DFS)
-
+void determineWalls( byte location ) {
   maze[int(location)].walls = maze[int(location)].walls << 1;
   left_detect = digitalRead(left_ir_sensor);  // 0 when detecting
   if ( !(left_detect) ) {
-    maze[int(location)].walls = maze[int(location)].walls + B001;
+    maze[int(location)].walls = maze[int(location)].walls + B00000001;
   }
 
   maze[int(location)].walls = maze[int(location)].walls << 1;
   front_detect = digitalRead(front_ir_sensor);  // 0 when detecting
   if ( !(front_detect) ) {
-    maze[int(location)].walls = maze[int(location)].walls + B001;
+    maze[int(location)].walls = maze[int(location)].walls + B00000001;
   }
 
   maze[int(location)].walls = maze[int(location)].walls << 1;
   right_detect = digitalRead(right_ir_sensor);  // 0 when detecting
   if ( !(right_detect) ) {
-    maze[int(location)].walls = maze[int(location)].walls + B001;
+    maze[int(location)].walls = maze[int(location)].walls + B00000001;
+  }
+}
+
+void walkBack() {
+  byte return_to = path.peek(); // find where we need to go back to but don't pop it in case it has other neighbors to visit
+  direction face;
+
+  if ( (int(current.pos >> 4) - int(return_to >> 4)) == 1) { // if current_x - return_to_x == 1, want to face west
+    face = west;
+  }
+  else if ( (int(current.pos >> 4) - int(return_to >> 4))  == -1 ) { // if current_x - return_to_x == -1, want to face east
+    face = east;
+  }
+  else if ( (int(current.pos & B00001111) - int(return_to & B00001111)) == 1 ) { // if current_y - return_to_y == 1, want to face south
+    face = south;
+  }
+  else if ( (int(current.pos & B00001111) - int(return_to & B00001111)) == -1) { // if current_y - return_to_y == 1, want to face north
+    face = north;
   }
 
-  // determine locations in maze array (will be used to check what's been visited already)
+  // Turn to face, update current direction - need tempa and tempb because % doesn't work for negatives apparently : /
 
+  int temp = current.dir - face;
+  if (temp < 0) {
+    temp = temp + 4;
+  }
+
+  if ( temp == 1 ) {
+    left90Turn();
+  } else if ( temp == 2 ) {
+    right180Turn();
+  } else if ( temp == 3 ) {
+    right90Turn();
+  } //else keep on keepin' on! :)
+  current.dir = face;
+
+  // Navigate to return_to, update current position
+
+  int go_on = 0;
+  while ( go_on != 1 ) { // Want to get to next intersection (but to the last place in the path)
+    go_on = navigate();
+  }
+  halt(); // Just so we don't go anywhere ;)
+  current.pos = return_to;
+}
+
+void dfs( byte location ) { // NOTE: location must be an open location for us to go to and we must be facing that location.
+
+  movetoLocation(location);
+  determineWalls(location);
+
+  // determine locations in maze array (will be used to check what's been visited already)
+  
   byte locfront;
   byte locleft;
   byte locright;
@@ -228,159 +275,72 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
     locleft =  byte( int(location) - 1);  // y-1;
     locright = byte( int(location) + 1);  // y+1;
   }
-  //Serial.println(current.pos);
-  //Serial.println(current.dir);
-  //Serial.println(locfront);
 
-  direction curr_direct = current.dir;
-  Serial.println("POSITION: ");
-  Serial.println(current.pos, BIN);
-  Serial.println("DIRECTION: ");
-  Serial.println(current.dir);
-
-  Serial.println("walls");
-  Serial.println(maze[int(current.pos)].walls, BIN);
+  direction curr_direct = current.dir; // Save initial direction
   
   // if there's no wall in front and the location above has not been visited (and it's not out of the maze; sanity check)
+  
   if ( front_detect && ( int(maze[int(locfront)].visited) != 1 ) && checkRange(locfront)) {
     dfs(locfront);
   }
-  Serial.println("POSITION: ");
-  Serial.println(current.pos, BIN);
-  Serial.println("DIRECTION: ");
-  Serial.println(current.dir);
-
-  Serial.println("walls");
-  Serial.println(maze[int(current.pos)].walls, BIN);
   
   // if there's no wall to left and the location to left has not been visited (and it's not out of the maze; sanity check)
-  Serial.println("Locleft:");
-  Serial.println(locleft);
-  Serial.println("Locright:");
-  Serial.println(locright);
   
   if (current.dir != curr_direct) { // coming in from opposite direction
-    right_detect = digitalRead(right_ir_sensor); // 0 when detecting
-    if ( right_detect  && ( int(maze[int(locleft)].visited) != 1 ) && checkRange(locleft) ) {
+    left_detect = digitalRead(right_ir_sensor); // 0 when detecting
+  } else {
+    left_detect = digitalRead(left_ir_sensor); // 0 when detecting
+  }
+  
+  if (left_detect && ( int(maze[int(locleft)].visited) != 1 ) && checkRange(locleft) ) {
+    if (current.dir != curr_direct) {
       right90Turn();
       current.dir = direction( (int(current.dir) + 1) % 4 ); // % doesn't work for negatives
-      dfs(locleft);
-    }
-    // if there's no wall to right and the location to right has not been visited (and it
-  } else {
-    left_detect = digitalRead(left_ir_sensor);  // 0 when detecting
-    if ( left_detect  && ( int(maze[int(locleft)].visited) != 1 ) && checkRange(locleft) ) {
+    } else {
       left90Turn();
       current.dir = direction( (int(current.dir) - 1) ); // % doesn't work for negatives
       if (current.dir < 0) {
         current.dir = direction(current.dir + 4);
       }
-      dfs(locleft);
     }
+    dfs(locleft);
   }
-  //Serial.println("Locright:");
-
-  //  Serial.println(locright);
-  Serial.println("POSITION: ");
-  Serial.println(current.pos, BIN);
-  Serial.println("DIRECTION: ");
-  Serial.println(current.dir);
-
-  Serial.println("walls");
-  Serial.println(maze[int(current.pos)].walls, BIN);
   
   // if there's no wall to right and the location to right has not been visited (and it's not out of the maze; sanity check)
-  if (current.dir != curr_direct) {
-    int dir_calc = current.dir - curr_direct;
-    if (dir_calc < 0) {
+  
+  int dir_calc = current.dir - curr_direct;
+  if (dir_calc < 0) {
       dir_calc = dir_calc + 4;
-    }
-    if (dir_calc == 1) {
-      //    Serial.println("in 1");
-      front_detect = digitalRead(front_ir_sensor);
-      if ( front_detect && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locright)) {
-        dfs(locright);
-      }
-    } else if ( dir_calc == 2 ) {
-      //  Serial.println("in 2");
-
-      left_detect = digitalRead(left_ir_sensor);
-      if ( left_detect  && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locright) ) {
-        left90Turn();
-        current.dir = direction( (int(current.dir) - 1) % 4 ); // % doesn't work for negatives
-        if (current.dir < 0) {
-          current.dir = current.dir + 4;
-        }
-        dfs(locright);
-      }
-    }
+  }
+  
+  if (dir_calc == 1) {
+    right_detect = digitalRead(front_ir_sensor);
+  } else if (dir_calc == 2) {
+    right_detect = digitalRead(left_ir_sensor);
   } else {
-    right_detect = digitalRead(right_ir_sensor);  // 0 when detecting
-    if ( right_detect && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locright) ) {
+    right_detect = digitalRead(right_ir_sensor);
+  }
+  
+  if ( right_detect && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locright)) {
+    if (dir_calc == 0) {
       right90Turn();
       current.dir = direction( (int(current.dir) + 1) % 4 );
-      dfs(locright);
-    }
+    } else if (dir_calc == 2) {
+      left90Turn();
+      current.dir = direction( (int(current.dir) - 1) % 4 ); // % doesn't work for negatives
+      if (current.dir < 0) {
+        current.dir = direction(int(current.dir) + 4);
+      }
+    } // if dir_calc == 1, we are already facing the correct direction
+    dfs(locright);
   }
-
+  
   // All paths have now been explored
-
-/*
-  for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
-    digitalWrite(DONE_LED, HIGH);
-    delay(500);
-    digitalWrite(DONE_LED, LOW);
-    delay(500);
-  }
-*/
 
   path.pop();
   if (!(path.isEmpty())) { // If we have somewhere to walk back to
-    byte return_to = path.peek(); // find where we need to go back to but don't pop it in case it has other neighbors to visit
-    direction face;
-
-    if ( (int(current.pos >> 4) - int(return_to >> 4)) == 1) { // if current_x - return_to_x == 1, want to face west
-      face = west;
-    }
-    else if ( (int(current.pos >> 4) - int(return_to >> 4))  == -1 ) { // if current_x - return_to_x == -1, want to face east
-      face = east;
-    }
-    else if ( (int(current.pos & B00001111) - int(return_to & B00001111)) == 1 ) { // if current_y - return_to_y == 1, want to face south
-      face = south;
-    }
-    else if ( (int(current.pos & B00001111) - int(return_to & B00001111)) == -1) { // if current_y - return_to_y == 1, want to face north
-      face = north;
-    }
-
-    // Turn to face, update current direction - need tempa and tempb because % doesn't work for negatives apparently : /
-
-    int temp = current.dir - face;
-    if (temp < 0) {
-      temp = temp + 4;
-    }
-
-    if ( temp == 1 ) {
-      left90Turn();
-    } else if ( temp == 2 ) {
-      right180Turn();
-    } else if ( temp == 3 ) {
-      right90Turn();
-    } //else keep on keepin' on! :)
-    current.dir = face;
-
-    // Navigate to return_to, update current position
-
-    go_on = 0;
-    while ( go_on != 1 ) { // Want to get to next intersection (but to the last place in the path)
-      go_on = navigate();
-    }
-    halt(); // Just so we don't go anywhere ;)
-    current.pos = return_to;
+    walkBack();
   }
-  Serial.println("POSITION: ");
-  Serial.println(current.pos, BIN);
-  Serial.println("DIRECTION: ");
-  Serial.println(current.dir);
 }
 
 void setup() {
@@ -413,7 +373,7 @@ void loop() {
   while (beginning) { // to wait for pushbutton/950 Hz tone
     if (digitalRead(START_BUTTON)) {
       beginning = 0;
-      for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
+      for (int i = 0; i < 2; i++) { // Signal we are about to begin
         digitalWrite(DONE_LED, HIGH);
         delay(500);
         digitalWrite(DONE_LED, LOW);
@@ -427,14 +387,17 @@ void loop() {
     if (front_detect) {
       dfs( byte( int(current.pos) + 1 ) ); // bits are 76543210, this will increment bit 0 by 1
     }
-    if (current.dir == east) {
-      left90Turn();
-    } else if (current.dir == south) {
-      right180Turn();
-    } else if (current.dir == west) {
-      right90Turn();
-    } //else we're facing the right direction!
-    current.dir = north;
+    if (current.dir == south) {
+      left_detect = digitalRead(left_ir_sensor);
+      if (left_detect && maze[int(B00010000)].visited == B00000000) {
+        left90Turn();
+        current.dir = east;
+        dfs( byte( int(current.pos) + 16 ) ); // bits are 76543210, this will increment bit 4 by 1
+        right90Turn();
+      } else {
+        right180Turn();
+      }
+    } //else we're facing north!
     right_detect = digitalRead(right_ir_sensor);
     if (right_detect && maze[int(B00010000)].visited == B00000000) {
       right90Turn();
