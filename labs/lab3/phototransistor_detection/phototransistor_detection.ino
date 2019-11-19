@@ -246,37 +246,35 @@ void robot_detect_take1() {
 
 void robot_detect_take2() {
 
-  if (robot_done == 0) {
-    int photo_input = analogRead(left_robot_detect);
-  
-    pi_arr[sample_size-1] = photo_input;
-  
-    for (int i= 1; i < sample_size; i++) {
-      pi_arr[i-1] = pi_arr[i];
-    }
-  
-    sum = 0;
-    Serial.println("ARRAY START");
-    for (int i= 0; i < sample_size; i++) {
-      Serial.println(pi_arr[i]);
-      sum += pi_arr[i];
-    }
-    Serial.println("ARRAY END");
-  
-    avg = sum/sample_size;
-    Serial.println("AVERAGE");
-    Serial.println(avg);
+  int photo_input = analogRead(left_robot_detect);
+
+  pi_arr[sample_size-1] = photo_input;
+
+  for (int i= 1; i < sample_size; i++) {
+    pi_arr[i-1] = pi_arr[i];
   }
 
-  if (avg > threshold && robot_done == 0) {
+  sum = 0;
+  Serial.println("ARRAY START");
+  for (int i= 0; i < sample_size; i++) {
+    Serial.println(pi_arr[i]);
+    sum += pi_arr[i];
+  }
+  Serial.println("ARRAY END");
+
+  avg = sum/sample_size;
+  Serial.println("AVERAGE");
+  Serial.println(avg);
+
+  if (avg > threshold) {
     Serial.println("DETECT");
-    digitalWrite(robot_LED_pin, HIGH);
-    right180Turn();
+    //digitalWrite(robot_LED_pin, HIGH);
+    //right180Turn();
   } else {
     Serial.println("ELSE");
-    digitalWrite(robot_LED_pin, LOW);
-    navigate();
-    robot_done = 0;
+    //digitalWrite(robot_LED_pin, LOW);
+    //navigate();
+    //robot_done = 0;
   }
   
 }
@@ -311,19 +309,19 @@ void setup() {
 void loop() {
   //halt();
 
-  while (beginning) { // to wait for pushbutton/950 Hz tone
-    halt();
-    if (digitalRead(START_BUTTON)) {
-      beginning = 0;
-      /*
-      for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
-        digitalWrite(DONE_LED, HIGH);
-        delay(500);
-        digitalWrite(DONE_LED, LOW);
-        delay(500);
-      }*/
-    }
-  }
+//  while (beginning) { // to wait for pushbutton/950 Hz tone
+//    halt();
+//    if (digitalRead(START_BUTTON)) {
+//      beginning = 0;
+//      /*
+//      for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
+//        digitalWrite(DONE_LED, HIGH);
+//        delay(500);
+//        digitalWrite(DONE_LED, LOW);
+//        delay(500);
+//      }*/
+//    }
+//  }
 
   //robot_detect_take1();
   robot_detect_take2();
