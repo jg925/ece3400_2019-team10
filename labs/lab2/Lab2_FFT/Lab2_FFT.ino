@@ -38,6 +38,8 @@ void setup() {
   DIDR0 = 0x01; // turn off the digital input for adc0
 }
 
+int faults;
+
 void loop() {
   while (1) { // reduces jitter
     cli();  // UDRE interrupt slows this way down on arduino1.0
@@ -57,11 +59,13 @@ void loop() {
     fft_run(); // process the data in the fft
     fft_mag_log(); // take the output of the fft
     sei();
-    int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 100 );
-    if ( max == 1 && detect_count >= 5)
+    int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 124 );
+    if ( max == 1 && detect_count >= 6)
     {
       Serial.println("950 Hz");
       detect_count = 0;
+      faults++;
+      Serial.println(faults);
       //Serial.println(detect_count);
     }
     else if ( max == 1 ) {
