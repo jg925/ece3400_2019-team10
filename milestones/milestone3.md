@@ -6,16 +6,54 @@ This milestone involved having our robot successfully avoid other robots and exp
 
 ## Robot Detection
 
-This milestone involved using IR detectors and emitters to detect and avoid other robots. Per the lab specification, we 
+This milestone involved using IR detectors and emitters to detect and avoid other robots. Per the lab specification, we mounted both the detectors and sensors at exactly 5 inches off the ground. Mounted detector shown below.
+
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/phototransistor.png?raw=true" height="350" width="350"></p>
+
+There were two options of IR detectors. After testing both with the same circuit below, we decided to use the wider angle detector to ensure our robot detection had the most range possible. When testing this IR detector circuit, we found that a higher resistance in the circuit allowed a larger range of analog read values to occur. With a 330Ω resistor, the analog read values were too small to have noticeable differences. So we upped the resistance to 10kΩ and obtained a solid range from 0 to 100 which is shown in the circuit and videos below.
+
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/circuit.png?raw=true" height="350" width="250"></p>
 
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/A8EQLZdOH7E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   <iframe width="560" height="315" src="https://www.youtube.com/embed/fa2VKi1fIuM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
+We decided to use three detectors for the front, right and left sides of our robot. As per the lab instructions, we mounted four emitters for each side of our robot. While we were testing our robot in a maze, however, we noticed that we were recieving a lot of noise from our detectors even after changing the threshold many times. We first concluded that it was probably due to the IR emitted from computer screens and the sun. But we found out through more testing that we were also picking up the IR being emitted from our own robot emitters as it bounced off of nearby walls. With the velcro added to the upper half of all maze walls, we had to reposition all of our wall sensors, IR detectors and IR emitters. We switched all our wall sensors to the lower level of our robot and made sure there was lots of space in between each detector and emitter pair on each side of our robot. 
+
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/Ns-UvfSCByA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
+
+Our code for reading in the values from the phototransistors consisted of using a running average of a sample of 10 inputs. Every time we detect that the average of the sample is above our decided threshold, we turn on the green LED located on our protoboard and make a 180 degree turn. Originally, we were halting when the IR was detected, but after learning that halting as a avoidance technique would be ineffective for the actual competition, we chose to make a U-turn instead. Immediately once the average drops below this threshold, the LED turns off and the robot does normal right hand rule line following navigation.
+
+```c
+int photo_input = analogRead(left_robot_detect);
+  
+pi_arr[sample_size-1] = photo_input;
+
+for (int i= 1; i < sample_size; i++) {
+  pi_arr[i-1] = pi_arr[i];
+}
+
+sum = 0;
+for (int i= 0; i < sample_size; i++) {
+  Serial.println(pi_arr[i]);
+  sum += pi_arr[i];
+}
+
+avg = sum/sample_size;
+
+if (avg > threshold) {
+  digitalWrite(robot_LED_pin, HIGH);
+  right180Turn();
+} else {
+  digitalWrite(robot_LED_pin, LOW);
+  navigate();
+}
+```
+
+After soldering the IR detection circuit onto our protoboard, the IR detector readings were abnormal. We quickly realized that this was due to a lot of noise from the rest of our circuits on the protoboard, so we isolated the IR detection circuit on a separate protoboard and the readings were back to normal. We also decided to switch to a 100kΩ resistor because after further testing, we found that it gave us an even better range of 0 to 700 which really helped in our robot detection.
 
 ## Maze Exploration
 
@@ -202,4 +240,4 @@ void loop() {
 
 ## Conclusion
 
-We were able to successfully complete this milestone. TALK ABOUT ROBOT DETECTION STUFF BEING EASY OR HARD OR SO-SO OR WHATEVER LOL. Debugging the DFS took almost a full week of going to lab every day, which proved to be quite difficult despite all the time we put in. Many hours were spent figuring out why the direction and coordinates weren't updating correctly, which we eventually figured out to be caused by us not calling DFS on the correct location based on the sensor readings and current directions. However, we were able to get it working in the end. It is important to note that when we tried integrating everything for Lab 4 (including the FFT and Radio libraries), we ran out of dynamic memory on our Arduino (actually, we reached 87% but there were many issues occuring). A TA told us after we finished this milestone that using both the StackArray library and recursion on the Arduino is very dangerous, so we will need to completely rewrite the algorithm by the end of Lab 4. 
+We were able to successfully complete this milestone. Building the phototransistor circuit wasn't too hard, but there were many problems with the readings from the detectors due to external IR and circuit board noise. We considered a few different ways to filter noise and ended up using a running average rather than a hardware filter. We quickly realized that the phototransistor readings weren't very consistent–due to positioning, bouncing, etc.–and that we need to work on it more for the actual competition. Debugging the DFS took almost a full week of going to lab every day, which proved to be quite difficult despite all the time we put in. Many hours were spent figuring out why the direction and coordinates weren't updating correctly, which we eventually figured out to be caused by us not calling DFS on the correct location based on the sensor readings and current directions. However, we were able to get it working in the end. It is important to note that when we tried integrating everything for Lab 4 (including the FFT and Radio libraries), we ran out of dynamic memory on our Arduino (actually, we reached 87% but there were many issues occuring). A TA told us after we finished this milestone that using both the StackArray library and recursion on the Arduino is very dangerous, so we will need to completely rewrite the algorithm by the end of Lab 4. 
