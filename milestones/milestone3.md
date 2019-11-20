@@ -52,42 +52,12 @@ StackArray <byte> path;
 box maze[100];
 node current;
 
-bool checkRange(byte location) {
-  int temp1 = int(location) >> 4; //x
-  if (temp1 < 0 || temp1 >= 10) {
-    return false;
-  }
-  int temp2 = int(location & B00001111); //y
-  if (temp2 < 0 || temp2 >= 10) {
-    return false;
-  }
-  return true;
-}
+// NOTE: location must be an open location for 
+// us to go to and we must be facing that location.
+void dfs( byte location ) { 
 
-void determineWalls( byte location ) {
-  maze[int(location)].walls = maze[int(location)].walls << 1;
-  left_detect = digitalRead(left_ir_sensor);  // 0 when detecting
-  if ( !(left_detect) ) {
-    maze[int(location)].walls = maze[int(location)].walls + B00000001;
-  }
-
-  maze[int(location)].walls = maze[int(location)].walls << 1;
-  front_detect = digitalRead(front_ir_sensor);  // 0 when detecting
-  if ( !(front_detect) ) {
-    maze[int(location)].walls = maze[int(location)].walls + B00000001;
-  }
-
-  maze[int(location)].walls = maze[int(location)].walls << 1;
-  right_detect = digitalRead(right_ir_sensor);  // 0 when detecting
-  if ( !(right_detect) ) {
-    maze[int(location)].walls = maze[int(location)].walls + B00000001;
-  }
-}
-
-void dfs( byte location ) { // NOTE: location must be an open location for us to go to and we must be facing that location.
-
-  movetoLocation(location);
-  determineWalls(location);
+  movetoLocation(location); // move to the open location using same navigation code as Milestone 2
+  determineWalls(location); // Determine what paths are open
 
   // determine locations in maze array (will be used to check what's been visited already)
   
@@ -99,21 +69,19 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
     locfront = byte( int(location) + 1);  // y+1
     locleft =  byte( int(location) - 16); // x-1
     locright = byte( int(location) + 16); // x+1
-  } else if (current.dir == east) {
-    locfront = byte( int(location) + 16); // x+1
-    locleft =  byte( int(location) + 1);  // y+1;
-    locright = byte( int(location) - 1);  // y-1;
-  }  // Similar for other two directions but excluded here for brevity.
+  } // Similar for other three directions but excluded here for brevity.
 
   direction curr_direct = current.dir; // Save initial direction
   
-  // if there's no wall in front and the location above has not been visited (and it's not out of the maze; sanity check)
+  // if there's no wall in front and the location above has not been visited 
+  // (and it's not out of the maze; sanity check)
   
   if ( front_detect && ( int(maze[int(locfront)].visited) != 1 ) && checkRange(locfront)) {
     dfs(locfront);
   }
   
-  // if there's no wall to left and the location to left has not been visited (and it's not out of the maze; sanity check)
+  // if there's no wall to left and the location to left has not been visited 
+  // (and it's not out of the maze; sanity check)
   
   if (current.dir != curr_direct) { // coming in from opposite direction
     left_detect = digitalRead(right_ir_sensor); // 0 when detecting
@@ -135,7 +103,8 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
     dfs(locleft);
   }
   
-  // if there's no wall to right and the location to right has not been visited (and it's not out of the maze; sanity check)
+  // if there's no wall to right and the location to right has not been visited
+  // (and it's not out of the maze; sanity check)
   
   int dir_calc = current.dir - curr_direct;
   if (dir_calc < 0) {
@@ -185,7 +154,7 @@ void setup() {
 }
 
 void loop() {
-  while (beginning) { // to wait for pushbutton/950 Hz tone
+  while (beginning) { // to wait for pushbutton
     if (digitalRead(START_BUTTON)) {
       beginning = 0;
     }
