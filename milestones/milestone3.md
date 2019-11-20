@@ -6,16 +6,50 @@ This milestone involved having our robot successfully avoid other robots and exp
 
 ## Robot Detection
 
-This milestone involved using IR detectors and emitters to detect and avoid other robots. Per the lab specification, we 
+This milestone involved using IR detectors and emitters to detect and avoid other robots. Per the lab specification, we mounted both the detectors and sensors at exactly 5 inches off the ground. Mounted detector shown below.
+
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/phototransistor.png?raw=true" height="350" width="350"></p>
+
+There were two options of IR detectors. After testing both with the same circuit below, we decided to use the wider angle detector to ensure our robot detection had the most range possible. When testing this IR detector circuit, we found that a higher resistance in the circuit allowed a larger range of analog read values to occur. With a 330Ω resistor, the analog read values were too small to have noticeable differences. So we upped the resistance to 10kΩ and obtained a solid range from 0 to 100 which is shown in the videos below.
+
+(insert image)
 
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/A8EQLZdOH7E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   <iframe width="560" height="315" src="https://www.youtube.com/embed/fa2VKi1fIuM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
+We decided to use three detectors for the front, right and left sides of our robot. As per the lab instructions, we mounted four emitters for each side of our robot. While we were testing our robot in a maze, however, we noticed that we were recieving a lot of noise from our detectors. We first concluded that it was probably due to the IR emitted from computer screens and the sun. But we found out through more testing that we were also picking up the IR being emitted from our own robot emitters as it bounced off of nearby walls. With the velcro added to the upper half of all maze walls, we had to reposition all of our wall sensors, IR detectors and IR emitters. We switched all our wall sensors to the lower level of our robot and made sure there was lots of space in between each detector and emitter pair on each side of our robot. 
+
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/Ns-UvfSCByA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
+
+```c
+int photo_input = analogRead(left_robot_detect);
+  
+pi_arr[sample_size-1] = photo_input;
+
+for (int i= 1; i < sample_size; i++) {
+  pi_arr[i-1] = pi_arr[i];
+}
+
+sum = 0;
+for (int i= 0; i < sample_size; i++) {
+  Serial.println(pi_arr[i]);
+  sum += pi_arr[i];
+}
+
+avg = sum/sample_size;
+
+if (avg > threshold) {
+  digitalWrite(robot_LED_pin, HIGH);
+  right180Turn();
+} else {
+  digitalWrite(robot_LED_pin, LOW);
+  navigate();
+}
+```
 
 ## Maze Exploration
 
