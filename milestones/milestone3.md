@@ -19,11 +19,15 @@ There were two options of IR detectors. After testing both with the same circuit
   <iframe width="560" height="315" src="https://www.youtube.com/embed/fa2VKi1fIuM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-We decided to use three detectors for the front, right and left sides of our robot. As per the lab instructions, we mounted four emitters for each side of our robot. While we were testing our robot in a maze, however, we noticed that we were recieving a lot of noise from our detectors even after changing the threshold many times. We first concluded that it was probably due to the IR emitted from computer screens and the sun. But we found out through more testing that we were also picking up the IR being emitted from our own robot emitters as it bounced off of nearby walls. With the velcro added to the upper half of all maze walls, we had to reposition all of our wall sensors, IR detectors and IR emitters. We switched all our wall sensors to the lower level of our robot and made sure there was lots of space in between each detector and emitter pair on each side of our robot. 
+We decided to use three detectors for the front, right and left sides of our robot. As per the lab instructions, we mounted four emitters for each side of our robot. While we were testing our robot in a maze, however, we noticed that we were recieving a lot of noise from our detectors even after changing the threshold many times. We first concluded that it was probably due to the IR emitted from computer screens and the sun. But we found out through more testing that we were also picking up the IR being emitted from our own robot emitters as it bounced off of nearby walls. With the velcro added to the upper half of all maze walls, we had to reposition all of our wall sensors, IR detectors and IR emitters. We switched all our wall sensors to the lower level of our robot and made sure there was lots of space in between each detector and emitter pair on each side of our robot.
 
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/Ns-UvfSCByA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
+
+Below is the "robot" that we used in our video above. The emitter circuit consists of 
+
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/emittercircuit.png" height="250" width="350"></p>
 
 Our code for reading in the values from the phototransistors consisted of using a running average of a sample of 10 inputs. Every time we detect that the average of the sample is above our decided threshold, we turn on the green LED located on our protoboard and make a 180 degree turn. Originally, we were halting when the IR was detected, but after learning that halting as a avoidance technique would be ineffective for the actual competition, we chose to make a U-turn instead. Immediately once the average drops below this threshold, the LED turns off and the robot does normal right hand rule line following navigation.
 
