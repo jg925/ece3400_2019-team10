@@ -51,19 +51,19 @@ struct node {
   direction dir;
 };
 
-struct box {
-  byte visited;
-  byte walls;
+struct box { 
+  byte visited; // bytes to save space
+  byte walls; // bytes to save space
 };
 
-StackArray <byte> path;
+StackArray <byte> path; // bytes to save space
 box maze[100];
 node current;
 
-// NOTE: location must be an open location for 
-// us to go to and we must be facing that location.
-
 void dfs( byte location ) { 
+  // NOTE: location must be an open location for 
+  // us to go to and we must be facing that location.
+
 
   movetoLocation(location); // move to the open location using same navigation code as Milestone 2
   determineWalls(location); // Determine what paths are open
@@ -146,7 +146,7 @@ void dfs( byte location ) {
 
   path.pop();
   if (!(path.isEmpty())) { // If we have somewhere to walk back to
-    walkBack();
+    walkBack(); // Return to previous location
   }
 }
 
