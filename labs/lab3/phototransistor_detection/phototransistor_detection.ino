@@ -44,7 +44,7 @@ int robot_LED_pin = 12;
 int pi_arr[10];
 int sum = 0;
 int count = 0;
-int threshold = 130;
+int threshold = 100;
 int count_threshold = 5;
 int sample_size = 10;
 int robot_done = 0;
@@ -246,7 +246,7 @@ void robot_detect_take1() {
 
 void robot_detect_take2() {
 
-  if (robot_done == 0) {
+  //if (robot_done == 0) {
     int photo_input = analogRead(left_robot_detect);
   
     pi_arr[sample_size-1] = photo_input;
@@ -266,17 +266,19 @@ void robot_detect_take2() {
     avg = sum/sample_size;
     Serial.println("AVERAGE");
     Serial.println(avg);
-  }
+  //}
 
-  if (avg > threshold && robot_done == 0) {
-    Serial.println("DETECT");
+  //if (avg > threshold && robot_done == 0) {
+  if (avg > threshold) {
+    Serial.println("DETECT!");
+    delay(1000);
     digitalWrite(robot_LED_pin, HIGH);
-    right180Turn();
+    //right180Turn();
   } else {
     Serial.println("ELSE");
     digitalWrite(robot_LED_pin, LOW);
-    navigate();
-    robot_done = 0;
+    //navigate();
+    //robot_done = 0;
   }
   
 }
@@ -309,21 +311,21 @@ void setup() {
 // ============================================================================================
 
 void loop() {
-  //halt();
-
-  while (beginning) { // to wait for pushbutton/950 Hz tone
-    halt();
-    if (digitalRead(START_BUTTON)) {
-      beginning = 0;
-      /*
-      for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
-        digitalWrite(DONE_LED, HIGH);
-        delay(500);
-        digitalWrite(DONE_LED, LOW);
-        delay(500);
-      }*/
-    }
-  }
+  halt();
+//
+//  while (beginning) { // to wait for pushbutton/950 Hz tone
+//    halt();
+//    if (digitalRead(START_BUTTON)) {
+//      beginning = 0;
+//      /*
+//      for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
+//        digitalWrite(DONE_LED, HIGH);
+//        delay(500);
+//        digitalWrite(DONE_LED, LOW);
+//        delay(500);
+//      }*/
+//    }
+//  }
 
   //robot_detect_take1();
   robot_detect_take2();
