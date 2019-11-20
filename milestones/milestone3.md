@@ -65,7 +65,7 @@ void dfs( byte location ) {
   // us to go to and we must be facing that location.
 
 
-  movetoLocation(location); // move to the open location using same navigation code as Milestone 2
+  movetoLocation(location); // move to the open location using similar navigation code as Milestone 2
   determineWalls(location); // Determine what paths are open
 
   // determine locations in maze array (will be used to check what's been visited already)
