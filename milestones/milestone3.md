@@ -22,8 +22,7 @@ This milestone involved having our robot successfully avoid other robots and exp
 In this section of the milestone, we implemented a depth-first search in order to successfully traverse a 4x5 maze. In order to implement this algorithm, we used the StackArray Arduino library
 
 ```c
-
-// This program allows the robot to nagivate any arbitrary set of walls.
+// This program allows the robot to nagivate any maze using a DFS
 
 ... // Declarations
 
