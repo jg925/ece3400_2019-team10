@@ -6,15 +6,15 @@ This milestone involved having our robot successfully avoid other robots and exp
 
 ## Robot Detection
 
-In this part of the milestone, we used IR detectors and emitters to successfully detect and avoid other robots.
+
+
+<p align="center">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/Ns-UvfSCByA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/A8EQLZdOH7E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   <iframe width="560" height="315" src="https://www.youtube.com/embed/fa2VKi1fIuM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</p>
-
-<p align="center">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/Ns-UvfSCByA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
 ## Maze Exploration
@@ -90,10 +90,10 @@ void dfs( byte location ) {
   }
   
   if (left_detect && ( int(maze[int(locleft)].visited) != 1 ) && checkRange(locleft) ) {
-    if (current.dir != curr_direct) {
+    if (current.dir != curr_direct) { // coming in from opposite direction
       right90Turn();
-      current.dir = direction( (int(current.dir) + 1) % 4 ); // % doesn't work for negatives
-    } else {
+      current.dir = direction( (int(current.dir) + 1) % 4 );
+    } else { // facing north
       left90Turn();
       current.dir = direction( (int(current.dir) - 1) ); // % doesn't work for negatives
       if (current.dir < 0) {
@@ -120,10 +120,10 @@ void dfs( byte location ) {
   }
   
   if ( right_detect && ( int(maze[int(locright)].visited) != 1 ) && checkRange(locright)) {
-    if (dir_calc == 0) {
+    if (dir_calc == 0) { // coming in from right direction
       right90Turn();
       current.dir = direction( (int(current.dir) + 1) % 4 );
-    } else if (dir_calc == 2) {
+    } else if (dir_calc == 2) { // coming in from opposite direction
       left90Turn();
       current.dir = direction( (int(current.dir) - 1) % 4 ); // % doesn't work for negatives
       if (current.dir < 0) {
