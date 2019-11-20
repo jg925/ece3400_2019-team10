@@ -12,7 +12,7 @@ This milestone involved using IR detectors and emitters to detect and avoid othe
 
 There were two options of IR detectors. After testing both with the same circuit below, we decided to use the wider angle detector to ensure our robot detection had the most range possible. When testing this IR detector circuit, we found that a higher resistance in the circuit allowed a larger range of analog read values to occur. With a 330Ω resistor, the analog read values were too small to have noticeable differences. So we upped the resistance to 10kΩ and obtained a solid range from 0 to 100 which is shown in the circuit and videos below.
 
-<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/circuit.png?raw=true" height="350" width="350"></p>
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/circuit.png?raw=true" height="350" width="300"></p>
 
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/A8EQLZdOH7E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
