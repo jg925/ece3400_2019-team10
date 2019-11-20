@@ -202,3 +202,4 @@ void loop() {
 
 ## Conclusion
 
+We were able to successfully complete this milestone. TALK ABOUT ROBOT DETECTION STUFF BEING EASY OR HARD OR SO-SO OR WHATEVER LOL. Debugging the DFS took almost a full week of going to lab every day, which proved to be quite difficult despite all the time we put in. However, we were able to get it working in the end. It is important to note that when we tried integrating everything for Lab 4 (including the FFT and Radio libraries), we ran out of dynamic memory on our Arduino (actually, we reached 87% but there were many issues occuring). Thus, we will need to rewrite the DFS by the end of Lab 4 so that we don't use the StackArray library and so that we don't use recursion. A TA told us that using both of these things were very dangerous on the Arduino after we had finished this milestone so, again, we will need to completely redo the algorithm. 
