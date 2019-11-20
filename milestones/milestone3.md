@@ -6,6 +6,8 @@ This milestone involved having our robot successfully avoid other robots and exp
 
 ## Robot Detection
 
+In this part of the milestone, we used IR detectors and emitters to successfully detect and avoid other robots.
+
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/A8EQLZdOH7E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   <iframe width="560" height="315" src="https://www.youtube.com/embed/fa2VKi1fIuM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
