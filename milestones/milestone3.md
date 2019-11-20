@@ -142,7 +142,7 @@ void dfs( byte location ) {
 }
 
 void setup() {
- ... // Pin Setup stuff (excluded for brevity)
+  ... // Pin Setup stuff (excluded for brevity)
   beginning = 1;
   ending = 0;
   current = { B00000000, north };
@@ -163,24 +163,25 @@ void loop() {
     path.push(current.pos);
     front_detect = digitalRead(front_ir_sensor);
     if (front_detect) {
-      dfs( byte( int(current.pos) + 1 ) ); // bits are 76543210, this will increment bit 0 by 1
+      dfs( byte( int(current.pos) + 1 ) )
     }
-    if (current.dir == south) {
+    if (current.dir == south) { // If we are returning from dfs toward (0,1)
       left_detect = digitalRead(left_ir_sensor);
       if (left_detect && maze[int(B00010000)].visited == B00000000) {
+      // If (1,0) is open
         left90Turn();
         current.dir = east;
-        dfs( byte( int(current.pos) + 16 ) ); // bits are 76543210, this will increment bit 4 by 1
+        dfs( byte( int(current.pos) + 16 ) );
         right90Turn();
-      } else {
+      } else { // else just turn and face north
         right180Turn();
       }
-    } //else we're facing north!
+    } // else we're facing north
     right_detect = digitalRead(right_ir_sensor);
     if (right_detect && maze[int(B00010000)].visited == B00000000) {
       right90Turn();
       current.dir = east;
-      dfs( byte( int(current.pos) + 16 ) ); // bits are 76543210, this will increment bit 4 by 1
+      dfs( byte( int(current.pos) + 16 ) );
       right90Turn();
     }
     halt();
