@@ -26,15 +26,6 @@ const uint64_t pipes[2] = { 0x0000000016LL, 0x0000000017LL };
 
 // =====================================================================================================
 
-// communication: variables inits
-
-// =====================================================================================================
-
-byte robot = B000;
-uint16_t msg = 0000000000000000;
-
-// =====================================================================================================
-
 // robot motion variables inits
 
 // =====================================================================================================
@@ -50,25 +41,15 @@ int left_pin = 5;
 int LEFT_LINE_SENSOR = A5;
 int RIGHT_LINE_SENSOR = A4;
 
-// ir sensor pins
+// wall sensor pins
 int right_ir_sensor = 2;
 int left_ir_sensor = 3;
 int front_ir_sensor = 4;
 
-// ir robot detection pins
-int left_robot_detect = A3;
-int center_robot_detect = A2;
-int right_robot_detect = A1;
-
-// ir robot detection variables
-int left_pi_arr[10];
-int center_pi_arr[10];
-int right_pi_arr[10];
-int leftcount = 0;
-int centercount = 0;
-int rightcount = 0;
-int robot_threshold = 75;
-int count_threshold = 5;
+// initialization of ir wall sensor values
+int right_detect;
+int left_detect;
+int front_detect;
 
 // boundary between "white" and "black"
 int line_threshold = 650;
@@ -77,10 +58,24 @@ int line_threshold = 650;
 int left_sensor_value = 0;
 int right_sensor_value = 0;
 
-// initialization of IR sensor values
-int right_detect;
-int left_detect;
-int front_detect;
+// =====================================================================================================
+
+// robot detection variables inits
+
+// =====================================================================================================
+
+// phototransistor pins
+int left_robot_detect = A3;
+int center_robot_detect = A2;
+int right_robot_detect = A1;
+
+// ir robot detection variables
+int left_pi_arr[10];
+int center_pi_arr[10];
+int right_pi_arr[10];
+int robot_threshold = 100;
+int sum = 0;
+int avg = 0;
 
 // =====================================================================================================
 
@@ -123,6 +118,20 @@ struct box {
 StackArray <byte> path;
 box maze[100];
 node current;
+
+// =====================================================================================================
+
+// fft variables inits
+
+// =====================================================================================================
+
+#define LOG_OUT 1 // use the log output function
+#define FFT_N 256 // set to 256 point fft
+
+#include <FFT.h> // include the library
+
+int detect_count = 0;
+int flag_950 = 0;
 
 // =====================================================================================================
 
@@ -224,16 +233,51 @@ int navigate() {
 
 // =====================================================================================================
 
-// FFT
+// robot detection
 
 // =====================================================================================================
 
-#define LOG_OUT 1 // use the log output function
-#define FFT_N 256 // set to 256 point fft
+void detect_robots() {
+  // takes a running average of 10 inputs
+  
+  int left_input = analogRead(left_robot_detect);
+  left_pi_arr[9] = left_input;
 
-#include <FFT.h> // include the library
+  // updates array for left phototransistor
+  for (int i= 1; i < 10; i++) {
+    left_pi_arr[i-1] = left_pi_arr[i];
+  }
 
-int detect_count = 0;
+  // sums sample
+  sum = 0;
+  Serial.println("ARRAY START");
+  for (int i= 0; i < 10; i++) {
+    Serial.println(left_pi_arr[i]);
+    sum += left_pi_arr[i];
+  }
+  Serial.println("ARRAY END");
+
+  // averages sample
+  avg = sum/10;
+  Serial.println("AVERAGE");
+  Serial.println(avg);
+
+  if (avg > robot_threshold) {
+    Serial.println("DETECT");
+    //digitalWrite(robot_LED_pin, HIGH);
+    right180Turn();
+  } else {
+    Serial.println("ELSE");
+    //digitalWrite(robot_LED_pin, LOW);
+    navigate();
+  }
+}
+
+// =====================================================================================================
+
+// fft helper
+
+// =====================================================================================================
 
 int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
   if ( six > FFT_threshold && seven > FFT_threshold ) {
@@ -249,6 +293,13 @@ int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
     return 0;
   }
 }
+
+// =====================================================================================================
+
+// fft main
+
+// =====================================================================================================
+
 
 void fft() {
   while (1) { // reduces jitter
@@ -273,6 +324,7 @@ void fft() {
     if (max == 1 && detect_count >= 6)
     {
       Serial.println("950 Hz");
+      flag_950 = 1;
       detect_count = 0;
       break;
       //Serial.println(detect_count);
@@ -295,10 +347,10 @@ void fft() {
 
 void communicate() {
   // walls
-  robot = maze[int(current.pos)].walls;
+  byte robot = maze[int(current.pos)].walls;
 
   // zeroes out msg
-  msg = 0000000000000000;
+  uint16_t msg = 0000000000000000;
 
   // direction bits
   msg = (msg << 2) | current.dir;
@@ -366,7 +418,7 @@ void communicate() {
 
 // =====================================================================================================
 
-// dfs helpers
+// dfs helpers      FIX DFS!!! DO NOT USE STACK ARRAYS OR RECURSION
 
 // =====================================================================================================
 
@@ -387,7 +439,7 @@ void movetoLocation (byte location) {
   while ( go_on != 1 ) { // Want to navigate to next intersection at location
     go_on = navigate();
   }
-  halt(); // Just so we don't go anywhere ;)
+  //halt(); // Just so we don't go anywhere ;)
 
   current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
   path.push(location); // Add current location to the path
@@ -453,7 +505,7 @@ void walkBack() {
   while ( go_on != 1 ) { // Want to get to next intersection (but to the last place in the path)
     go_on = navigate();
   }
-  halt(); // Just so we don't go anywhere ;)
+  //halt(); // Just so we don't go anywhere ;)
   current.pos = return_to;
 }
 
@@ -569,15 +621,25 @@ void dfs( byte location ) { // NOTE: location must be an open location for us to
 // =====================================================================================================
 
 void setup() {
-  // pin setups
+  //
+  // pins setup
+  //
+  
+  // line sensors
   pinMode(LEFT_LINE_SENSOR, INPUT);
   pinMode(RIGHT_LINE_SENSOR, INPUT);
+
+  // wall sensors
   pinMode(left_ir_sensor, INPUT);
   pinMode(front_ir_sensor, INPUT);
   pinMode(right_ir_sensor, INPUT);
+
+  // ir detectors
   pinMode(left_robot_detect, INPUT);
   pinMode(center_robot_detect, INPUT);
   pinMode(right_robot_detect, INPUT);
+
+  // button/led
   pinMode(START_BUTTON, INPUT);
   pinMode(DONE_LED, OUTPUT);
 
@@ -602,7 +664,7 @@ void setup() {
   maze[0].visited = B00000001;
 
   //
-  // FFT Setup
+  // fft setup
   //
   
   TIMSK0 = 0; // turn off timer0 for lower jitter
@@ -656,14 +718,16 @@ void setup() {
 // =====================================================================================================
 
 void loop() {
-  while (beginning) { // to wait for pushbutton/950 Hz tone
+  while (beginning) { // wait for pushbutton/950 Hz tone
     fft();
-    beginning = 0;
-    for (int i = 0; i < 2; i++) { // Signal we are about to begin
-      digitalWrite(DONE_LED, HIGH);
-      delay(500);
-      digitalWrite(DONE_LED, LOW);
-      delay(500);
+    if (flag_950 || digitalRead(START_BUTTON)) {
+      beginning = 0;
+      for (int i = 0; i < 2; i++) { // Signal we are about to begin
+        digitalWrite(DONE_LED, HIGH);
+        delay(500);
+        digitalWrite(DONE_LED, LOW);
+        delay(500);
+      }
     }
   }
   

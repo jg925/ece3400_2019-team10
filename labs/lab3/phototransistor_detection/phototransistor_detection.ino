@@ -246,6 +246,7 @@ void robot_detect_take1() {
 
 void robot_detect_take2() {
 
+<<<<<<< HEAD
   //if (robot_done == 0) {
     int photo_input = analogRead(left_robot_detect);
   
@@ -277,6 +278,35 @@ void robot_detect_take2() {
   } else {
     Serial.println("ELSE");
     digitalWrite(robot_LED_pin, LOW);
+=======
+  int photo_input = analogRead(left_robot_detect);
+
+  pi_arr[sample_size-1] = photo_input;
+
+  for (int i= 1; i < sample_size; i++) {
+    pi_arr[i-1] = pi_arr[i];
+  }
+
+  sum = 0;
+  Serial.println("ARRAY START");
+  for (int i= 0; i < sample_size; i++) {
+    Serial.println(pi_arr[i]);
+    sum += pi_arr[i];
+  }
+  Serial.println("ARRAY END");
+
+  avg = sum/sample_size;
+  Serial.println("AVERAGE");
+  Serial.println(avg);
+
+  if (avg > threshold) {
+    Serial.println("DETECT");
+    //digitalWrite(robot_LED_pin, HIGH);
+    //right180Turn();
+  } else {
+    Serial.println("ELSE");
+    //digitalWrite(robot_LED_pin, LOW);
+>>>>>>> 5170c4b849c9b48bf2d30e593b8ec2c58b52546b
     //navigate();
     //robot_done = 0;
   }
@@ -311,8 +341,13 @@ void setup() {
 // ============================================================================================
 
 void loop() {
+<<<<<<< HEAD
   halt();
 //
+=======
+  //halt();
+
+>>>>>>> 5170c4b849c9b48bf2d30e593b8ec2c58b52546b
 //  while (beginning) { // to wait for pushbutton/950 Hz tone
 //    halt();
 //    if (digitalRead(START_BUTTON)) {
