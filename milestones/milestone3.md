@@ -25,9 +25,10 @@ We decided to use three detectors for the front, right and left sides of our rob
   <iframe width="560" height="315" src="https://www.youtube.com/embed/Ns-UvfSCByA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-Below is the "robot" that we used in our video above. The emitter circuit consists of 
+Below is the "robot" that we avoided in our video above. The emitter circuit simply consists of one IR emitter and one 330Ω resistor connected to a power source.
 
-<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/emittercircuit.png" height="250" width="350"></p>
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/emittercircuit.png
+?raw=true" height="150" width="250"></p>
 
 Our code for reading in the values from the phototransistors consisted of using a running average of a sample of 10 inputs. Every time we detect that the average of the sample is above our decided threshold, we turn on the green LED located on our protoboard and make a 180 degree turn. Originally, we were halting when the IR was detected, but after learning that halting as a avoidance technique would be ineffective for the actual competition, we chose to make a U-turn instead. Immediately once the average drops below this threshold, the LED turns off and the robot does normal right hand rule line following navigation.
 
