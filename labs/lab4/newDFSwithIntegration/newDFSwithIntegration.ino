@@ -752,6 +752,8 @@ void setup() {
 
 // =====================================================================================================
 
+int stopped[3] = {0, 0, 0};
+
 void loop() {
   while (beginning) { // wait for pushbutton/950 Hz tone
       if (digitalRead(START_BUTTON)) {// fft();
@@ -767,5 +769,17 @@ void loop() {
   
   if (!(ending)) { // to make sure we don't keep doing stuff after we finish
     dfs();
+    stopped[0] = stopped[1]; // shift element over
+    stopped[1] = stopped[2]; // shift element over
+    if (int(current.pos) == 0) { // fill in new opening
+      stopped[2] = 1;
+      if (stopped[0] == 1 && stopped[1] == 1) {
+        ending = 1;
+      }
+    } else {
+      stopped[2] = 0;
+    }
+  } else {
+    digitalWrite(DONE_LED, HIGH);
   }
 }
