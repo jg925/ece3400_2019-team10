@@ -188,13 +188,49 @@ void movetoLocation (byte location) {
     face = B00001000;
   }
 
-  while (current.dir != face) {
-    left90Turn();
-    current.dir = current.dir << 1;
-    if (int(current.dir) == 16) {
-      current.dir = B00000001;
+  int curr_dir = current.dir;
+  int i = 1;
+  for (i; i<3; i++) {
+    curr_dir = curr_dir << 1;
+    if (curr_dir > 8) {
+      curr_dir = B00000001;
+    }
+    if (curr_dir == face) {
+      break;
     }
   }
+  curr_dir = current.dir;
+  int j = 1;
+  for (j; j<3; j++) {
+    curr_dir = curr_dir >> 1;
+    if (curr_dir < 1) {
+      curr_dir = B00001000;
+    }
+    if (curr_dir == face) {
+      break;
+    }
+  }
+
+  if (i<j) {
+    while (current.dir != face) {
+      left90Turn();
+      current.dir = current.dir << 1;
+      if (int(current.dir) == 16) {
+        current.dir = B00000001;
+      }
+    }
+  }
+  else {
+    while (current.dir != face) {
+      right90Turn();
+      current.dir = current.dir >> 1;
+      if (int(current.dir) < 1) {
+        current.dir = B00001000;
+      }
+    }
+  }
+
+  maze[current.pos].neighbors = maze[current.pos].neighbors | face;
   
   int go_on = 0;
   while ( go_on != 1 ) { // Want to navigate to next intersection at location
@@ -322,11 +358,45 @@ void walkBack() {
     to_return_pos = current.pos + B00010000;
   }
 
-  while (current.dir != face) {
-    left90Turn();
-    current.dir = current.dir << 1;
-    if (int(current.dir) == 16) {
-      current.dir = B00000001;
+  int curr_dir = current.dir;
+  int i = 1;
+  for (i; i<3; i++) {
+    curr_dir = curr_dir << 1;
+    if (curr_dir > 8) {
+      curr_dir = B00000001;
+    }
+    if (curr_dir == face) {
+      break;
+    }
+  }
+  curr_dir = current.dir;
+  int j = 1;
+  for (j; j<3; j++) {
+    curr_dir = curr_dir >> 1;
+    if (curr_dir < 1) {
+      curr_dir = B00001000;
+    }
+    if (curr_dir == face) {
+      break;
+    }
+  }
+
+  if (i<j) {
+    while (current.dir != face) {
+      left90Turn();
+      current.dir = current.dir << 1;
+      if (int(current.dir) == 16) {
+        current.dir = B00000001;
+      }
+    }
+  }
+  else {
+    while (current.dir != face) {
+      right90Turn();
+      current.dir = current.dir >> 1;
+      if (int(current.dir) < 1) {
+        current.dir = B00001000;
+      }
     }
   }
 
@@ -421,7 +491,7 @@ void setup() {
   pinMode(right_ir_sensor, INPUT);
 
   // ir detectors
-//  pinMode(left_robot_detect, INPUT);
+  //pinMode(left_robot_detect, INPUT);
   //pinMode(center_robot_detect, INPUT);
   //pinMode(right_robot_detect, INPUT);
 
@@ -431,6 +501,7 @@ void setup() {
 
   // serial and print setup
   Serial.begin(57600);
+  printf_begin();
 
   // servo setup
   right.attach(right_pin);
@@ -475,6 +546,7 @@ void loop() {
     stopped[0] = stopped[1]; // shift element over
     stopped[1] = stopped[2]; // shift element over
     if (int(current.pos) == 0) { // fill in new opening
+      halt();
       stopped[2] = 1;
       if (stopped[0] == 1 && stopped[1] == 1) {
         ending = 1;
