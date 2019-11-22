@@ -1,4 +1,5 @@
 #include <Servo.h>
+#include "FFT.h"
 #include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
@@ -111,19 +112,6 @@ struct box {
 box maze[81]; // 9x9
 node current;
 
-// =====================================================================================================
-
-// fft variables inits
-
-// =====================================================================================================
-
-//#define LOG_OUT 1 // use the log output function
-//#define FFT_N 256 // set to 256 point fft
-//
-//// #include <FFT.h> // include the library UNCOMMENT THIS LINE TO INCLUDE FFT LIBRARY
-//
-//int detect_count = 0;
-//int flag_950 = 0;
 
 // =====================================================================================================
 
@@ -264,24 +252,35 @@ int navigate() {
 
 // =====================================================================================================
 
+// fft variables inits
+
+// =====================================================================================================
+
+#define LOG_OUT 1 // use the log output function
+#define FFT_N 256 // set to 256 point fft
+
+int detect_count = 0;
+
+// =====================================================================================================
+
 // fft helper
 
 // =====================================================================================================
 
-//int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
-//  if ( six > FFT_threshold && seven > FFT_threshold ) {
-//    //if ( six > five && six > eight && seven > five && seven > eight ) {
-//      // checking that six and seven are a local maximum
-//      //if ( six - seven < 10 && six - five > 10 && six - seven > 0) {
-//        // checking that shape of curve is correct
-//        return 1;
-//      //}
-//    //}
-//  }
-//  else {
-//    return 0;
-//  }
-//}
+int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
+  if ( six > FFT_threshold && seven > FFT_threshold ) {
+    //if ( six > five && six > eight && seven > five && seven > eight ) {
+      // checking that six and seven are a local maximum
+      //if ( six - seven < 10 && six - five > 10 && six - seven > 0) {
+        // checking that shape of curve is correct
+        return 1;
+      //}
+    //}
+  }
+  else {
+    return 0;
+  }
+}
 
 // =====================================================================================================
 
@@ -289,44 +288,59 @@ int navigate() {
 
 // =====================================================================================================
 
+int fft() {
+  int flag_950 = 0;
+  cli();  // UDRE interrupt slows this way down on arduino1.0
+  
+  int tempTIM = TIMSK0;
+  int tempSRA = ADCSRA;
+  int tempMUX = ADMUX;
+  int tempDID = DIDR0;
 
-//void fft() {
-//  while (1) { // reduces jitter
-//    cli();  // UDRE interrupt slows this way down on arduino1.0
-//    for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
-//      while (!(ADCSRA & 0x10)); // wait for adc to be ready
-//      ADCSRA = 0xf5; // restart adc
-//      byte m = ADCL; // fetch adc data
-//      byte j = ADCH;
-//      int k = (j << 8) | m; // form into an int
-//      k -= 0x0200; // form into a signed int
-//      k <<= 6; // form into a 16b signed int
-//      fft_input[i] = k; // put real data into even bins
-//      fft_input[i + 1] = 0; // set odd bins to 0
-//    }
-//    fft_window(); // window the data for better frequency response
-//    fft_reorder(); // reorder the data before doing the fft
-//    fft_run(); // process the data in the fft
-//    fft_mag_log(); // take the output of the fft
-//    sei();
-//    int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 124 );
-//    if (max == 1 && detect_count >= 6)
-//    {
-//      Serial.println("950 Hz");
-//      flag_950 = 1;
-//      detect_count = 0;
-//      break;
-//      //Serial.println(detect_count);
-//    }
-//    else if (digitalRead(START_BUTTON)) {
-//      Serial.println("Button Press");
-//      break;
-//    }
-//    else if ( max == 1 ) {
-//      detect_count++;
-//    }
-//  }
-//}
+  TIMSK0 = 0; // turn off timer0 for lower jitter
+  ADCSRA = 0xe5; // set the adc to free running mode
+  ADMUX = 0x40; // use adc0
+  DIDR0 = 0x01; // turn off the digital input for adc0
+
+  byte m;
+  byte j;
+  int k;
+  for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
+    while (!(ADCSRA & 0x10)); // wait for adc to be ready
+    ADCSRA = 0xf5; // restart adc
+    m = ADCL; // fetch adc data
+    j = ADCH;
+    k = (j << 8) | m; // form into an int
+    k -= 0x0200; // form into a signed int
+    k <<= 6; // form into a 16b signed int
+    fft_input[i] = k; // put real data into even bins
+    fft_input[i + 1] = 0; // set odd bins to 0
+  }
+  fft_window(); // window the data for better frequency response
+  fft_reorder(); // reorder the data before doing the fft
+  fft_run(); // process the data in the fft
+  fft_mag_log(); // take the output of the fft
+  sei();
+  int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 124 );
+  if (max == 1 && detect_count >= 6) {
+    //Serial.println("950 Hz");
+    flag_950 = 1;
+    detect_count = 0;
+    //Serial.println(detect_count);
+  } else if (digitalRead(START_BUTTON)) {
+    flag_950 = 1;
+    //Serial.println("Button Press");
+  } else if ( max == 1 ) {
+    detect_count++;
+  }
+  
+  TIMSK0 = tempTIM;
+  ADCSRA = tempSRA;
+  ADMUX = tempMUX;
+  DIDR0 = tempDID;
+  
+  return flag_950;
+}
 
 // =====================================================================================================
 
@@ -754,15 +768,6 @@ void setup() {
   maze[0].visited_came = B10000000; // mark (0,0) as visited
 
   //
-  // fft setup
-  //
-  
-  //TIMSK0 = 0; // turn off timer0 for lower jitter
-  //ADCSRA = 0xe5; // set the adc to free running mode
-  //ADMUX = 0x40; // use adc0
-  //DIDR0 = 0x01; // turn off the digital input for adc0
-
-  //
   // communication setup
   //
   
@@ -811,7 +816,7 @@ int stopped[3] = {0, 0, 0};
 
 void loop() {
   while (beginning) { // wait for pushbutton/950 Hz tone
-    if (digitalRead(START_BUTTON)) {// fft();
+    if (fft()) {
       beginning = 0;
       for (int i = 0; i < 2; i++) { // Signal we are about to begin
         digitalWrite(DONE_LED, HIGH);
@@ -821,7 +826,6 @@ void loop() {
       }
     }
   }
-  
   if (!ending) { // to make sure we don't keep doing stuff after we finish
     dfs();
     stopped[0] = stopped[1]; // shift element over
