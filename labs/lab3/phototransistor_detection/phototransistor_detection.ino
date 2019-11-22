@@ -41,12 +41,10 @@ int left_robot_detect = A3;
 int robot_LED_pin = 12;
 
 // robot detection vars
-int pi_arr[10];
+int pi_arr[5];
 int sum = 0;
 int count = 0;
-int threshold = 100;
-int count_threshold = 5;
-int sample_size = 10;
+int threshold = 1;
 int robot_done = 0;
 int avg = 0;
 
@@ -196,121 +194,48 @@ void navigate() {
   }
   
 }
-
-// ============================================================================================
-
-// Robot detection code take 1: running count
-
-// ============================================================================================
-
-void robot_detect_take1() {
-  
-  int photo_input = analogRead(left_robot_detect);
-
-  pi_arr[sample_size-1] = photo_input;
-
-  Serial.println("ARRAY START");
-  count = 0;
-  for (int i= 0; i < sample_size; i++) {
-    Serial.println(pi_arr[i]);
-    if (pi_arr[i] > threshold) {
-      count++;
-    }
-  }
-  Serial.println("ARRAY END");
-  
-  for (int i= 1; i < sample_size; i++) {
-    pi_arr[i-1] = pi_arr[i];
-  }
-
-  Serial.println(count);
-  
-  if (count >= count_threshold) {
-    Serial.println("DETECT");
-    digitalWrite(robot_LED_pin, HIGH);
-    right180Turn();
-  } else {
-    //halt();
-    digitalWrite(robot_LED_pin, LOW);   
-    navigate();
-  }
-  //delay(1000);
-
-}
-
 // ============================================================================================
 
 // Robot detection code take 2: moving average
 
 // ============================================================================================
 
-void robot_detect_take2() {
+void robot_detect() {
 
-<<<<<<< HEAD
   //if (robot_done == 0) {
     int photo_input = analogRead(left_robot_detect);
   
-    pi_arr[sample_size-1] = photo_input;
+    pi_arr[4] = photo_input;
   
-    for (int i= 1; i < sample_size; i++) {
+    for (int i= 1; i < 5; i++) {
       pi_arr[i-1] = pi_arr[i];
     }
   
     sum = 0;
     Serial.println("ARRAY START");
-    for (int i= 0; i < sample_size; i++) {
+    for (int i= 0; i < 5; i++) {
       Serial.println(pi_arr[i]);
       sum += pi_arr[i];
     }
     Serial.println("ARRAY END");
   
-    avg = sum/sample_size;
+    avg = sum/5;
     Serial.println("AVERAGE");
     Serial.println(avg);
   //}
 
   //if (avg > threshold && robot_done == 0) {
-  if (avg > threshold) {
+  if (avg >= threshold) {
     Serial.println("DETECT!");
-    delay(1000);
+    delay(500);
     digitalWrite(robot_LED_pin, HIGH);
     //right180Turn();
   } else {
     Serial.println("ELSE");
     digitalWrite(robot_LED_pin, LOW);
-=======
-  int photo_input = analogRead(left_robot_detect);
-
-  pi_arr[sample_size-1] = photo_input;
-
-  for (int i= 1; i < sample_size; i++) {
-    pi_arr[i-1] = pi_arr[i];
-  }
-
-  sum = 0;
-  Serial.println("ARRAY START");
-  for (int i= 0; i < sample_size; i++) {
-    Serial.println(pi_arr[i]);
-    sum += pi_arr[i];
-  }
-  Serial.println("ARRAY END");
-
-  avg = sum/sample_size;
-  Serial.println("AVERAGE");
-  Serial.println(avg);
-
-  if (avg > threshold) {
-    Serial.println("DETECT");
-    //digitalWrite(robot_LED_pin, HIGH);
-    //right180Turn();
-  } else {
-    Serial.println("ELSE");
-    //digitalWrite(robot_LED_pin, LOW);
->>>>>>> 5170c4b849c9b48bf2d30e593b8ec2c58b52546b
     //navigate();
     //robot_done = 0;
   }
-  
 }
 
 // ============================================================================================
@@ -341,28 +266,7 @@ void setup() {
 // ============================================================================================
 
 void loop() {
-<<<<<<< HEAD
   halt();
-//
-=======
-  //halt();
-
->>>>>>> 5170c4b849c9b48bf2d30e593b8ec2c58b52546b
-//  while (beginning) { // to wait for pushbutton/950 Hz tone
-//    halt();
-//    if (digitalRead(START_BUTTON)) {
-//      beginning = 0;
-//      /*
-//      for (int i = 0; i < 2; i++) { // WARNING: PLEASE STEP A SAFE DISTANCE AWAY FROM THE ROBOT ;)
-//        digitalWrite(DONE_LED, HIGH);
-//        delay(500);
-//        digitalWrite(DONE_LED, LOW);
-//        delay(500);
-//      }*/
-//    }
-//  }
-
-  //robot_detect_take1();
-  robot_detect_take2();
+  robot_detect();
   
 }
