@@ -683,31 +683,31 @@ void determineNav( byte location ) {
   Serial.print(location, BIN);
   if (n >= 0 && n < 9) {
     Serial.print("\nNorth neighbor before: ");
-    Serial.print(maze[n].neighbors, BIN);
-    maze[n].neighbors = maze[n].neighbors | B00000010;
+    Serial.print(maze[location + 1].neighbors, BIN);
+    maze[n].neighbors = maze[location + 1].neighbors | B00000010;
     Serial.print("\nNorth neighbor after: ");
-    Serial.print(maze[n].neighbors, BIN);
+    Serial.print(maze[location + 1].neighbors, BIN);
   }
   if (e >= 0 && e < 9) {
     Serial.print("\nEast neighbor before: ");
-    Serial.print(maze[e].neighbors, BIN);
-    maze[e].neighbors = maze[e].neighbors | B00000001;
+    Serial.print(maze[location + 16].neighbors, BIN);
+    maze[e].neighbors = maze[location + 16].neighbors | B00000001;
     Serial.print("\nEast neighbor after: ");
-    Serial.print(maze[e].neighbors, BIN);
+    Serial.print(maze[location + 16].neighbors, BIN);
   }
   if (s >= 0 && s < 9) {
     Serial.print("\nSouth neighbor before: ");
-    Serial.print(maze[s].neighbors, BIN);
-    maze[s].neighbors = maze[s].neighbors | B00001000;
+    Serial.print(maze[location - 1].neighbors, BIN);
+    maze[s].neighbors = maze[location - 1].neighbors | B00001000;
     Serial.print("\nSouth neighbor after: ");
-    Serial.print(maze[s].neighbors, BIN);
+    Serial.print(maze[location - 1].neighbors, BIN);
   }
   if (w >= 0 && w < 9) {
     Serial.print("\nWest neighbor before: ");
-    Serial.print(maze[w].neighbors, BIN);
-    maze[w].neighbors = maze[w].neighbors | B00000100;
+    Serial.print(maze[location - 16].neighbors, BIN);
+    maze[w].neighbors = maze[location - 16].neighbors | B00000100;
     Serial.print("\nWest neighbor after: ");
-    Serial.print(maze[w].neighbors, BIN);
+    Serial.print(maze[location - 16].neighbors, BIN);
   }
 }
 
