@@ -1,5 +1,7 @@
+#define LOG_OUT 1 // use the log output function
+#define FFT_N 256 // set to 256 point fft
 #include <Servo.h>
-#include "FFT.h"
+#include <FFT.h>
 #include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
@@ -34,8 +36,8 @@ Servo left;
 Servo right;
 
 // servo pins
-int right_pin = 6;
-int left_pin = 5;
+int right_pin = 10;
+int left_pin = 11;
 
 // line sensor pins
 int LEFT_LINE_SENSOR = A5;
@@ -70,12 +72,12 @@ int center_robot_detect = A2;
 int right_robot_detect = A1;
 
 // ir robot detection variables
-//int left_pi_arr[10];
-//int center_pi_arr[10];
-//int right_pi_arr[10];
-//int robot_threshold = 100;
-//int sum = 0;
-//int avg = 0;
+int left_pi_arr[10];
+int center_pi_arr[10];
+int right_pi_arr[10];
+int robot_threshold = 600;
+int sum = 0;
+int avg = 0;
 
 // =====================================================================================================
 
@@ -91,6 +93,8 @@ int START_BUTTON = 7;
 // which goes HIGH when we finished traversing the maze
 int beginning;
 int ending;
+
+#define maze_size 81
 
 // =====================================================================================================
 
@@ -109,7 +113,7 @@ struct box {
                   // 1111 means everywhere has been traversed or there are walls (a.k.a. return).
 };
 
-box maze[81]; // 9x9
+box maze[maze_size]; // 9x9
 node current;
 
 
@@ -256,9 +260,6 @@ int navigate() {
 
 // =====================================================================================================
 
-#define LOG_OUT 1 // use the log output function
-#define FFT_N 256 // set to 256 point fft
-
 int detect_count = 0;
 
 // =====================================================================================================
@@ -288,8 +289,11 @@ int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
 
 // =====================================================================================================
 
-int fft() {
+int fftboi() {
+  halt();
   int flag_950 = 0;
+  right.detach();
+  left.detach();
   cli();  // UDRE interrupt slows this way down on arduino1.0
   
   int tempTIM = TIMSK0;
@@ -338,6 +342,9 @@ int fft() {
   ADCSRA = tempSRA;
   ADMUX = tempMUX;
   DIDR0 = tempDID;
+
+  right.attach(right_pin);
+  left.attach(left_pin);
   
   return flag_950;
 }
@@ -658,6 +665,53 @@ void walkBack() {
   current.pos = to_return_pos;
 }
 
+int determineDone() {
+  for (int i=0; i < maze_size; i++) {
+    if (((maze[i].neighbors & B00001111) != 15) && (maze[i].visited_came & B10000000) >> 7 == 1) { // if there are still open spots and the location has been visited
+      return 0;
+    }
+  }
+  return 1;
+}
+
+void determineNav( byte location ) {
+  int n = int(location & B00001111) + 1;
+  int e = (int(location) >> 4) + 1;
+  int s = int(location & B00001111) - 1;
+  int w = (int(location) >> 4) - 1;
+  Serial.print("\nLocation: ");
+  Serial.print(location, BIN);
+  if (n >= 0 && n < 9) {
+    Serial.print("\nNorth neighbor before: ");
+    Serial.print(maze[n].neighbors, BIN);
+    maze[n].neighbors = maze[n].neighbors | B00000010;
+    Serial.print("\nNorth neighbor after: ");
+    Serial.print(maze[n].neighbors, BIN);
+  }
+  if (e >= 0 && e < 9) {
+    Serial.print("\nEast neighbor before: ");
+    Serial.print(maze[e].neighbors, BIN);
+    maze[e].neighbors = maze[e].neighbors | B00000001;
+    Serial.print("\nEast neighbor after: ");
+    Serial.print(maze[e].neighbors, BIN);
+  }
+  if (s >= 0 && s < 9) {
+    Serial.print("\nSouth neighbor before: ");
+    Serial.print(maze[s].neighbors, BIN);
+    maze[s].neighbors = maze[s].neighbors | B00001000;
+    Serial.print("\nSouth neighbor after: ");
+    Serial.print(maze[s].neighbors, BIN);
+  }
+  if (w >= 0 && w < 9) {
+    Serial.print("\nWest neighbor before: ");
+    Serial.print(maze[w].neighbors, BIN);
+    maze[w].neighbors = maze[w].neighbors | B00000100;
+    Serial.print("\nWest neighbor after: ");
+    Serial.print(maze[w].neighbors, BIN);
+  }
+}
+
+
 // =====================================================================================================
 
 // dfs main
@@ -671,7 +725,14 @@ void dfs() {
 
   // transmit info
   //communicate();
-  maze[int(current.pos)].neighbors = maze[int(current.pos)].neighbors | B10000000; // set walls sent to 1
+  maze[location].neighbors = maze[location].neighbors | B10000000; // set walls sent to 1
+
+  determineNav(location);  
+
+  if (determineDone()) {
+    Serial.println("\nWe made it");
+    digitalWrite(DONE_LED, HIGH);
+  }
 
   // Movement priority
 
@@ -761,11 +822,12 @@ void setup() {
   beginning = 1;
   ending = 0;
   current = { B00000000, B00001000 }; // set at (0,0), facing north
-  for (int i = 0; i < 81; i++) {
+  for (int i = 0; i < maze_size; i++) {
     maze[i].visited_came = B00000000; // initialize all locations to be not visited
     maze[i].neighbors = B00000000;  // initialize all neighbors to be open
   }
   maze[0].visited_came = B10000000; // mark (0,0) as visited
+  maze[0].neighbors = B00000001; // Mark back wall as unnavigable
 
   //
   // communication setup
@@ -813,10 +875,11 @@ void setup() {
 // =====================================================================================================
 
 int stopped[3] = {0, 0, 0};
+int try1 = 1;
 
 void loop() {
-  while (beginning) { // wait for pushbutton/950 Hz tone
-    if (fft()) {
+  if (beginning) { // wait for pushbutton/950 Hz tone
+    if (fftboi()) {
       beginning = 0;
       for (int i = 0; i < 2; i++) { // Signal we are about to begin
         digitalWrite(DONE_LED, HIGH);
@@ -826,7 +889,7 @@ void loop() {
       }
     }
   }
-  if (!ending) { // to make sure we don't keep doing stuff after we finish
+  else if (!ending) { // to make sure we don't keep doing stuff after we finish
     dfs();
     stopped[0] = stopped[1]; // shift element over
     stopped[1] = stopped[2]; // shift element over
@@ -840,6 +903,19 @@ void loop() {
       stopped[2] = 0;
     }
   } else {
+    if (try1) {
+      for (int z = 0; z < maze_size; z++) {
+        Serial.println(maze[z].visited_came, BIN);
+        if ((maze[z].visited_came & B10000000) >> 7 == 1) {
+          Serial.print("\nLocation: ");
+          Serial.print(z, BIN);
+          Serial.print(" NEIGHBORS: ");
+          Serial.print(maze[z].neighbors, BIN);
+        }
+      }
+      try1 = 0;
+    }
+    halt();
     digitalWrite(DONE_LED, HIGH);
   }
 }
