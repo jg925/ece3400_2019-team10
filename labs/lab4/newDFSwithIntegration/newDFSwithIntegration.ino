@@ -124,8 +124,8 @@ node current;
 // =====================================================================================================
 
 void halt() {
-  left.write(90);
-  right.write(90);
+  left.write(95);   // normal servos: 90
+  right.write(95);  // normal servos: 90
 }
 
 void moveForward() {
@@ -135,11 +135,11 @@ void moveForward() {
 
 void slightRight() {
   left.write(180);
-  right.write(85);
+  right.write(90);  // normal servos: 85
 }
 
 void slightLeft() {
-  left.write(95);
+  left.write(100);   // normal servos: 95
   right.write(0);
 }
 
@@ -155,17 +155,17 @@ void rotateLeft() {
 
 void right90Turn() {
   rotateRight();
-  delay(725);
+  delay(725);       // normal servos: 725
 }
 
 void left90Turn() {
   rotateLeft();
-  delay(725);
+  delay(725);       // normal servos: 725
 }
 
 void right180Turn() {
   rotateRight();
-  delay(1450);
+  delay(1450);      // normal servos: 1450
 }
 
 // =====================================================================================================

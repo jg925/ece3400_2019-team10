@@ -44,7 +44,7 @@ int robot_LED_pin = 12;
 int pi_arr[5];
 int sum = 0;
 int count = 0;
-int threshold = 1;
+int threshold = 600;
 int robot_done = 0;
 int avg = 0;
 
