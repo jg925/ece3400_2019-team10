@@ -466,11 +466,16 @@ void movetoLocation (byte location) {
     }
   }
 
+  Serial.print("\nCurrent Dir: ");
+  Serial.print(current.dir,BIN);
+  Serial.print(" Face: ");
+  Serial.print(face,BIN);
+
   if (i<j) {
     while (current.dir != face) {
       left90Turn();
       current.dir = current.dir << 1;
-      if (int(current.dir) == 16) {
+      if (int(current.dir) > 8) {
         current.dir = B00000001;
       }
     }
@@ -635,12 +640,16 @@ void walkBack() {
       break;
     }
   }
-
+  Serial.print("\nCurrent Dir: ");
+  Serial.print(current.dir,BIN);
+  Serial.print(" Face: ");
+  Serial.print(face,BIN);
+  
   if (i<j) {
     while (current.dir != face) {
       left90Turn();
       current.dir = current.dir << 1;
-      if (int(current.dir) == 16) {
+      if (int(current.dir) > 8) {
         current.dir = B00000001;
       }
     }
@@ -679,35 +688,35 @@ void determineNav( byte location ) {
   int e = (int(location) >> 4) + 1;
   int s = int(location & B00001111) - 1;
   int w = (int(location) >> 4) - 1;
-  Serial.print("\nLocation: ");
-  Serial.print(location, BIN);
+//  Serial.print("\nLocation: ");
+//  Serial.print(location, BIN);
   if (n >= 0 && n < 9) {
-    Serial.print("\nNorth neighbor before: ");
-    Serial.print(maze[location + 1].neighbors, BIN);
-    maze[n].neighbors = maze[location + 1].neighbors | B00000010;
-    Serial.print("\nNorth neighbor after: ");
-    Serial.print(maze[location + 1].neighbors, BIN);
+//    Serial.print("\nNorth neighbor before: ");
+//    Serial.print(maze[location + 1].neighbors, BIN);
+    maze[location + 1].neighbors = maze[location + 1].neighbors | B00000010;
+//    Serial.print("\nNorth neighbor after: ");
+//    Serial.print(maze[location + 1].neighbors, BIN);
   }
   if (e >= 0 && e < 9) {
-    Serial.print("\nEast neighbor before: ");
-    Serial.print(maze[location + 16].neighbors, BIN);
-    maze[e].neighbors = maze[location + 16].neighbors | B00000001;
-    Serial.print("\nEast neighbor after: ");
-    Serial.print(maze[location + 16].neighbors, BIN);
+//    Serial.print("\nEast neighbor before: ");
+//    Serial.print(maze[location + 16].neighbors, BIN);
+    maze[location + 16].neighbors = maze[location + 16].neighbors | B00000001;
+//    Serial.print("\nEast neighbor after: ");
+//    Serial.print(maze[location + 16].neighbors, BIN);
   }
   if (s >= 0 && s < 9) {
-    Serial.print("\nSouth neighbor before: ");
-    Serial.print(maze[location - 1].neighbors, BIN);
-    maze[s].neighbors = maze[location - 1].neighbors | B00001000;
-    Serial.print("\nSouth neighbor after: ");
-    Serial.print(maze[location - 1].neighbors, BIN);
+//    Serial.print("\nSouth neighbor before: ");
+//    Serial.print(maze[location - 1].neighbors, BIN);
+    maze[location - 1].neighbors = maze[location - 1].neighbors | B00001000;
+//    Serial.print("\nSouth neighbor after: ");
+//    Serial.print(maze[location - 1].neighbors, BIN);
   }
   if (w >= 0 && w < 9) {
-    Serial.print("\nWest neighbor before: ");
-    Serial.print(maze[location - 16].neighbors, BIN);
-    maze[w].neighbors = maze[location - 16].neighbors | B00000100;
-    Serial.print("\nWest neighbor after: ");
-    Serial.print(maze[location - 16].neighbors, BIN);
+//    Serial.print("\nWest neighbor before: ");
+//    Serial.print(maze[location - 16].neighbors, BIN);
+    maze[location - 16].neighbors = maze[location - 16].neighbors | B00000100;
+//    Serial.print("\nWest neighbor after: ");
+//    Serial.print(maze[location - 16].neighbors, BIN);
   }
 }
 
@@ -730,7 +739,6 @@ void dfs() {
   determineNav(location);  
 
   if (determineDone()) {
-    Serial.println("\nWe made it");
     digitalWrite(DONE_LED, HIGH);
   }
 
@@ -827,7 +835,7 @@ void setup() {
     maze[i].neighbors = B00000000;  // initialize all neighbors to be open
   }
   maze[0].visited_came = B10000000; // mark (0,0) as visited
-  maze[0].neighbors = B00000001; // Mark back wall as unnavigable
+  maze[0].neighbors = B00000010; // Mark back wall as unnavigable
 
   //
   // communication setup
@@ -875,7 +883,6 @@ void setup() {
 // =====================================================================================================
 
 int stopped[3] = {0, 0, 0};
-int try1 = 1;
 
 void loop() {
   if (beginning) { // wait for pushbutton/950 Hz tone
@@ -903,19 +910,6 @@ void loop() {
       stopped[2] = 0;
     }
   } else {
-    if (try1) {
-      for (int z = 0; z < maze_size; z++) {
-        Serial.println(maze[z].visited_came, BIN);
-        if ((maze[z].visited_came & B10000000) >> 7 == 1) {
-          Serial.print("\nLocation: ");
-          Serial.print(z, BIN);
-          Serial.print(" NEIGHBORS: ");
-          Serial.print(maze[z].neighbors, BIN);
-        }
-      }
-      try1 = 0;
-    }
     halt();
-    digitalWrite(DONE_LED, HIGH);
   }
 }
