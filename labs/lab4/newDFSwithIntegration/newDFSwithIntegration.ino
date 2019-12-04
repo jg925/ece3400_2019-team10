@@ -36,8 +36,8 @@ Servo left;
 Servo right;
 
 // servo pins
-int right_pin = 10;
-int left_pin = 11;
+int right_pin = 5;
+int left_pin = 6;
 
 // line sensor pins
 int LEFT_LINE_SENSOR = A5;
@@ -124,48 +124,48 @@ node current;
 // =====================================================================================================
 
 void halt() {
-  left.write(95);   // normal servos: 90
-  right.write(95);  // normal servos: 90
+  left.write(96);   // normal servos: 90
+  right.write(96);  // normal servos: 90
 }
 
 void moveForward() {
-  left.write(180);
-  right.write(0);
+  left.write(102);
+  right.write(91);
 }
 
 void slightRight() {
-  left.write(180);
-  right.write(90);  // normal servos: 85
+  left.write(100);
+  right.write(95);  // normal servos: 85
 }
 
 void slightLeft() {
-  left.write(100);   // normal servos: 95
-  right.write(0);
+  left.write(97);   // normal servos: 95
+  right.write(91);
 }
 
 void rotateRight() {
-  left.write(120);
-  right.write(120);
+  left.write(101);
+  right.write(101);
 }
 
 void rotateLeft() {
-  left.write(60);
-  right.write(60);
+  left.write(91);
+  right.write(91);
 }
 
 void right90Turn() {
   rotateRight();
-  delay(725);       // normal servos: 725
+  delay(575);       // normal servos: 725
 }
 
 void left90Turn() {
   rotateLeft();
-  delay(725);       // normal servos: 725
+  delay(575);       // normal servos: 725
 }
 
 void right180Turn() {
   rotateRight();
-  delay(1450);      // normal servos: 1450
+  delay(1150);      // normal servos: 1450
 }
 
 // =====================================================================================================
@@ -181,7 +181,7 @@ int navigate() {
   // if both sensors on white
   if (left_sensor_value < line_threshold && right_sensor_value < line_threshold) {
     moveForward();
-    delay(500);
+    delay(275);
     return 1; // return 1 here, else we return 0 to keep navigating
   }
 
@@ -218,7 +218,7 @@ int navigate() {
 
 // =====================================================================================================
 
-//void detect_robots() {
+//int detect_robots() {
 //  // takes a running average of 10 inputs
 //  
 //  int left_input = analogRead(left_robot_detect);
@@ -246,11 +246,11 @@ int navigate() {
 //  if (avg > robot_threshold) {
 //    Serial.println("DETECT");
 //    //digitalWrite(robot_LED_pin, HIGH);
-//    right180Turn();
+//    return 1; 
 //  } else {
 //    Serial.println("ELSE");
 //    //digitalWrite(robot_LED_pin, LOW);
-//    navigate();
+//    return 0;
 //  }
 //}
 
@@ -268,13 +268,14 @@ int detect_count = 0;
 
 // =====================================================================================================
 
-int is_maximum( int five, int six, int seven, int eight, int FFT_threshold ) {
-  if ( six > FFT_threshold && seven > FFT_threshold ) {
+int is_maximum( int five, int six, int seven, int eight, int nine, int FFT_threshold ) {
+  if (five > FFT_threshold && six > FFT_threshold && seven > FFT_threshold && eight > FFT_threshold && nine > FFT_threshold) {
     //if ( six > five && six > eight && seven > five && seven > eight ) {
       // checking that six and seven are a local maximum
       //if ( six - seven < 10 && six - five > 10 && six - seven > 0) {
         // checking that shape of curve is correct
-        return 1;
+          return 1;
+        
       //}
     //}
   }
@@ -325,8 +326,8 @@ int fftboi() {
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
-  int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], 124 );
-  if (max == 1 && detect_count >= 6) {
+  int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], fft_log_out[9], 80 );
+  if (max == 1 && detect_count >= 5) {
     //Serial.println("950 Hz");
     flag_950 = 1;
     detect_count = 0;
@@ -465,11 +466,6 @@ void movetoLocation (byte location) {
       break;
     }
   }
-
-  Serial.print("\nCurrent Dir: ");
-  Serial.print(current.dir,BIN);
-  Serial.print(" Face: ");
-  Serial.print(face,BIN);
 
   if (i<j) {
     while (current.dir != face) {
@@ -640,10 +636,6 @@ void walkBack() {
       break;
     }
   }
-  Serial.print("\nCurrent Dir: ");
-  Serial.print(current.dir,BIN);
-  Serial.print(" Face: ");
-  Serial.print(face,BIN);
   
   if (i<j) {
     while (current.dir != face) {
