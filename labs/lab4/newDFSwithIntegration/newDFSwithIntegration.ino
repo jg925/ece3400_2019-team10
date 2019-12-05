@@ -67,14 +67,10 @@ int right_sensor_value = 0;
 // =====================================================================================================
 
 // phototransistor pins
-int left_robot_detect = A3;
 int center_robot_detect = A2;
-int right_robot_detect = A1;
 
 // ir robot detection variables
-int left_pi_arr[10];
 int center_pi_arr[10];
-int right_pi_arr[10];
 int robot_threshold = 600;
 int sum = 0;
 int avg = 0;
@@ -113,7 +109,7 @@ struct box {
                   // 1111 means everywhere has been traversed or there are walls (a.k.a. return).
 };
 
-box maze[maze_size]; // 9x9
+box maze[maze_size];
 node current;
 
 
@@ -155,17 +151,17 @@ void rotateLeft() {
 
 void right90Turn() {
   rotateRight();
-  delay(575);       // normal servos: 725
+  delay(500);       // normal servos: 725
 }
 
 void left90Turn() {
   rotateLeft();
-  delay(575);       // normal servos: 725
+  delay(550);       // normal servos: 725
 }
 
 void right180Turn() {
   rotateRight();
-  delay(1150);      // normal servos: 1450
+  delay(1050);      // normal servos: 1450
 }
 
 // =====================================================================================================
@@ -181,7 +177,7 @@ int navigate() {
   // if both sensors on white
   if (left_sensor_value < line_threshold && right_sensor_value < line_threshold) {
     moveForward();
-    delay(275);
+    delay(225);
     return 1; // return 1 here, else we return 0 to keep navigating
   }
 
@@ -218,41 +214,41 @@ int navigate() {
 
 // =====================================================================================================
 
-//int detect_robots() {
-//  // takes a running average of 10 inputs
-//  
-//  int left_input = analogRead(left_robot_detect);
-//  left_pi_arr[9] = left_input;
+int detect_robots() {
+  // takes a running average of 10 inputs
+  
+  int center_input = analogRead(center_robot_detect);
+//  center_pi_arr[9] = center_input;
 //
 //  // updates array for left phototransistor
 //  for (int i= 1; i < 10; i++) {
-//    left_pi_arr[i-1] = left_pi_arr[i];
+//    center_pi_arr[i-1] = center_pi_arr[i];
 //  }
+//
+//  Serial.print("\n");
+//  for (int t=0;t<10;t++) {
+//    Serial.print(center_pi_arr[t]);
+//    Serial.print(" ");
+//  }
+//  //delay(500);
 //
 //  // sums sample
 //  sum = 0;
-//  Serial.println("ARRAY START");
 //  for (int i= 0; i < 10; i++) {
-//    Serial.println(left_pi_arr[i]);
-//    sum += left_pi_arr[i];
+//    sum += center_pi_arr[i];
 //  }
-//  Serial.println("ARRAY END");
 //
 //  // averages sample
 //  avg = sum/10;
-//  Serial.println("AVERAGE");
-//  Serial.println(avg);
-//
-//  if (avg > robot_threshold) {
-//    Serial.println("DETECT");
-//    //digitalWrite(robot_LED_pin, HIGH);
-//    return 1; 
-//  } else {
-//    Serial.println("ELSE");
-//    //digitalWrite(robot_LED_pin, LOW);
-//    return 0;
-//  }
-//}
+
+  //if (avg > robot_threshold) {
+  if (center_input > robot_threshold) {
+    //digitalWrite(DONE_LED, HIGH);
+    return 1; 
+  } else {
+    return 0;
+  }
+}
 
 // =====================================================================================================
 
@@ -327,7 +323,7 @@ int fftboi() {
   fft_mag_log(); // take the output of the fft
   sei();
   int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], fft_log_out[9], 80 );
-  if (max == 1 && detect_count >= 5) {
+  if (max == 1 && detect_count >= 4) {
     //Serial.println("950 Hz");
     flag_950 = 1;
     detect_count = 0;
@@ -430,7 +426,7 @@ int fftboi() {
 
 // =====================================================================================================
 
-void movetoLocation (byte location) {
+int movetoLocation (byte location) {
   int diffx = int(current.pos >> 4) - int(location >> 4);
   int diffy = (int(current.pos << 4) >> 4) - (int(location << 4) >> 4);
   byte face;
@@ -486,6 +482,10 @@ void movetoLocation (byte location) {
     }
   }
 
+  if (detect_robots()) {
+    return 0;
+  }
+
   maze[current.pos].neighbors = maze[current.pos].neighbors | face;
   
   int go_on = 0;
@@ -496,14 +496,14 @@ void movetoLocation (byte location) {
 
   current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
   maze[int(location)].visited_came = B10000000 | face; // Mark location as visited and update "came" direction
+  return 1;
 }
 
 int moveNorth() {
   byte location = current.pos;
   if (int((location & B00001111) + B00000001) < 9) { // if y-to-be < 9
     if ( (int((maze[int(location)].neighbors & B00001111) >> 3) == 0) && ((maze[int(location + B00000001)].visited_came >> 7) == 0) ) { // free to move north
-      movetoLocation(location + B00000001);
-      return 1;
+      return movetoLocation(location + B00000001);
     }
     return 0;
   }
@@ -514,8 +514,7 @@ int moveEast() {
   byte location = current.pos;
   if (int((location >> 4) + B00000001) < 9) { // if x-to-be < 9
     if ( (int((maze[int(location)].neighbors & B00000100) >> 2) == 0) && ((maze[int(location + B00010000)].visited_came >> 7) == 0) ) { // free to move east
-      movetoLocation(location + B00010000);
-      return 1;
+      return movetoLocation(location + B00010000);
     }
     return 0;
   }
@@ -526,9 +525,7 @@ int moveSouth() {
   byte location = current.pos;
   if (int((location & B00001111) - B00000001) >= 0) { // if y-to-be >=0
     if ( (int((maze[int(location)].neighbors & B00000010) >> 1) == 0) && ((maze[int(location - B00000001)].visited_came >> 7) == 0) ){ // free to move south
-      movetoLocation(location - B00000001);
-      //maze[int(location - B000000010].
-      return 1;
+      return movetoLocation(location - B00000001);
     }
     return 0;
   }
@@ -539,8 +536,7 @@ int moveWest() {
   byte location = current.pos;
   if (int((location >> 4) - B00000001) >= 0) { // if x-to-be >= 0
     if ( (int((maze[int(location)].neighbors & B0000001)) == 0) && ((maze[int(location - B00010000)].visited_came >> 7) == 0) ) { // free to move west
-      movetoLocation(location - B00010000);
-      return 1;
+      return movetoLocation(location - B00010000);
     }
     return 0;
   }
@@ -680,35 +676,17 @@ void determineNav( byte location ) {
   int e = (int(location) >> 4) + 1;
   int s = int(location & B00001111) - 1;
   int w = (int(location) >> 4) - 1;
-//  Serial.print("\nLocation: ");
-//  Serial.print(location, BIN);
   if (n >= 0 && n < 9) {
-//    Serial.print("\nNorth neighbor before: ");
-//    Serial.print(maze[location + 1].neighbors, BIN);
     maze[location + 1].neighbors = maze[location + 1].neighbors | B00000010;
-//    Serial.print("\nNorth neighbor after: ");
-//    Serial.print(maze[location + 1].neighbors, BIN);
   }
   if (e >= 0 && e < 9) {
-//    Serial.print("\nEast neighbor before: ");
-//    Serial.print(maze[location + 16].neighbors, BIN);
     maze[location + 16].neighbors = maze[location + 16].neighbors | B00000001;
-//    Serial.print("\nEast neighbor after: ");
-//    Serial.print(maze[location + 16].neighbors, BIN);
   }
   if (s >= 0 && s < 9) {
-//    Serial.print("\nSouth neighbor before: ");
-//    Serial.print(maze[location - 1].neighbors, BIN);
     maze[location - 1].neighbors = maze[location - 1].neighbors | B00001000;
-//    Serial.print("\nSouth neighbor after: ");
-//    Serial.print(maze[location - 1].neighbors, BIN);
   }
   if (w >= 0 && w < 9) {
-//    Serial.print("\nWest neighbor before: ");
-//    Serial.print(maze[location - 16].neighbors, BIN);
     maze[location - 16].neighbors = maze[location - 16].neighbors | B00000100;
-//    Serial.print("\nWest neighbor after: ");
-//    Serial.print(maze[location - 16].neighbors, BIN);
   }
 }
 
@@ -733,7 +711,7 @@ void dfs() {
   if (determineDone()) {
     digitalWrite(DONE_LED, HIGH);
   }
-
+  
   // Movement priority
 
   int wemoved = 1;
@@ -800,9 +778,7 @@ void setup() {
   pinMode(right_ir_sensor, INPUT);
 
   // ir detectors
-  pinMode(left_robot_detect, INPUT);
   pinMode(center_robot_detect, INPUT);
-  pinMode(right_robot_detect, INPUT);
 
   // button/led
   pinMode(START_BUTTON, INPUT);
