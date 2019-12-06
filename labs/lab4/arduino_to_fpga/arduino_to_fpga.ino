@@ -1,6 +1,6 @@
 
-int output  = 7;
-int bot_valid = 1;
+int valid  = 7;
+//int bot_valid = 0;
 int x_pos_1 = 2;
 int x_pos_2 = 3;
 int x_pos_3 = 4;
@@ -34,13 +34,12 @@ void drawSquare(int x1,int x2,int x3, int x4, int y1,int y2,int y3, int y4, int 
   digitalWrite( A1, E);
   digitalWrite( A2, S);
   digitalWrite( A3, W);
-  
 }
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode( output, OUTPUT );
-  pinMode( bot_valid, OUTPUT );
+  pinMode( valid, OUTPUT );
+//  pinMode( bot_valid, OUTPUT );
   pinMode( LED_BUILTIN, OUTPUT );
   pinMode( x_pos_1, OUTPUT );
   pinMode( y_pos_1, OUTPUT );
@@ -55,64 +54,59 @@ void setup() {
   pinMode( A2, OUTPUT ); //SOUTH
   pinMode( A3, OUTPUT ); //WEST
 }
-//aaaaNESWxxxxyyyy 16bit of data from radio?
+//aaasNESWxxxxyyyy 16bit of data from radio?
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(5000);
-  digitalWrite( output, LOW );
-  digitalWrite( bot_valid, LOW);
-  //delay(1000);
-  //delay(10000);
-  //delay(10000);
-  //drawSquare(HIGH,LOW,HIGH,LOW,HIGH,LOW);
-  //digitalWrite( output, HIGH);
-  //digitalWrite( output, LOW );
-//  digitalWrite( output, HIGH);
+  delay(10000);
+  digitalWrite( valid, LOW );
+//  digitalWrite( bot_valid, LOW);
+  
   drawSquare(LOW,LOW,LOW,HIGH,LOW,LOW,LOW,HIGH,HIGH,LOW,LOW,HIGH);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, HIGH);
   delay(1000);
-  digitalWrite( output, LOW );
-  digitalWrite( bot_valid, HIGH);
-  drawBot(LOW,LOW,HIGH,LOW);
-  digitalWrite( output, HIGH);
+  
+  digitalWrite( valid, LOW );
+//  digitalWrite( bot_valid, HIGH);
+//  drawBot(LOW,LOW,HIGH,LOW);
+  digitalWrite( valid, HIGH);
   delay(2000);
-  digitalWrite( output, LOW);
-  digitalWrite( bot_valid, LOW);
+  digitalWrite( valid, LOW);
+//  digitalWrite( bot_valid, LOW);
   drawSquare(LOW,LOW,HIGH,LOW,LOW,LOW,LOW,HIGH,HIGH,HIGH,LOW,LOW);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, HIGH);
   delay(2000);
-  digitalWrite( output, LOW);
+  digitalWrite( valid, LOW);
   drawSquare(LOW,LOW,HIGH,HIGH,LOW,LOW,LOW,HIGH,HIGH,LOW,HIGH,LOW);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, HIGH);
   delay(1000);
-  digitalWrite( output, LOW );
-  drawBot(LOW,HIGH,LOW,LOW);
-  digitalWrite( bot_valid, HIGH);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, LOW );
+//  drawBot(LOW,HIGH,LOW,LOW);
+//  digitalWrite( bot_valid, HIGH);
+  digitalWrite( valid, HIGH);
   delay(2000);
-  digitalWrite( output, LOW);
-  digitalWrite( bot_valid, LOW);
+  digitalWrite( valid, LOW);
+//  digitalWrite( bot_valid, LOW);
   drawSquare(LOW,LOW,HIGH,HIGH,LOW,LOW,HIGH,LOW,LOW,LOW,HIGH,HIGH);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, HIGH);
   delay(2000);
-  digitalWrite( output, LOW);
+  digitalWrite( valid, LOW);
   drawSquare(LOW,LOW,HIGH,HIGH,LOW,LOW,HIGH,HIGH,LOW,HIGH,HIGH,LOW);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, HIGH);
   delay(2000);
-  digitalWrite( output, LOW );
+  digitalWrite( valid, LOW );
   drawSquare(LOW,LOW,HIGH,LOW,LOW,LOW,HIGH,HIGH,HIGH,HIGH,LOW,LOW);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, HIGH);
   delay(2000);
-  digitalWrite( output, LOW );
+  digitalWrite( valid, LOW );
   drawSquare(LOW,LOW,LOW,HIGH,LOW,LOW,HIGH,HIGH,LOW,HIGH,LOW,HIGH);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, HIGH);
   delay(2000);
-  digitalWrite( output, LOW );
+  digitalWrite( valid, LOW );
   drawSquare(LOW,LOW,LOW,HIGH,LOW,LOW,HIGH,LOW,LOW,LOW,HIGH,HIGH);
-  digitalWrite( output, HIGH);
+  digitalWrite( valid, HIGH);
   delay(2000);
-  digitalWrite( output, LOW );
+  digitalWrite( valid, LOW );
   while(1)
   {
   }

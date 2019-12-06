@@ -1,4 +1,4 @@
-// 000rvwwwxxxxyyyy
+// 000swwwwxxxxyyyy
 
 /*
  Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
@@ -21,6 +21,38 @@
 #include "nRF24L01.h"
 #include "RF24.h"
 #include "printf.h"
+
+// pins for base station arduino 
+
+int valid   = 7;
+int x_pos_1 = 2;
+int x_pos_2 = 3;
+int x_pos_3 = 4;
+int y_pos_1 = 5;
+int y_pos_2 = 6;
+int y_pos_3 = 8;
+
+// function that draws a square in the given position (x,y) with walls
+
+void drawSquare(int x1,int x2,int x3, int x4, int y1,int y2,int y3, int y4, int N, int E, int S, int W) {
+  // x coordinates
+  digitalWrite( x_pos_1, x1 );
+  digitalWrite( x_pos_2, x2 );
+  digitalWrite( x_pos_3, x3);
+  digitalWrite( A4, x4);
+
+  // y coordinates
+  digitalWrite( y_pos_1, y1 );
+  digitalWrite( y_pos_2, y2 );
+  digitalWrite( y_pos_3, y3 );
+  digitalWrite( A5, y4 );
+
+  // WALLS
+  digitalWrite( A0, N);
+  digitalWrite( A1, E);
+  digitalWrite( A2, S);
+  digitalWrite( A3, W);
+}
 
 //
 // Hardware configuration
@@ -107,9 +139,44 @@ void setup(void)
   //
 
   radio.printDetails();
+
+  // setting up pins for communication with the FPGA
+
+  pinMode( valid, OUTPUT );
+  pinMode( LED_BUILTIN, OUTPUT );
+  pinMode( x_pos_1, OUTPUT );
+  pinMode( y_pos_1, OUTPUT );
+  pinMode( x_pos_2, OUTPUT );
+  pinMode( y_pos_2, OUTPUT );
+  pinMode( x_pos_3, OUTPUT );
+  pinMode( y_pos_3, OUTPUT );
+  pinMode( A4, OUTPUT ); //x4
+  pinMode( A5, OUTPUT ); //y4
+  pinMode( A0, OUTPUT ); //NORTH
+  pinMode( A1, OUTPUT ); //EAST
+  pinMode( A2, OUTPUT ); //SOUTH
+  pinMode( A3, OUTPUT ); //WEST
 }
 
 void loop(void) {
+  
+  byte x1;
+  byte x2;
+  byte x3;
+  byte x4;
+  
+  byte y1;
+  byte y2;
+  byte y3;
+  byte y4;
+
+  byte north_wall;
+  byte east_wall;
+  byte south_wall;
+  byte west_wall;
+
+  byte global_sent;
+  
   // if there is data ready
   if ( radio.available() ){
     
@@ -124,19 +191,36 @@ void loop(void) {
       // Spew it
       uint16_t xcord = (info & B11110000) >> 4 ;
       uint16_t ycord = (info & B00001111)      ;
-      uint16_t walls = (info >> 8)  & B00000111;
-      uint16_t visit = (info >> 11) & B00010000;
-      uint16_t robot = (info >> 12) & B00001000;
+      uint16_t walls = (info >> 8)  & B00001111;
+      uint16_t sent  = (info >> 12) & B00000001;
+//      uint16_t robot = (info >> 12) & B00001000;
+
+      x1 = (xcord >> 3) & B00000001;
+      x2 = (xcord >> 2) & B00000001;
+      x3 = (xcord >> 1) & B00000001; 
+      x4 = xcord & B00000001;
+
+      y1 = (ycord >> 3) & B00000001;
+      y2 = (ycord >> 2) & B00000001;
+      y3 = (ycord >> 1) & B00000001; 
+      y4 = ycord & B00000001;
+
+      north_wall = (walls >> 3) & B00000001;
+      east_wall  = (walls >> 2) & B00000001;
+      south_wall = (walls >> 1) & B00000001; 
+      west_wall  = walls & B00000001;
+
+      global_sent = sent;
       
       printf("Got payload... ");
       printf("message: %x", info);
       printf("\n");
-      printf("x-coord: %d", xcord );
-      printf(" y-coord: %d", ycord );
-      printf(" walls: %d",   walls );
-      printf(" visited: %d", visit );
-      printf(" robot: %d",   robot );
-      printf("\n");        
+      printf("\nx-coord: %d", xcord );
+      printf("\ny-coord: %d", ycord );
+      printf("\nwalls: %d",   walls );
+      printf("\nsent: %d", sent );
+//      printf(" robot: %d",   robot );
+      printf("\n\n");        
     }
 
     // First, stop listening so we can talk
@@ -144,10 +228,24 @@ void loop(void) {
 
     // Send the final one back.
     radio.write( &info, sizeof(uint16_t) );
-    printf("Sent response.\n\r");
+//    printf("Sent response.\n\r");
 
     // Now, resume listening so we catch the next packets.
     radio.startListening();
   }
+
+  // setting valid bit to LOW before we send the data to draw
+
+  digitalWrite( valid, LOW );
+
+  // sending the data to draw the square, then setting valid bit to HIGH
+  if (!global_sent) {
+    drawSquare(x1, x2, x3, x4, y1, y2, y3, y4, north_wall, east_wall, south_wall, west_wall);
+  }
+  
+  digitalWrite( valid, HIGH );
+  delay(100);
+  digitalWrite( valid, LOW );
+  
 }
 // vim:cin:ai:sts=2 sw=2 ft=cpp
