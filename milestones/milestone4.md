@@ -24,8 +24,14 @@ protocol to send data from robot to base station?
 
 sending the entire maze vs only sending new information
 
-### Full Robotic Integration
+## Full Robotic Integration
 
-## Drawing the Maze
+### Drawing a Tile
+
+30x30 tile boy
+clocks were an issue
+I hate Verilog
+
+### Drawing the Maze
 
 ## Conclusion
