@@ -22,4 +22,4 @@ Lab 4
 
 [Milestone 3](milestones/milestone3.md)
 
-Milestone 4
+[Milestone 4](milestones/milestone4.md)
