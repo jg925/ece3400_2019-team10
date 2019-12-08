@@ -35,6 +35,9 @@ int y_pos_3 = 8;
 // function that draws a square in the given position (x,y) with walls
 
 void drawSquare(int x1,int x2,int x3, int x4, int y1,int y2,int y3, int y4, int N, int E, int S, int W) {
+  // valid boy
+  
+  
   // x coordinates
   digitalWrite( x_pos_1, x1 );
   digitalWrite( x_pos_2, x2 );
@@ -159,93 +162,111 @@ void setup(void)
 }
 
 void loop(void) {
-  
-  byte x1;
-  byte x2;
-  byte x3;
-  byte x4;
-  
-  byte y1;
-  byte y2;
-  byte y3;
-  byte y4;
+  while(1) {
+    bool xval;
+    byte x1;
+    byte x2;
+    byte x3;
+    byte x4;
 
-  byte north_wall;
-  byte east_wall;
-  byte south_wall;
-  byte west_wall;
-
-  byte global_sent;
+    bool yval;
+    byte y1;
+    byte y2;
+    byte y3;
+    byte y4;
   
-  // if there is data ready
-  if ( radio.available() ){
+    byte north_wall;
+    byte east_wall;
+    byte south_wall;
+    byte west_wall;
+  
+    byte global_sent;
     
-    // Dump the payloads until we've gotten everything
-    uint16_t info;
-    bool done = false;
-    while (!done)
-    {
-      // Fetch the payload, and see if this was the last one.
-      done = radio.read( &info, sizeof(uint16_t) );
+//    // if there is data ready
+//    if ( !radio.available() ) {
+//      printf("radio not available");
+//    }
+    if ( radio.available() ){
+//    else {
+//      printf("radio available");
+//      
+      // Dump the payloads until we've gotten everything
+      uint16_t info;
+      bool done = false;
+      while (!done)
+      {
+        // Fetch the payload, and see if this was the last one.
+        done = radio.read( &info, sizeof(uint16_t) );
+  
+        // Spew it
+        uint16_t xcord = (info & B11110000) >> 4 ;
+        uint16_t ycord = (info & B00001111)      ;
+        uint16_t walls = (info >> 8)  & B00001111;
+        uint16_t sent  = (info >> 12) & B00000001;
 
-      // Spew it
-      uint16_t xcord = (info & B11110000) >> 4 ;
-      uint16_t ycord = (info & B00001111)      ;
-      uint16_t walls = (info >> 8)  & B00001111;
-      uint16_t sent  = (info >> 12) & B00000001;
-//      uint16_t robot = (info >> 12) & B00001000;
+        if (xcord > 9) {
+          xval = false;
+        } else {
+          xval = true;
+        }
+        x1 = (xcord >> 3) & B00000001;
+        x2 = (xcord >> 2) & B00000001;
+        x3 = (xcord >> 1) & B00000001; 
+        x4 = xcord & B00000001;
 
-      x1 = (xcord >> 3) & B00000001;
-      x2 = (xcord >> 2) & B00000001;
-      x3 = (xcord >> 1) & B00000001; 
-      x4 = xcord & B00000001;
-
-      y1 = (ycord >> 3) & B00000001;
-      y2 = (ycord >> 2) & B00000001;
-      y3 = (ycord >> 1) & B00000001; 
-      y4 = ycord & B00000001;
-
-      north_wall = (walls >> 3) & B00000001;
-      east_wall  = (walls >> 2) & B00000001;
-      south_wall = (walls >> 1) & B00000001; 
-      west_wall  = walls & B00000001;
-
-      global_sent = sent;
-      
-      printf("Got payload... ");
-      printf("message: %x", info);
-      printf("\n");
-      printf("\nx-coord: %d", xcord );
-      printf("\ny-coord: %d", ycord );
-      printf("\nwalls: %d",   walls );
-      printf("\nsent: %d", sent );
-//      printf(" robot: %d",   robot );
-      printf("\n\n");        
+        if (ycord > 9) {
+          yval = false;
+        } else {
+          yval = true;
+        }
+        y1 = (ycord >> 3) & B00000001;
+        y2 = (ycord >> 2) & B00000001;
+        y3 = (ycord >> 1) & B00000001; 
+        y4 = ycord & B00000001;
+  
+        north_wall = (walls >> 3) & B00000001;
+        east_wall  = (walls >> 2) & B00000001;
+        south_wall = (walls >> 1) & B00000001; 
+        west_wall  = walls & B00000001;
+  
+        global_sent = sent;
+        
+        printf("Got payload... ");
+        printf("message: %x", info);
+        printf("\nx-coord: %d", xcord );
+        printf("\ny-coord: %d", ycord );
+        printf("\nwalls: %d",   walls );
+        printf("\nsent: %d", sent );
+        printf("\n\n");        
+      }
+  
+      // First, stop listening so we can talk
+      radio.stopListening();
+  
+      // Send the final one back.
+      radio.write( &info, sizeof(uint16_t) );
+      printf("Sent response.\n\r");
+  
+      // Now, resume listening so we catch the next packets.
+      radio.startListening();
     }
 
-    // First, stop listening so we can talk
-    radio.stopListening();
+    else {
+      delay(1);
+    }
+    printf("\nxval = %d", xval);
+    // sending the data to draw the square, then setting valid bit to HIGH
+    if (!global_sent && xval && yval) {
+      digitalWrite( valid, LOW );
+      delay(100);
+      drawSquare(x1, x2, x3, x4, y1, y2, y3, y4, north_wall, east_wall, south_wall, west_wall);
+      delay(100);
+      digitalWrite( valid, HIGH );
+    }
 
-    // Send the final one back.
-    radio.write( &info, sizeof(uint16_t) );
-//    printf("Sent response.\n\r");
-
-    // Now, resume listening so we catch the next packets.
-    radio.startListening();
+    else {
+      delay(1);
+    }
   }
-
-  // setting valid bit to LOW before we send the data to draw
-
-  digitalWrite( valid, LOW );
-
-  // sending the data to draw the square, then setting valid bit to HIGH
-  if (!global_sent) {
-    drawSquare(x1, x2, x3, x4, y1, y2, y3, y4, north_wall, east_wall, south_wall, west_wall);
-  }
-  
-  digitalWrite( valid, HIGH );
-  delay(100);
-  digitalWrite( valid, LOW );
-  
 }
 // vim:cin:ai:sts=2 sw=2 ft=cpp

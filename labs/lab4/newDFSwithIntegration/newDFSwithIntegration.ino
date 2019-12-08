@@ -1,7 +1,7 @@
 #define LOG_OUT 1 // use the log output function
 #define FFT_N 256 // set to 256 point fft
 #include <Servo.h>
-#include <FFT.h>
+//#include <FFT.h>
 #include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
@@ -76,7 +76,7 @@ int center_pi_arr[10];
 // =====================================================================================================
 
 // green "done LED" and push button "start button"
-#define DONE_LED 8
+#define DONE_LED A1
 #define START_BUTTON 7
 
 // initialize "beginning" which waits for button press or 950 Hz signal and "ending"
@@ -113,49 +113,75 @@ node current;
 
 // =====================================================================================================
 
+int going_fast = 0;
+
 void halt() {
   left.write(96);   // normal servos: 90
   right.write(96);  // normal servos: 90
+  going_fast=0;
 }
 
 void moveForward() {
-  left.write(102);
+  // trying to reduce jerk
+  if (!going_fast) {
+    left.write(97);
+    right.write(95);
+    delay(30);
+    left.write(98);
+    right.write(94);
+    delay(30);
+    left.write(99);
+    right.write(93);
+    delay(30); 
+    left.write(100);
+    right.write(92);
+    delay(30);
+  }
+  going_fast=1;
+  left.write(101);
   right.write(91);
 }
 
 void slightRight() {
   left.write(100);
   right.write(95);  // normal servos: 85
+//  going_fast=0;
 }
 
 void slightLeft() {
   left.write(97);   // normal servos: 95
   right.write(91);
+//  going_fast=0;
 }
 
 void rotateRight() {
   left.write(101);
   right.write(101);
+  going_fast=0;
 }
 
 void rotateLeft() {
   left.write(91);
   right.write(91);
+  going_fast=0;
 }
 
 void right90Turn() {
   rotateRight();
-  delay(500);       // normal servos: 725
+  delay(425);       // normal servos: 725
+  going_fast=0;
 }
 
 void left90Turn() {
   rotateLeft();
-  delay(550);       // normal servos: 725
+  delay(425);       // normal servos: 725
+  going_fast=0;
 }
 
 void right180Turn() {
   rotateRight();
   delay(1050);      // normal servos: 1450
+  going_fast=0;
 }
 
 // =====================================================================================================
@@ -171,7 +197,7 @@ int navigate() {
   // if both sensors on white
   if (left_sensor_value < line_threshold && right_sensor_value < line_threshold) {
     moveForward();
-    delay(225);
+    delay(275);
     return 1; // return 1 here, else we return 0 to keep navigating
   }
 
@@ -208,8 +234,6 @@ int navigate() {
 
 // =====================================================================================================
 
-byte robotfound = 0;
-
 int detect_robots() {
   int center_input = analogRead(center_robot_detect);
   return center_input > robot_threshold; 
@@ -240,58 +264,59 @@ int is_maximum( int five, int six, int seven, int eight, int nine, int FFT_thres
 // =====================================================================================================
 
 int fftboi() {
-  halt();
-  int flag_950 = 0;
-  right.detach();
-  left.detach();
-  cli();  // UDRE interrupt slows this way down on arduino1.0
+//  halt();
+//  int flag_950 = 0;
+//  right.detach();
+//  left.detach();
+return digitalRead(START_BUTTON);
+//  cli();  // UDRE interrupt slows this way down on arduino1.0
+//  
+//  int tempTIM = TIMSK0;
+//  int tempSRA = ADCSRA;
+//  int tempMUX = ADMUX;
+//  int tempDID = DIDR0;
+//
+//  TIMSK0 = 0; // turn off timer0 for lower jitter
+//  ADCSRA = 0xe5; // set the adc to free running mode
+//  ADMUX = 0x40; // use adc0
+//  DIDR0 = 0x01; // turn off the digital input for adc0
+//
+//  byte m;
+//  byte j;
+//  int k;
+//  for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
+//    while (!(ADCSRA & 0x10)); // wait for adc to be ready
+//    ADCSRA = 0xf5; // restart adc
+//    m = ADCL; // fetch adc data
+//    j = ADCH;
+//    k = (j << 8) | m; // form into an int
+//    k -= 0x0200; // form into a signed int
+//    k <<= 6; // form into a 16b signed int
+//    fft_input[i] = k; // put real data into even bins
+//    fft_input[i + 1] = 0; // set odd bins to 0
+//  }
+//  fft_window(); // window the data for better frequency response
+//  fft_reorder(); // reorder the data before doing the fft
+//  fft_run(); // process the data in the fft
+//  fft_mag_log(); // take the output of the fft
+//  sei();
+//  int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], fft_log_out[9], 80 );
+//  if ((max && detect_count >= 4) || digitalRead(START_BUTTON)) {
+//    flag_950 = 1;
+//    detect_count = 0;
+//  } else if ( max ) {
+//    detect_count++;
+//  }
   
-  int tempTIM = TIMSK0;
-  int tempSRA = ADCSRA;
-  int tempMUX = ADMUX;
-  int tempDID = DIDR0;
-
-  TIMSK0 = 0; // turn off timer0 for lower jitter
-  ADCSRA = 0xe5; // set the adc to free running mode
-  ADMUX = 0x40; // use adc0
-  DIDR0 = 0x01; // turn off the digital input for adc0
-
-  byte m;
-  byte j;
-  int k;
-  for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
-    while (!(ADCSRA & 0x10)); // wait for adc to be ready
-    ADCSRA = 0xf5; // restart adc
-    m = ADCL; // fetch adc data
-    j = ADCH;
-    k = (j << 8) | m; // form into an int
-    k -= 0x0200; // form into a signed int
-    k <<= 6; // form into a 16b signed int
-    fft_input[i] = k; // put real data into even bins
-    fft_input[i + 1] = 0; // set odd bins to 0
-  }
-  fft_window(); // window the data for better frequency response
-  fft_reorder(); // reorder the data before doing the fft
-  fft_run(); // process the data in the fft
-  fft_mag_log(); // take the output of the fft
-  sei();
-  int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], fft_log_out[9], 80 );
-  if ((max && detect_count >= 4) || digitalRead(START_BUTTON)) {
-    flag_950 = 1;
-    detect_count = 0;
-  } else if ( max ) {
-    detect_count++;
-  }
-  
-  TIMSK0 = tempTIM;
-  ADCSRA = tempSRA;
-  ADMUX = tempMUX;
-  DIDR0 = tempDID;
-
-  right.attach(right_pin);
-  left.attach(left_pin);
-  
-  return flag_950;
+//  TIMSK0 = tempTIM;
+//  ADCSRA = tempSRA;
+//  ADMUX = tempMUX;
+//  DIDR0 = tempDID;
+//
+//  right.attach(right_pin);
+//  left.attach(left_pin);
+//  
+//  return flag_950;
 }
 
 // =====================================================================================================
@@ -301,26 +326,10 @@ int fftboi() {
 // =====================================================================================================
 
 void communicate() {
-  // rddswwwwxxxxyyyy 
+  // 000swwwwxxxxyyyy 
 
   // zeroes out msg
   uint16_t msg = 0000000000000000;
-
-  // robot detection bit
-  msg = (msg << 1) | (robotfound >> 7);
-
-  // robot direction bits
-  byte robotdir = (byte(robotfound) & B00001111);
-  if (robotdir == 1) { // WEST
-    robotdir = B00000000;
-  } else if (robotdir == 2) { // SOUTH
-    robotdir = B00000001;
-  } else if (robotdir == 4) { // EAST
-    robotdir = B00000010;
-  } else { // NORTH
-    robotdir = B00000011;
-  }
-  msg = (msg << 2) | robotdir;
 
   // walls already sent bit; NOTE: IF THIS IS 1, DO NOT DRAW THE WALLS AGAIN
   msg = (msg << 1) | ((maze[int(current.pos & B00001111)*9+int(current.pos >> 4)].vs_came & B01000000) >> 6);
@@ -347,19 +356,19 @@ void communicate() {
 //    printf("ok...");
 //  else
 //    printf("failed.\n\r");
-
-  // Now, continue listening
-  radio.startListening();
-
-  // Wait here until we get a response, or timeout (250ms)
-  unsigned long started_waiting_at = millis();
-  
-  bool timeout = false;
-  while ( ! radio.available() && ! timeout ) {
-    if (millis() - started_waiting_at > 250 ){
-      timeout = true;
-    }
-  }
+//
+//  // Now, continue listening
+//  radio.startListening();
+//
+//  // Wait here until we get a response, or timeout (250ms)
+//  unsigned long started_waiting_at = millis();
+//  
+//  bool timeout = false;
+//  while ( ! radio.available() && ! timeout ) {
+//    if (millis() - started_waiting_at > 250 ){
+//      timeout = true;
+//    }
+//  }
 
   // Describe the results
 //  if ( !timeout ) {
@@ -437,25 +446,21 @@ int movetoLocation (byte location) {
     }
   }
 
-  int detect = detect_robots();
-  if (detect) {
-    robotfound = B10000000 | face;
+  if (detect_robots()) {
     return 0;
-  } else {
-    robotfound = B00000000;
-
-    maze[int(current.pos & B00001111)*9+int(current.pos >> 4)].walls_neighbors = maze[int(current.pos & B00001111)*9+int(current.pos >> 4)].walls_neighbors | face;
-    
-    int go_on = 0;
-    while ( go_on != 1 ) { // Want to navigate to next intersection at location
-      go_on = navigate();
-    }
-    halt(); // Just so we don't go anywhere ;)
-  
-    current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
-    maze[int(current.pos & B00001111)*9+int(current.pos >> 4)].vs_came = B10000000 | face; // Mark new current location as visited and update "came" direction
-    return 1;
   }
+
+  maze[int(current.pos & B00001111)*9+int(current.pos >> 4)].walls_neighbors = maze[int(current.pos & B00001111)*9+int(current.pos >> 4)].walls_neighbors | face;
+  
+  int go_on = 0;
+  while ( go_on != 1 ) { // Want to navigate to next intersection at location
+    go_on = navigate();
+  }
+  halt(); // Just so we don't go anywhere ;)
+
+  current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
+  maze[int(current.pos & B00001111)*9+int(current.pos >> 4)].vs_came = B10000000 | face; // Mark new current location as visited and update "came" direction
+  return 1;
 }
 
 int moveNorth() {
@@ -721,6 +726,7 @@ void dfs() {
   
   if (!wemoved && current.pos != 0) { // if we didn't move, i.e. all neighbors have been visited and/or have walls
     walkBack();
+    halt();
   } else if (!wemoved && current.pos == 0 && current.dir != 8) {
     left90Turn();
     current.dir = current.dir << 1;
@@ -752,7 +758,7 @@ void setup() {
 
   // serial and print setup
   Serial.begin(57600);
-  //printf_begin();
+  printf_begin();
 
   // servo setup
   right.attach(right_pin);
@@ -820,6 +826,7 @@ int stopped[3] = {0, 0, 0};
 
 void loop() {
   if (beginning) { // wait for pushbutton/950 Hz tone
+    Serial.println("Beginning");
     if (fftboi()) {
       beginning = 0;
       for (int i = 0; i < 2; i++) { // Signal we are about to begin
@@ -831,7 +838,9 @@ void loop() {
     }
   }
   else if (!ending) { // to make sure we don't keep doing stuff after we finish
+    Serial.println("Before DFS");
     dfs();
+    Serial.println("After DFS");
     stopped[0] = stopped[1]; // shift element over
     stopped[1] = stopped[2]; // shift element over
     if (int(current.pos) == 0) { // fill in new opening
@@ -844,6 +853,7 @@ void loop() {
       stopped[2] = 0;
     }
   } else {
+    Serial.println("halting");
     halt();
   }
 }
