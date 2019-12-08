@@ -8,11 +8,11 @@ This milestone involved having our robot successfully avoid other robots and exp
 
 This milestone involved using IR detectors and emitters to detect and avoid other robots. Per the lab specification, we mounted both the detectors and sensors at exactly 5 inches off the ground. Mounted detector shown below.
 
-<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/phototransistor.jpg?" height="350" width="350"></p>
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/phototransistor.jpg?" height="350" width="350"></p>
 
 There were two options of IR detectors. After testing both with the same circuit below, we decided to use the wider angle detector to ensure our robot detection had the most range possible. When testing this IR detector circuit, we found that a higher resistance in the circuit allowed a larger range of analog read values to occur. With a 330Ω resistor, the analog read values were too small to have noticeable differences. So we upped the resistance to 10kΩ and obtained a solid range from 0 to 100 which is shown in the circuit and videos below.
 
-<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/circuit.jpg?" height="350" width="250"></p>
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/circuit.jpg?" height="350" width="250"></p>
 
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/A8EQLZdOH7E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -27,9 +27,9 @@ We decided to use three detectors for the front, right and left sides of our rob
 
 Below is the "robot" that we avoided in our video above. The emitter circuit simply consists of one IR emitter and one 330Ω resistor connected to a power source.
 
-<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/milestones/ir.jpg?" height="250" width="350"></p>
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/milestones/ir.jpg?" height="250" width="350"></p>
 
-<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/emittercircuit.jpg" height="250" width="150"></p>
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/emittercircuit.jpg" height="250" width="150"></p>
 
 Our code for reading in the values from the phototransistors consisted of using a running average of a sample of 10 inputs. Every time we detect that the average of the sample is above our decided threshold, we turn on the green LED located on our protoboard and make a 180 degree turn. Originally, we were halting when the IR was detected, but after learning that halting as a avoidance technique would be ineffective for the actual competition, we chose to make a U-turn instead. Immediately once the average drops below this threshold, the LED turns off and the robot does normal right hand rule line following navigation.
 
@@ -65,7 +65,7 @@ After soldering the IR detection circuit onto our protoboard, the IR detector re
 
 In this section of the milestone, we implemented a depth-first search in order to successfully traverse a 4x5 maze. In order to implement this algorithm, we used the StackArray Arduino library. We created an enum called direction as well as a struct called node that keeps track of the robot's orientation and position. We used bytes to store the position to save space; the first four bits are for the x-coordinate and the last four are for the y-coordinate. We created another struct that we used to create a 100 element array to simulate the 10x10 maze. This node contains two bytes which tell if the location has been visited and where the walls are relative to where to robot entered the position. We initially set all the walls to be 00000111 in setup() because we use shifting to properly set the bits once we determine the locations using the wall sensors. When placing our robot into the corner of a maze, we always say it starts at (0,0) and that it is always facing north, so we always place it such that there are walls to the left and behind it as shown below. This greatly simplified the start-up code. 
 
-<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/blob/master/labs/lab3/images/RobotInit.jpg?raw=true" height="350" width="350"></p>
+<p align="center"><img src="https://github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab3/images/RobotInit.jpg" height="350" width="350"></p>
 
 When loop() is called for the first time, we wait for the start button that we integrated to be pressed. Then we check if (0,1) is open and we perform a DFS on that location. Our DFS is a little more complicated than that of a "standard" DFS because we always have to take the robot's orientation into account. First, we move to the open location, push it onto the stack, and determine where the walls are, modifying the bytes in our maze array as needed. Then we determine the coordinates of the neighbors, save the current orientation, and look to recursively call DFS on the location in front of the robot if there isn't a wall, it isn't visited, and it's in the maze. Then, depending on the orientation after that, we read the appropriate wall sensor to check the location to the left of the original orientation, check the coordinate to see if it's navigable, and perform another DFS if possible. Finally, we execute a similar process for the location to the right of the original orientation. After all that, we pop the current location off the stack and return to the previous location (if there is a location to return to). After the DFS to (0,1) fully completes, we look back into loop(), and do the same thing on (1,0). Again, because orientation matters, it gets a little more complicated determining which sensor to read from and where to turn. After both of those paths have been explored fully (or determined to be unexplorable), we return to our starting location, face north, halt the robot, and turn on our victory LED.
 
