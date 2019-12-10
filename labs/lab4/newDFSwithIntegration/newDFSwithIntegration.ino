@@ -298,13 +298,7 @@ int detect_robots() {
   return center_input > robot_threshold;
 }
 
-// =====================================================================================================
 
-// fft variables inits
-
-// =====================================================================================================
-
-int detect_count = 0;
 
 // =====================================================================================================
 
@@ -312,8 +306,12 @@ int detect_count = 0;
 
 // =====================================================================================================
 
-int is_maximum( int five, int six, int seven, int eight, int nine, int FFT_threshold ) {
-  return (five > FFT_threshold) && (six > FFT_threshold) && (seven > FFT_threshold) && (eight > FFT_threshold) && (nine > FFT_threshold);
+int is_maximum( int five, int six, int seven ) {
+  if ( six > 122 && six < 137 && seven > 120 && seven < 126 && five < 100 )
+  {
+    return 1;
+  }
+  return 0;
 }
 
 // =====================================================================================================
@@ -359,12 +357,9 @@ int fftboi() {
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
-  int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7], fft_log_out[8], fft_log_out[9], 80 );
-  if ((max && detect_count >= 4) || digitalRead(START_BUTTON)) {
+  int max = is_maximum( fft_log_out[5], fft_log_out[6], fft_log_out[7] );
+  if (max || digitalRead(START_BUTTON)) {
     flag_950 = 1;
-    detect_count = 0;
-  } else if ( max ) {
-    detect_count++;
   }
 
   TIMSK0 = tempTIM;
