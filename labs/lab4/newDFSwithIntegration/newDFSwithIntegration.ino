@@ -66,8 +66,8 @@ int front_detect;
 #define center_robot_detect A2
 
 // ir robot detection variables
-int center_pi_arr[10];
 #define robot_threshold 825
+int robot_detected = 0;
 
 // =====================================================================================================
 
@@ -124,7 +124,7 @@ void halt() {
 void moveForward() {
   // trying to reduce jerk
   if (!going_fast) {
-    Serial.println("MOVE FORWARD DELAYS");
+    //    Serial.println("MOVE FORWARD DELAYS");
     left.write(97);
     right.write(95);
     delay(30);
@@ -141,6 +141,11 @@ void moveForward() {
   going_fast = 1;
   left.write(101);
   right.write(91);
+}
+
+void moveBackward() {
+  left.write(91);
+  right.write(101);
 }
 
 void slightRight() {
@@ -168,11 +173,15 @@ void rotateLeft() {
 }
 
 void right90Turn() {
-  if (!beginning) {
+  if (!beginning) { // Don't want to turn move forward if starting in tunnel
     moveForward();
     delay(100);
   }
-  Serial.println("RIGHT 90 TURN DELAYS");
+  if (robot_detected) {
+    moveBackward();
+    delay(200);
+    robot_detected = 0;
+  }
   rotateRight();
   delay(200);
   while (analogRead(RIGHT_LINE_SENSOR) >= line_threshold) {
@@ -187,9 +196,13 @@ void right90Turn() {
 }
 
 void left90Turn() {
+  if (robot_detected) {
+    moveBackward();
+    delay(200);
+    robot_detected = 0;
+  }
   moveForward();
   delay(100);
-  Serial.println("LEFT 90 TURN DELAYS");
   rotateLeft();
   delay(200);
   while (analogRead(LEFT_LINE_SENSOR) >= line_threshold) {
@@ -204,9 +217,13 @@ void left90Turn() {
 }
 
 void right180Turn() {
+  if (robot_detected) {
+    moveBackward();
+    delay(200);
+    robot_detected = 0;
+  }
   moveForward();
   delay(100);
-  Serial.println("RIGHT 180 TURN DELAYS");
   rotateRight();
   delay(200);
   for (int w = 0; w < 2; w++) {
@@ -235,17 +252,11 @@ int navigate() {
   // if both sensors on white
   if (left_sensor_value < line_threshold && right_sensor_value < line_threshold) {
     moveForward();
-    //    while (left_sensor_value < line_threshold && right_sensor_value < line_threshold) {
-    //      left_sensor_value = analogRead(LEFT_LINE_SENSOR);
-    //      right_sensor_value = analogRead(RIGHT_LINE_SENSOR);
-    //    }
     going_fast = 1;
-    Serial.println("NAVIGATE (INTERSECTION) DELAYS");
     moveForward();
     delay(100);
     halt();
     delay(50);
-    //going_fast = 0;
     return 1; // return 1 here, else we return 0 to keep navigating
   }
 
@@ -408,7 +419,7 @@ void communicate() {
   // Now, continue listening
   radio.startListening();
   //
-  //  // Wait here until we get a response, or timeout (250ms)
+  //  Wait here until we get a response, or timeout (250ms)
   unsigned long started_waiting_at = millis();
   //
   bool timeout = false;
@@ -475,6 +486,7 @@ int movetoLocation (byte location) {
   current.dir = face;
 
   if (detect_robots()) {
+    robot_detected = 1;
     return 0;
   }
 
@@ -484,7 +496,6 @@ int movetoLocation (byte location) {
   while ( go_on != 1 ) { // Want to navigate to next intersection at location
     go_on = navigate();
   }
-  //halt(); // Just so we don't go anywhere ;)
 
   current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
   maze[int(current.pos & B00001111) * 9 + int(current.pos >> 4)].vs_came = B10000000 | face; // Mark new current location as visited and update "came" direction
@@ -502,6 +513,49 @@ int moveNorth() {
     return 0;
   }
   return 0;
+}
+
+void movetoLocation2 (byte location) {
+  int diffx = int(current.pos >> 4) - int(location >> 4);
+  int diffy = int(current.pos & B00001111) - int(location & B00001111);
+  byte face;
+  if (diffx == 1) {
+    face = B00000001;
+  } else if (diffx == -1) {
+    face = B00000100;
+  } else if (diffy == 1) {
+    face = B00000010;
+  } else { // diffy == -1
+    face = B00001000;
+  }
+
+  int curr_dir = current.dir;
+  int i = 1;
+  for (i; i < 4; i++) {
+    curr_dir = curr_dir << 1;
+    if (curr_dir > 8) {
+      curr_dir = B00000001;
+    }
+    if (curr_dir == face) {
+      break;
+    }
+  }
+  if (i == 1) {
+    left90Turn();
+  } else if (i == 2) {
+    right180Turn();
+  } else if (i == 3) {
+    right90Turn();
+  }
+
+  current.dir = face;
+
+  int go_on = 0;
+  while ( go_on != 1 ) { // Want to navigate to next intersection at location
+    go_on = navigate();
+  }
+
+  current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
 }
 
 int moveEast() {
@@ -593,6 +647,89 @@ void determineWalls( byte location ) { // location is current location
   }
 }
 
+void miniWalk() {
+  byte loc = current.pos;
+  byte dir = current.dir;
+  byte path[3];
+  int i = 0;
+  while (i < 3) {
+    int left = digitalRead(left_ir_sensor);
+    int right = digitalRead(right_ir_sensor);
+    int front = digitalRead(front_ir_sensor);
+    if (front && i > 0) {
+      if (current.dir == B00001000) {
+        movetoLocation2(current.pos + 1);
+      } else if (current.dir == B00000100) {
+        movetoLocation2(current.pos + 16);
+      } else if (current.dir == B00000010) {
+        movetoLocation2(current.pos - 1);
+      } else {
+        movetoLocation2(current.pos - 16);
+      }
+    } else if (left) {
+      if (current.dir == B00001000) {
+        movetoLocation2(current.pos - 16);
+      } else if (current.dir == B00000100) {
+        movetoLocation2(current.pos + 1);
+      } else if (current.dir == B00000010) {
+        movetoLocation2(current.pos + 16);
+      } else {
+        movetoLocation2(current.pos - 1);
+      }
+    } else if (right) {
+      if (current.dir == B00001000) {
+        movetoLocation2(current.pos + 16);
+      } else if (current.dir == B00000100) {
+        movetoLocation2(current.pos - 1);
+      } else if (current.dir == B00000010) {
+        movetoLocation2(current.pos - 16);
+      } else {
+        movetoLocation2(current.pos + 1);
+      }
+    } else {
+      if (current.dir == B00001000) {
+        movetoLocation2(current.pos - 1);
+      } else if (current.dir == B00000100) {
+        movetoLocation2(current.pos + 16);
+      } else if (current.dir == B00000010) {
+        movetoLocation2(current.pos + 1);
+      } else {
+        movetoLocation2(current.pos - 16);
+      }
+    }
+    path[i] = current.pos;
+    i++;
+  }
+  i--;
+  while (i > 0) {
+    movetoLocation2(path[i - 1]);
+    current.pos = path[i - 1];
+    i--;
+  }
+  movetoLocation2(loc);
+  int curr_dir = current.dir;
+  int u = 1;
+  for (u; u < 4; u++) {
+    curr_dir = curr_dir << 1;
+    if (curr_dir > 8) {
+      curr_dir = B00000001;
+    }
+    if (curr_dir == dir) {
+      break;
+    }
+  }
+
+  if (u == 1) {
+    left90Turn();
+  } else if (u == 2) {
+    right180Turn();
+  } else if (u == 3) {
+    right90Turn();
+  }
+  current.dir = dir;
+}
+
+
 void walkBack() {
   byte to_return_dir = maze[int(current.pos & B00001111) * 9 + int(current.pos >> 4)].vs_came & B00001111;
   byte to_return_pos;
@@ -636,39 +773,17 @@ void walkBack() {
 
   // Navigate to return_to, update current position
 
-    if (detect_robots()) {
-      int turn = 0;
-      while (!digitalRead(front_ir_sensor)) { // find open place
-        right90Turn();
-        turn++;
-      }
-  
-      int go_on = 0; // move to open place
-      while ( go_on != 1 ) { // Want to get to next intersection (but to the last place in the path)
-        go_on = navigate();
-      }
-  
-      right180Turn(); // turn around
-  
-      go_on = 0; // move back to original position
-      while ( go_on != 1 ) { // Want to get to next intersection (but to the last place in the path)
-        go_on = navigate();
-      }
-  
-      if (turn == 1) {
-        right90Turn();
-      } else if (turn == 3) {
-        left90Turn();
-      }
-
-    } else {
-  int go_on = 0;
-  while ( go_on != 1 ) { // Want to get to next intersection (but to the last place in the path)
-    go_on = navigate();
-  }
-  //halt(); // Just so we don't go anywhere ;)
-  current.pos = to_return_pos;
+  if (detect_robots()) {
+    robot_detected = 1;
+    miniWalk();
+  } else {
+    int go_on = 0;
+    while ( go_on != 1 ) { // Want to get to next intersection (but to the last place in the path)
+      go_on = navigate();
     }
+    //halt(); // Just so we don't go anywhere ;)
+    current.pos = to_return_pos;
+  }
 }
 
 int determineDone() {
