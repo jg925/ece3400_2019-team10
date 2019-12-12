@@ -25,9 +25,7 @@ We then wanted to simulate our robot traversing a maze, so we made up a 10x10 ar
 ```c
 TRANSMITTER:
 
-byte maze[10][10] =
-
-{
+byte maze[10][10] = {
   B110, B000, B111, B010, B110, B010, B010, B111, B000, B001,
   B110, B000, B111, B010, B110, B010, B010, B111, B000, B001,
   B110, B000, B111, B010, B110, B010, B010, B111, B000, B001,
@@ -39,9 +37,6 @@ byte maze[10][10] =
   B110, B000, B111, B010, B110, B010, B010, B111, B000, B001,
   B110, B000, B111, B010, B110, B010, B010, B111, B000, B001,
 };
-
-...
-...
 
 msg = 0000000000000000;
 msg = (msg << 1) | 1;
@@ -69,7 +64,6 @@ if (x == 9 && y == 9) {
 } 
 
 radio.stopListening();
-
 bool ok = radio.write( &msg, sizeof(uint16_t) );
 
 if (ok)
