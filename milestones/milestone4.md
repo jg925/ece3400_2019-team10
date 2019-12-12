@@ -198,12 +198,11 @@ void dfs() {
 
 void loop() {
   if (beginning) { // wait for pushbutton
-    if (digitalRead(START_BUTTON) {
+    if (digitalRead(START_BUTTON)) {
       dfs();
       beginning = 0; // stop calling fft if 950 Hz detected or button pressed
     }
-  }
-  else if (!ending) { // to make sure we don't keep doing stuff after we finish
+  } else if (!ending) { // to make sure we don't keep doing stuff after we finish
     dfs();
   } else { // Permanently halt at (0,0) when done.
     halt();
@@ -212,5 +211,63 @@ void loop() {
 ```
 
 ## INSERT 4x4newDFStest VIDEO HERE
+
+The next thing that we integrated was radio communication to the base station Arduino.
+
+```c
+void communicate() {
+  // 000swwwwxxxxyyyy is the scheme we are using
+
+  // zeroes out msg
+  uint16_t msg = 0000000000000000;
+
+  // walls already sent bit; NOTE: IF THIS IS 1, DO NOT DRAW THE WALLS AGAIN
+  msg = (msg << 1) | ((maze[int(current.pos & B00001111) * 9 + int(current.pos >> 4)].vs_came & B01000000) >> 6);
+
+  // walls bits
+  msg = (msg << 4) | (maze[int(current.pos & B00001111) * 9 + int(current.pos >> 4)].walls_neighbors >> 4);
+
+  // x pos bits
+  msg = (msg << 4) | (current.pos >> 4);
+
+  // y pos bits
+  msg = (msg << 4) | (current.pos & B00001111);
+
+  // First, stop listening so we can talk.
+  radio.stopListening();
+
+  //printf("Now sending %x...",msg);
+  bool ok = radio.write( &msg, sizeof(uint16_t) );
+
+  // For debugging purposes:
+  if (ok)
+    printf("ok...");
+  else
+    printf("failed.\n\r");
+
+  // Now, continue listening
+  radio.startListening();
+
+  //  Wait here until we get a response, or timeout (250ms)
+  unsigned long started_waiting_at = millis();
+  //
+  bool timeout = false;
+  while ( ! radio.available() && ! timeout ) {
+    if (millis() - started_waiting_at > 250 ) {
+      timeout = true;
+    }
+  }
+
+  // Describe the results (we kept this because it didn't work when we got rid of it
+  if ( !timeout ) {
+    // Grab the response, compare, and send to debugging spew
+    uint16_t got_msg;
+    radio.read( &got_msg, sizeof(uint16_t) );
+    
+    // Spew it
+    printf("Got response %x \n\r", msg);
+  }
+}
+```
 
 ## Conclusion
