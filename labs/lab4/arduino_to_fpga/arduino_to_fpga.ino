@@ -7,7 +7,7 @@ int x_pos_3 = 4;
 int y_pos_1 = 5;
 int y_pos_2 = 6;
 int y_pos_3 = 8;
-int delay_time = 50;
+int delay_time = 5;
 
 void drawSquare(int x1,int x2,int x3, int x4, int y1,int y2,int y3, int y4, int N, int E, int S, int W) {
   // x coordinates
@@ -94,6 +94,7 @@ void loop() {
   delay(delay_time);
 
   digitalWrite( valid, LOW);
+  // walls were low high low high
   drawSquare(LOW,LOW,HIGH,HIGH,LOW,HIGH,LOW,HIGH,LOW,HIGH,LOW,HIGH);
   digitalWrite( valid, HIGH);
   delay(delay_time);
@@ -412,12 +413,46 @@ void loop() {
   delay(delay_time);
   
   digitalWrite( valid, LOW );
+  drawSquare(LOW,HIGH,LOW,HIGH, LOW,LOW,HIGH,HIGH, LOW,LOW,LOW,HIGH);
+  digitalWrite( valid, HIGH);
+  delay(delay_time);
+  
+  digitalWrite( valid, LOW );
   drawSquare(LOW,HIGH,LOW,HIGH, LOW,LOW,HIGH,LOW, LOW,LOW,HIGH,HIGH);
   digitalWrite( valid, HIGH);
   delay(delay_time);
   
   digitalWrite( valid, LOW );
-  drawSquare(LOW,LOW,HIGH,HIGH, LOW,LOW,HIGH,LOW, LOW,LOW,HIGH,HIGH);
+  drawSquare(LOW,HIGH,HIGH,LOW, LOW,LOW,HIGH,LOW, LOW,LOW,HIGH,LOW);
+  digitalWrite( valid, HIGH);
+  delay(delay_time);
+  
+  digitalWrite( valid, LOW );
+  drawSquare(LOW,HIGH,HIGH,HIGH, LOW,LOW,HIGH,LOW, LOW,LOW,LOW,LOW);
+  digitalWrite( valid, HIGH);
+  delay(delay_time);
+  
+  digitalWrite( valid, LOW );
+  drawSquare(LOW,HIGH,HIGH,HIGH, LOW,LOW,LOW,HIGH, LOW,LOW,LOW,HIGH);
+  digitalWrite( valid, HIGH);
+  delay(delay_time);
+
+  delay(4*delay_time);
+  
+  digitalWrite( valid, LOW );
+  drawSquare(LOW,HIGH,LOW,HIGH, LOW,HIGH,LOW,LOW, HIGH,LOW,LOW,HIGH);
+  digitalWrite( valid, HIGH);
+  delay(delay_time);
+  
+  digitalWrite( valid, LOW );
+  drawSquare(LOW,HIGH,HIGH,LOW, LOW,HIGH,LOW,LOW, HIGH,HIGH,LOW,LOW);
+  digitalWrite( valid, HIGH);
+  delay(delay_time);
+
+  delay(8*delay_time);
+  
+  digitalWrite( valid, LOW );
+  drawSquare(LOW,HIGH,LOW,LOW, LOW,LOW,LOW,HIGH, HIGH,HIGH,LOW,HIGH);
   digitalWrite( valid, HIGH);
   delay(delay_time);
   
