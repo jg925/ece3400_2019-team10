@@ -89,34 +89,28 @@ while ( ! radio.available() && ! timeout )
     timeout = true;
 
 // Describe the results
-if ( timeout )
-{
+if ( timeout ) {
   printf("Failed, response timed out.\n\r");
-}
-else
-{
+} else {
   // Grab the response, compare, and send to debugging spew
   byte got_msg;
   radio.read( &got_msg, sizeof(uint16_t) );
 
   // Spew it
   printf("Got response %x \n\r",msg);
-
 }
 
 RECEIVER:
 
-if ( radio.available() ){
+if (radio.available()) {
     
     // Dump the payloads until we've gotten everything
     uint16_t info;
     bool done = false;
-    while (!done)
-    {
+    while (!done) {
       // Fetch the payload, and see if this was the last one.
       done = radio.read( &info, sizeof(uint16_t) );
 
-      // Spew it
       uint16_t xcord = (info & B11110000) >> 4 ;
       uint16_t ycord = (info & B00001111)      ;
       uint16_t walls = (info >> 8)  & B00000111;
