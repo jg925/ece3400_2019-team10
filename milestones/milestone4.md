@@ -142,7 +142,7 @@ struct node {
 
 struct box {
   byte vs_came; // vs00NESW, tells if visited with v bit, the walls were sent with the s bit,
-  // and which direction we came from (where only one of NESW can be a 1)
+                // and which direction we came from (where only one of NESW can be a 1)
 
   byte walls_neighbors; // wwwwnnnn, tells where walls are (using cardinal directions) with wwww, 
                         // where is available to move/not move with nnnn (using cardinal directions)
