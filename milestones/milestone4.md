@@ -167,10 +167,7 @@ void dfs() {
   if (!wemoved && current.pos != 0) { // if we didn't move, 
   // i.e. all neighbors have been visited and/or have walls, and we aren't at the start
     walkBack();
-  } else if (!wemoved && current.pos == 0 && current.dir != 8) { 
-    // if we didn't move and we're at the start and we aren't facing north
-    
-    // Turn to face north
+  }
 }
 ```
 
