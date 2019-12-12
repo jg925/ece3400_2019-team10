@@ -147,7 +147,8 @@ void dfs() {
   if ((maze[int(location & B00001111) * 9 + int(location >> 4)].walls_neighbors & B00001111) != 15) {
   // if everywhere isn't unnavigable around location
 
-    // Now move based on movement priority: try in front of us, then to left, then to right, then behind
+    // Now move based on movement priority:
+    // try in front of us, then to left, then to right, then behind
 
     if (int(current.dir) == 8) { // facing north
       if (!moveNorth()) {
