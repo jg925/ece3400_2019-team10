@@ -272,6 +272,6 @@ void communicate() {
 
 ## INSERT VIDEO HERE SHOWING ROBOT STARTING ON PUSHBUTTON, UPDATING MAZE ON MONITOR
 
-The last piece to the puzzle was integrating robot detection.
+The next thing we integrated was robot detection.
 
 ## Conclusion
