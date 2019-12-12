@@ -85,21 +85,8 @@ While this scheme worked, we thought it over a little more and realized a lot of
 </p>
 
 ## Drawing a Tile
-After Lab 3, we continued to work on our FPGA Verilog code to map out a tile. As a first stepping stone to the final
-goal, of drawing out a full maze. We aimed to accurately draw a tile in a certain location. Since the robot would be 
-sending data via the radio communication at each intersection in the maze, we wanted to be able to draw a tile representing
-each of those intersections. We set our visible screen size to be able to fit the entire 10x10 tile maze which would include
-30x30 pixel tiles. 
 
-Our overall flow for drawing a tile at a location was to send information from the base station's Arduino about 
-the coordinates of the robot in the maze. These coordinates would then correlate to a certain top-left corner pixel of a
-30x30 pixel tile that would be mapped. `DEO_NANO.v` and `IMAGE_PROCESSOR.v` were the two main files that were heavily
-modified to try different methods for mapping out the tiles. Ultimately, we had `DE0_NANO.v`, the main FPGA project module,
-convert the Arduino inputs indicating x and y location into its corresponding top-left corner pixel. 
-Within, `IMAGE_PROCESSOR.v`, 
-
-Insert image of hard-coded display pattern
-
+30x30 tile boy
 clocks were an issue
 I hate Verilog
 
@@ -107,6 +94,8 @@ I hate Verilog
 
 ## Full Robotic Integration
 The last thing to do was to put it all together. 
+
+### Hardware
 
 We had created the pushbutton circuit in a previous lab, but for completeness, we have shown the circuit below. It's a simple pushbutton held low with a pulldown resistor until the button is pressed.
 
@@ -128,11 +117,14 @@ In order to detect other robots, we built another simple circuit that is shown b
 
 The next circuit we needed to build was an LED circuit that would turn on when we finished mapping the maze. It was yet another simple circuit to build, with the schematic shown below. The green LED is controlled by the Arduino rather than always being at +5V, unlike the previous circuits shown above. 
 
-This circuit is exactly the same as our four IR emitter circuits, except that the IR LEDs are powered by the +5V rather than the Arduino output.
+This circuit is exactly the same as our four IR emitter circuits, except that the IR LEDs are powered by +5V rather than the Arduino output.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab4/LED.png">
 </p>
 
+The final thing we needed to add hardware-wise was support for our fast servos. Powering them off +5V from the Arduino just wasn't going to cut it. Thus, we used a 9V battery for each servo. The circuit isn't drawn here because it's the same thing as powering regular servos, but we wanted to make note that we wired the ground of the battery to the Arduino ground so that we had a common ground, and the +9V terminal went to the power wire on the Servo. The signal that went through the 330\Omega resistor from the Arduino to the control wire remained exactly the same.
+
+### Software
 
 ## Conclusion
