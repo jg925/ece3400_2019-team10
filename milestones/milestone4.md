@@ -103,32 +103,30 @@ if ( timeout ) {
 RECEIVER:
 
 if (radio.available()) {
-    
-    // Dump the payloads until we've gotten everything
-    uint16_t info;
-    bool done = false;
-    while (!done) {
-      // Fetch the payload, and see if this was the last one.
-      done = radio.read( &info, sizeof(uint16_t) );
+   // Dump the payloads until we've gotten everything
+   uint16_t info;
+   bool done = false;
+   while (!done) {
+     // Fetch the payload, and see if this was the last one.
+     done = radio.read( &info, sizeof(uint16_t) );
 
-      uint16_t xcord = (info & B11110000) >> 4 ;
-      uint16_t ycord = (info & B00001111)      ;
-      uint16_t walls = (info >> 8)  & B00000111;
-      uint16_t visit = (info >> 11) & B00010000;
-      uint16_t robot = (info >> 12) & B00001000;
-              
-    }
+     uint16_t xcord = (info & B11110000) >> 4 ;
+     uint16_t ycord = (info & B00001111)      ;
+     uint16_t walls = (info >> 8)  & B00000111;
+     uint16_t visit = (info >> 11) & B00010000;
+     uint16_t robot = (info >> 12) & B00001000;
+   }
 
-    // First, stop listening so we can talk
-    radio.stopListening();
+   // First, stop listening so we can talk
+   radio.stopListening();
 
-    // Send the final one back.
-    radio.write( &info, sizeof(uint16_t) );
-    printf("Sent response.\n\r");
+   // Send the final one back.
+   radio.write( &info, sizeof(uint16_t) );
+   printf("Sent response.\n\r");
 
-    // Now, resume listening so we catch the next packets.
-    radio.startListening();
-  }
+   // Now, resume listening so we catch the next packets.
+   radio.startListening();
+}
 ```
 
 ## INSERT VIDEO SHOWING RADIO COMMUNICATION RESULTS
