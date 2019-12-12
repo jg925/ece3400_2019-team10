@@ -75,20 +75,11 @@ byte maze[10][10] =
 
 INSERT VIDEO SHOWING RESULTS
 
-While this scheme worked, we thought it over a little more and realized a lot of the information we were sending was excessive. We don't need to draw robots so we don't need to send that information, sending the direction is pointless since it isn't used, and since we only send one square at a time when we're at an intersection, the visited bit was also useless. Thus, we came up with a new and improved scheme that sends the current coordinates (XXXXYYYY), the walls (NESW), and a sent bit (S) indicating if we had already sent the walls for a given location. This was useful because we didn't want to overwrite older information if we're in a walkback of the DFS. The full scheme is shown below.
+While this scheme worked, we thought it over a little more and realized a lot of the information we were sending was excessive. We don't need to draw robots so we don't need to send that information, sending the direction is pointless since it isn't used, and since we only send one square at a time when we're at an intersection, the visited bit was also useless. Thus, we came up with a new and improved scheme that sends the current coordinates (XXXXYYYY), the walls (NESW), and a sent bit (S) indicating if we had already sent the walls information for a given location. This sent bit is useful because we don't want to overwrite older information if we're in a walkback of the DFS. The final scheme is shown below.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab4/NewScheme.png">
 </p>
- 
-## Simulating the Robot
-data structure to encode maze information
-
-sending simulated information to the base station (4 bits for x, 4 bits for y, 4 bits for walls)
-
-protocol to send data from robot to base station?
-
-sending the entire maze vs only sending new information
 
 ## Full Robotic Integration
 
