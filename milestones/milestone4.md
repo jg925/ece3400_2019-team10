@@ -132,20 +132,24 @@ The software proved far more difficult than anticipated despite the hardware wor
 void dfs() {
   byte location = current.pos;
 
-  determineWalls(location); // determine the walls around the current location
+  // determine the walls around the current location
+  determineWalls(location);
   
+  // set walls sent to 1
   maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came = 
-   maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came | B01000000; // set walls sent to 1
+   maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came | B01000000; 
 
-  determineNav(location); // set all neighbors such that location is now unnavigable (to avoid repeats)
+  // set all neighbors such that location is now unnavigable (to avoid repeats)
+  determineNav(location);
 
   if (determineDone()) { // if we've navigated everywhere we can, turn the done LED on.
     digitalWrite(DONE_LED, HIGH);
   }
 
   int wemoved = 1;
-  if ((maze[int(location & B00001111) * 9 + int(location >> 4)].walls_neighbors & B00001111) != 15) {
+  
   // if everywhere isn't unnavigable around location
+  if ((maze[int(location & B00001111) * 9 + int(location >> 4)].walls_neighbors & B00001111) != 15) {
 
     // Now move based on movement priority:
     // try in front of us, then to left, then to right, then behind
