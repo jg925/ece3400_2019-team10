@@ -135,15 +135,17 @@ It is an iterative DFS, so we call dfs() once every time loop gets called. We on
 ```c
 struct node {
   byte pos; // xxxxyyyy
-  byte dir; // 0000dddd, where first bit is north, second is east, third is south, and fourth is west.
+  byte dir; // 0000NESW, where only one of NESW can be a 1
 };
 
 struct box {
-  byte vs_came; // vs00dddd, tells if visited with v bit, the walls were sent with the s bit,
-  // dddd tells which direction we came from where 1000 is N, 0100 is E, 0010 is S, and 0001 is W
+  byte vs_came; // vs00NESW, tells if visited with v bit, the walls were sent with the s bit,
+  // and which direction we came from (where only one of NESW can be a 1)
 
-  byte walls_neighbors; // wwwwnnnn, tells where walls are (using cardinal directions) with wwww, where is available to move/not move with nnnn (using cardinal directions)
-  // where 1000 is N, 0100 is E, 0010 is S, and 0001 is W. when nnnn is 1111, everywhere has been traversed and/or there are walls.
+  byte walls_neighbors; // wwwwnnnn, tells where walls are (using cardinal directions) with wwww, 
+                        // where is available to move/not move with nnnn (using cardinal directions)
+                        // when nnnn is 1111, everywhere has been traversed and/or there are walls
+                        // so we will backtrack.
 };
 
 box maze[maze_size];
