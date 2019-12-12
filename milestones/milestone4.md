@@ -133,6 +133,8 @@ The first thing we did was completely revamp our DFS algorithm. As noted in the 
 It is an iterative DFS, so we call dfs() once every time loop gets called. We only want to start moving if the button is pressed so that's why we have that first conditional in loop. Once the button is pressed, then we want to start the dfs. Then in dfs, we determine our current position and the walls around us, change the neighbors to recognize that we've visited the location, determine if we're done mapping the maze, and then look to move. If we can move, then we do; otherwise, we walk back using the information we've saved into the maze. Finally, in loop, when we return to (0,0), we halt. This integrates many things already: the DFS algorithm, the line sensors, the wall sensors, the green done LED, and the pushbutton. A video is shown below the code of this code working on a 4x4 maze.
 
 ```c
+#define maze_size 81
+
 struct node {
   byte pos; // xxxxyyyy
   byte dir; // 0000NESW, where only one of NESW can be a 1
