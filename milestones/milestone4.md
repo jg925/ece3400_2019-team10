@@ -237,8 +237,6 @@ void communicate() {
 
   // First, stop listening so we can talk.
   radio.stopListening();
-
-  //printf("Now sending %x...",msg);
   bool ok = radio.write( &msg, sizeof(uint16_t) );
 
   // For debugging purposes:
@@ -273,5 +271,7 @@ void communicate() {
 ```
 
 ## INSERT VIDEO HERE SHOWING ROBOT STARTING ON PUSHBUTTON, UPDATING MAZE ON MONITOR
+
+The last piece to the puzzle was integrating robot detection.
 
 ## Conclusion
