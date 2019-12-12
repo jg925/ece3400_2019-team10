@@ -122,8 +122,9 @@ if (radio.available()) {
    radio.startListening();
 }
 ```
-
-## INSERT VIDEO SHOWING RADIO COMMUNICATION RESULTS
+<p align="center">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/IkKy2ZBJqrs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 While this scheme worked, we thought it over a little more and realized a lot of the information we were sending was excessive. We don't need to draw robots so we don't need to send that information, and since we only send one square at a time when we're at an intersection, the visited bit was also useless. Thus, we came up with a new and improved scheme that sends the current coordinates (XXXXYYYY), the walls (NESW), and a sent bit (S) indicating if we had already sent the walls information for a given location. This sent bit is useful because we don't want to overwrite older information if we're in a walkback of the DFS. The final scheme is shown below.
 
@@ -140,7 +141,9 @@ tiles.
 
 Our overall flow for drawing a tile at a location was to send information from the base station's Arduino about the 
 coordinates of the robot in the maze. These coordinates would then correlate to a certain top-left corner pixel of a 30x30 
-pixel tile that would be mapped. `DEO_NANO.v` and `IMAGE_PROCESSOR.v` were the two main files that were heavily modified to try different methods for mapping out the tiles. Ultimately, we had `DE0_NANO.v`, the main FPGA project module, convert the Arduino inputs indicating x and y location into its corresponding top-left corner pixel. Within, `IMAGE_PROCESSOR.v`,
+pixel tile that would be mapped. `DEO_NANO.v` and `IMAGE_PROCESSOR.v` were the two main files that were heavily modified to try different methods for mapping out the tiles. Ultimately, we had `DE0_NANO.v`, the main FPGA project module, convert the Arduino inputs indicating x and y location into its corresponding top-left corner pixel. Within `IMAGE_PROCESSOR.v`, an iterating `xpos` and `ypos` would be added on to the top-left corner x and y inputs to create the tile. Each pixel corresponded to an index in the memory, and the color of that pixel would be stored.
+
+To create the walls we added
 
 clocks were an issue
 I hate Verilog
