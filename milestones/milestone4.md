@@ -16,7 +16,7 @@ For milestone 4, we had three requirements to fulfill. First, we had to update t
 ## Radio Communication
 When we obtained the two radio breakout boards, everything was already soldered for us except for the power wires, so we quickly soldered those to the boards and moved on. We then downloaded the RF24 Arduino library and the "Getting Started" sketch, put the radios into two separate Arduinos, changed the channels over which we want to transmit (so that we don't also receive signals from other groups), and the radios transmitted and received without a problem. We also walked around with the Arduinos and radios and played with the power transmission settings. We found that RF24_PA_HIGH suited our needs (anything below that was too weak, but we didn't quite need max power). 
 
-We then wanted to simulate our robot traversing a maze, so we made up a 10x10 array of random wall values and transmitted the message as seen below. Our original scheme involved sending the current direction (dd), if a robot was detected (r), if the location was visited (v), the walls (www), and the coordinates (xxxxyyyy). Thus, the scheme looked like the the image below, and part of the code we used to simulate the robot is shown below, as is a video showing the results,.
+We then wanted to simulate our robot traversing a maze, so we made up a 10x10 array of random wall values and transmitted the message as seen below. Our original scheme involved sending if a robot was detected (r), if the location was visited (v), the walls (www), and the coordinates (xxxxyyyy). For the simulation, we always assumed no robot was detected and the location was always visited. Thus, the scheme looked like the the image below, and part of the code we used to simulate the robot is shown below, as is a video showing the results,.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab4/OldScheme.png">
@@ -41,39 +41,39 @@ byte maze[10][10] =
 ...
 ...
 
- msg = 0000000000000000;
- msg = (msg << 1) | 1;
- msg = (msg << 1) | 0;
- msg = (msg << 3) | maze[x][y];
- msg = (msg << 4) | x;
- msg = (msg << 4) | y;
+msg = 0000000000000000;
+msg = (msg << 1) | 1;
+msg = (msg << 1) | 0;
+msg = (msg << 3) | maze[x][y];
+msg = (msg << 4) | x;
+msg = (msg << 4) | y;
 
- printf("\ncoord: ");
- printf("%d", x);
- printf(", %d \n", y);
- printf("walls: ");
- printf("%x", robot);
- printf("\nmsg: ");
- printf("%x", msg);
- printf("\n");
+printf("\ncoord: ");
+printf("%d", x);
+printf(", %d \n", y);
+printf("walls: ");
+printf("%x", robot);
+printf("\nmsg: ");
+printf("%x", msg);
+printf("\n");
 
- // simulate robot in maze
- if (x == 9 && y == 9) {
-   x = 0;
-   y = 0;
- } else if (x %2 == 0) {
-   if (y == 9) {
-     x++;
-   } else {
-     y++;
-   }
- } else {
-   if (y == 0) {
-     x++;
-   } else {
-     y--;
-   }
- } 
+// simulate robot in maze
+if (x == 9 && y == 9) {
+  x = 0;
+  y = 0;
+} else if (x %2 == 0) {
+  if (y == 9) {
+    x++;
+  } else {
+    y++;
+  }
+} else {
+  if (y == 0) {
+    x++;
+  } else {
+    y--;
+  }
+} 
 ```
 
 INSERT VIDEO SHOWING RESULTS
