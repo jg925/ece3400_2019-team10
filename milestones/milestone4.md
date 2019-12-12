@@ -107,7 +107,7 @@ The wall sensors, also working from a previous lab, utilize Schmitt Triggers so 
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/SchmittTrigger.png">
 </p>
 
-In order to detect other robots, we built another simple circuit that is shown below. We used IR detectors (at 940nm) and played around with the resistor value until we had a large enough range that allowed for easy differentiation between ambient noise (i.e. from the Sun and computer monitors) and the emitters that go on every robot.
+In order to detect other robots, we built another simple circuit that is shown below. We used 940nm IR detectors (shown as phototransistors below) and played around with the resistor value until we had a large enough range that allowed for easy differentiation between ambient noise (i.e. from the Sun and computer monitors) and the emitters that go on every robot.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab4/Detector.png">
