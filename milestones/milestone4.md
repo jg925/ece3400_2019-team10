@@ -126,7 +126,7 @@ The final thing we needed to add hardware-wise was support for our fast servos. 
 
 ### Software
 
-The software proved far more difficult than anticipated despite the hardware working properly. The first thing we did was completely revamp our DFS algorithm. As noted in the previous milestone, the TAs told us that using recursion and additional data structures like a stack array would probably cause us to run out of memory and cause our robot to fail. Thus, we wrote an iterative DFS using only structs that we defined. 
+The software proved far more difficult than anticipated despite the hardware working properly. We integrated the software incrementally in order to aid in the debugging process. The first thing we did was completely revamp our DFS algorithm. As noted in the previous milestone, the TAs told us that using recursion and additional data structures like a stack array would probably cause us to run out of memory and cause our robot to fail. Thus, we wrote an iterative DFS using only structs that we defined. 
 
 ```c
 void dfs() {
@@ -167,6 +167,22 @@ void dfs() {
   if (!wemoved && current.pos != 0) { // if we didn't move, 
   // i.e. all neighbors have been visited and/or have walls, and we aren't at the start
     walkBack();
+  }
+}
+
+...
+
+void loop() {
+  if (beginning) { // wait for pushbutton
+    if (digitalRead(START_BUTTON) {
+      dfs();
+      beginning = 0; // stop calling fft if 950 Hz detected or button pressed
+    }
+  }
+  else if (!ending) { // to make sure we don't keep doing stuff after we finish
+    dfs();
+  } else { // Permanently halt at (0,0) when done.
+    halt();
   }
 }
 ```
