@@ -134,10 +134,6 @@ void dfs() {
 
   // determine the walls around the current location
   determineWalls(location);
-  
-  // set walls sent to 1
-  maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came = 
-   maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came | B01000000; 
 
   // set all neighbors such that location is now unnavigable (to avoid repeats)
   determineNav(location);
@@ -171,8 +167,8 @@ void dfs() {
   if (!wemoved && current.pos != 0) { // if we didn't move, 
   // i.e. all neighbors have been visited and/or have walls, and we aren't at the start
     walkBack();
-  } else if (!wemoved && current.pos == 0 && current.dir != 8) { // if we didn't move and 
-  //we're at the start and we aren't facing north
+  } else if (!wemoved && current.pos == 0 && current.dir != 8) { 
+    // if we didn't move and we're at the start and we aren't facing north
     
     // Turn to face north
 }
