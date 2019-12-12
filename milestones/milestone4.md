@@ -222,10 +222,12 @@ void communicate() {
   uint16_t msg = 0000000000000000;
 
   // walls already sent bit; NOTE: IF THIS IS 1, DO NOT DRAW THE WALLS AGAIN
-  msg = (msg << 1) | ((maze[int(current.pos & B00001111) * 9 + int(current.pos >> 4)].vs_came & B01000000) >> 6);
+  msg = (msg << 1) | ((maze[int(current.pos & B00001111) * 9 
+    + int(current.pos >> 4)].vs_came & B01000000) >> 6);
 
   // walls bits
-  msg = (msg << 4) | (maze[int(current.pos & B00001111) * 9 + int(current.pos >> 4)].walls_neighbors >> 4);
+  msg = (msg << 4) | (maze[int(current.pos & B00001111) * 9
+    + int(current.pos >> 4)].walls_neighbors >> 4);
 
   // x pos bits
   msg = (msg << 4) | (current.pos >> 4);
