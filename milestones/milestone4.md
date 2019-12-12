@@ -133,8 +133,7 @@ void dfs() {
   byte location = current.pos;
 
   determineWalls(location); // determine the walls around the current location
-
-  communicate(); // transmit info
+  
   maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came = maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came | B01000000; // set walls sent to 1
 
   determineNav(location); // set all neighbors such that location is now unnavigable (to avoid repeats)
@@ -156,31 +155,8 @@ void dfs() {
           }
         }
       }
-    } else if (int(current.dir) == 4) { // facing east
-      if (!moveEast()) {
-        if (!moveNorth()) {
-          if (!moveSouth()) {
-            wemoved = moveWest();
-          }
-        }
-      }
-    } else if (int(current.dir) == 2) { // facing south
-      if (!moveSouth()) {
-        if (!moveEast()) {
-          if (!moveWest()) {
-            wemoved = moveNorth();
-          }
-        }
-      }
-    } else { // facing west
-      if (!moveWest()) {
-        if (!moveSouth()) {
-          if (!moveNorth()) {
-            wemoved = moveEast();
-          }
-        }
-      }
-    }
+    } 
+    // Similar code for other three directions
   } else { // if all neighbors are unnavigable
     wemoved = 0;
   }
@@ -188,30 +164,7 @@ void dfs() {
   if (!wemoved && current.pos != 0) { // if we didn't move, i.e. all neighbors have been visited and/or have walls, and we aren't at the start
     walkBack();
   } else if (!wemoved && current.pos == 0 && current.dir != 8) { // if we didn't move and we're at the start and we aren't facing north
-
-    // Figure out how to turn the fastest
-    int i = 1;
-    int curr_dir = current.dir;
-    for (i; i < 4; i++) {
-      curr_dir = curr_dir << 1;
-      if (curr_dir > 8) {
-        curr_dir = B00000001;
-      }
-      if (curr_dir == B00001000) {
-        break;
-      }
-    }
-
-    // Actually turn to face north
-    if (i == 1) {
-      left90Turn();
-    } else if (i == 2) {
-      right180Turn();
-    } else if (i == 3) {
-      right90Turn();
-    }
-    current.dir = B00001000;
-  }
+    // Turn to face north
 }
 ```
 
