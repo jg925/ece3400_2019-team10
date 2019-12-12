@@ -84,14 +84,20 @@ While this scheme worked, we thought it over a little more and realized a lot of
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab4/NewScheme.png">
 </p>
 
-## Full Robotic Integration
-
-### Drawing a Tile
+## Drawing a Tile
 
 30x30 tile boy
 clocks were an issue
 I hate Verilog
 
-### Drawing the Maze
+## Drawing the Maze
+
+## Full Robotic Integration
+The last thing to do was to put it all together. We had created the pushbutton circuit in a previous lab, but for completeness, we have shown the circuit below. It's a simple pushbutton held low with a pulldown resistor until the button is pressed.
+
+<p align="center">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab4/pushbutton.png">
+</p>
+
 
 ## Conclusion
