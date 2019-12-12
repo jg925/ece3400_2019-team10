@@ -93,11 +93,18 @@ I hate Verilog
 ## Drawing the Maze
 
 ## Full Robotic Integration
-The last thing to do was to put it all together. We had created the pushbutton circuit in a previous lab, but for completeness, we have shown the circuit below. It's a simple pushbutton held low with a pulldown resistor until the button is pressed.
+The last thing to do was to put it all together. 
+
+We had created the pushbutton circuit in a previous lab, but for completeness, we have shown the circuit below. It's a simple pushbutton held low with a pulldown resistor until the button is pressed.
 
 <p align="center">
   <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab4/pushbutton.png">
 </p>
 
+The wall sensors, also working from a previous lab, utilize Schmitt Triggers so that we could use digital pins rather than analog pins in order to save the pins for other inputs that only work with analog pins. The sam schematic from Lab 2 is copied below.
+
+<p align="center">
+  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab2/images/SchmittTrigger.png">
+</p>
 
 ## Conclusion
