@@ -126,4 +126,93 @@ The final thing we needed to add hardware-wise was support for our fast servos. 
 
 ### Software
 
+The software proved far more difficult than anticipated despite the hardware working properly. The first thing we did was completely revamp our DFS algorithm. As noted in the previous milestone, the TAs told us that using recursion and additional data structures like a stack array would probably cause us to run out of memory and cause our robot to fail. Thus, we wrote an iterative DFS using only structs that we defined. 
+
+```c
+void dfs() {
+  byte location = current.pos;
+
+  determineWalls(location); // determine the walls around the current location
+
+  communicate(); // transmit info
+  maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came = maze[int(location & B00001111) * 9 + int(location >> 4)].vs_came | B01000000; // set walls sent to 1
+
+  determineNav(location); // set all neighbors such that location is now unnavigable (to avoid repeats)
+
+  if (determineDone()) { // if we've navigated everywhere we can, turn the done LED on.
+    digitalWrite(DONE_LED, HIGH);
+  }
+
+  int wemoved = 1;
+  if ((maze[int(location & B00001111) * 9 + int(location >> 4)].walls_neighbors & B00001111) != 15) { // if everywhere isn't unnavigable around location
+
+    // Now move based on movement priority: try in front of us, then to left, then to right, then behind
+
+    if (int(current.dir) == 8) { // facing north
+      if (!moveNorth()) {
+        if (!moveWest()) {
+          if (!moveEast()) {
+            wemoved = moveSouth();
+          }
+        }
+      }
+    } else if (int(current.dir) == 4) { // facing east
+      if (!moveEast()) {
+        if (!moveNorth()) {
+          if (!moveSouth()) {
+            wemoved = moveWest();
+          }
+        }
+      }
+    } else if (int(current.dir) == 2) { // facing south
+      if (!moveSouth()) {
+        if (!moveEast()) {
+          if (!moveWest()) {
+            wemoved = moveNorth();
+          }
+        }
+      }
+    } else { // facing west
+      if (!moveWest()) {
+        if (!moveSouth()) {
+          if (!moveNorth()) {
+            wemoved = moveEast();
+          }
+        }
+      }
+    }
+  } else { // if all neighbors are unnavigable
+    wemoved = 0;
+  }
+
+  if (!wemoved && current.pos != 0) { // if we didn't move, i.e. all neighbors have been visited and/or have walls, and we aren't at the start
+    walkBack();
+  } else if (!wemoved && current.pos == 0 && current.dir != 8) { // if we didn't move and we're at the start and we aren't facing north
+
+    // Figure out how to turn the fastest
+    int i = 1;
+    int curr_dir = current.dir;
+    for (i; i < 4; i++) {
+      curr_dir = curr_dir << 1;
+      if (curr_dir > 8) {
+        curr_dir = B00000001;
+      }
+      if (curr_dir == B00001000) {
+        break;
+      }
+    }
+
+    // Actually turn to face north
+    if (i == 1) {
+      left90Turn();
+    } else if (i == 2) {
+      right180Turn();
+    } else if (i == 3) {
+      right90Turn();
+    }
+    current.dir = B00001000;
+  }
+}
+```
+
 ## Conclusion
