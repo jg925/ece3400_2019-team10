@@ -170,7 +170,7 @@ void dfs() {
   }
 }
 
-...
+... // setup and DFS helpers
 
 void loop() {
   if (beginning) { // wait for pushbutton
