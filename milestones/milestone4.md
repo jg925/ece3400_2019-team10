@@ -23,6 +23,8 @@ We then wanted to simulate our robot traversing a maze, so we made up a 10x10 ar
 </p>
 
 ```c
+TRANSMITTER:
+
 byte maze[10][10] =
 
 {
@@ -48,15 +50,6 @@ msg = (msg << 3) | maze[x][y];
 msg = (msg << 4) | x;
 msg = (msg << 4) | y;
 
-printf("\ncoord: ");
-printf("%d", x);
-printf(", %d \n", y);
-printf("walls: ");
-printf("%x", robot);
-printf("\nmsg: ");
-printf("%x", msg);
-printf("\n");
-
 // simulate robot in maze
 if (x == 9 && y == 9) {
   x = 0;
@@ -74,6 +67,74 @@ if (x == 9 && y == 9) {
     y--;
   }
 } 
+
+radio.stopListening();
+
+bool ok = radio.write( &msg, sizeof(uint16_t) );
+
+if (ok)
+  printf("ok...");
+else
+  printf("failed.\n\r");
+
+// Now, continue listening
+radio.startListening();
+
+// Wait here until we get a response, or timeout (250ms)
+unsigned long started_waiting_at = millis();
+
+bool timeout = false;
+while ( ! radio.available() && ! timeout )
+  if (millis() - started_waiting_at > 200 )
+    timeout = true;
+
+// Describe the results
+if ( timeout )
+{
+  printf("Failed, response timed out.\n\r");
+}
+else
+{
+  // Grab the response, compare, and send to debugging spew
+  byte got_msg;
+  radio.read( &got_msg, sizeof(uint16_t) );
+
+  // Spew it
+  printf("Got response %x \n\r",msg);
+
+}
+
+RECEIVER:
+
+if ( radio.available() ){
+    
+    // Dump the payloads until we've gotten everything
+    uint16_t info;
+    bool done = false;
+    while (!done)
+    {
+      // Fetch the payload, and see if this was the last one.
+      done = radio.read( &info, sizeof(uint16_t) );
+
+      // Spew it
+      uint16_t xcord = (info & B11110000) >> 4 ;
+      uint16_t ycord = (info & B00001111)      ;
+      uint16_t walls = (info >> 8)  & B00000111;
+      uint16_t visit = (info >> 11) & B00010000;
+      uint16_t robot = (info >> 12) & B00001000;
+              
+    }
+
+    // First, stop listening so we can talk
+    radio.stopListening();
+
+    // Send the final one back.
+    radio.write( &info, sizeof(uint16_t) );
+    printf("Sent response.\n\r");
+
+    // Now, resume listening so we catch the next packets.
+    radio.startListening();
+  }
 ```
 
 ## INSERT VIDEO SHOWING RADIO COMMUNICATION RESULTS
