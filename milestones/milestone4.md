@@ -316,8 +316,9 @@ void communicate() {
   }
 }
 ```
-
-## INSERT VIDEO HERE SHOWING ROBOT STARTING ON PUSHBUTTON, UPDATING MAZE ON MONITOR
+<p align="center">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/CR6a_61peiU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 The next thing we integrated was robot detection.
 
