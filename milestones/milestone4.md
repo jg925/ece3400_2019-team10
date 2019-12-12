@@ -94,7 +94,6 @@ I hate Verilog
 
 ## Full Robotic Integration
 The last thing to do was to put it all together. 
-
 ### Hardware
 
 We had created the pushbutton circuit in a previous lab, but for completeness, we have shown the circuit below. It's a simple pushbutton held low with a pulldown resistor until the button is pressed.
