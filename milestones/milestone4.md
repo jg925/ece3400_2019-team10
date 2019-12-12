@@ -14,7 +14,7 @@ For milestone 4, we had three requirements to fulfill. First, we had to update t
  * 1 DE0-Nano Cyclone IV FPGA Board
  
 ## Radio Communication
-The first thing we needed to do was find two radio breakout board with headers. Everything was already soldered for us except for the power wires, so we quickly soldered those to the boards and moved on. We then downloaded the RF24 Arduino library and the "Getting Started" sketch, put the radios into two separate Arduinos, changed the channels over which we want to transmit (so that we don't also receive signals from other groups), and the radios transmitted and received without a problem. We also walked around with the Arduinos and radios and played with the power transmission settings. We found that RF24_PA_HIGH suited our needs (anything below that was too weak, but we didn't quite need max power). 
+When we obtained the two radio breakout boards, everything was already soldered for us except for the power wires, so we quickly soldered those to the boards and moved on. We then downloaded the RF24 Arduino library and the "Getting Started" sketch, put the radios into two separate Arduinos, changed the channels over which we want to transmit (so that we don't also receive signals from other groups), and the radios transmitted and received without a problem. We also walked around with the Arduinos and radios and played with the power transmission settings. We found that RF24_PA_HIGH suited our needs (anything below that was too weak, but we didn't quite need max power). 
 
 We then wanted to simulate our robot traversing a maze, so we made up a 10x10 array of random wall values and transmitted the message as seen below. Our original scheme involved sending the current direction (dd), if a robot was detected (r), if the location was visited (v), the walls (www), and the coordinates (xxxxyyyy). Thus, the scheme looked like the the image below, and part of the code we used to simulate the robot is shown below, as is a video showing the results,.
 
@@ -37,6 +37,9 @@ byte maze[10][10] =
   B110, B000, B111, B010, B110, B010, B010, B111, B000, B001,
   B110, B000, B111, B010, B110, B010, B010, B111, B000, B001,
 };
+
+...
+...
 
  msg = 0000000000000000;
  msg = (msg << 1) | 1;
