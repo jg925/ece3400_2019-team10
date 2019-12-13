@@ -3,7 +3,7 @@
 ![Team Photo](winning_teamphoto.jpg)
 A photo of the winning team with our robot! Back row (from left to right): Jinny Gui, Daniel Buscaglia, Ryan McMahon, Joy Thean. Front Row: Axel.
 
-Below is a video showing our robot competing in the third and last round of 
+Below is a video showing our robot competing in the third and final round of 
 the robot competition on 12/10/19.
 
 <p align="center">
@@ -30,7 +30,4 @@ the robot competition on 12/10/19.
 [Milestone 3](milestones/milestone3.md)
 
 [Milestone 4](milestones/milestone4.md)
-
-# Meet the Team
-
 
