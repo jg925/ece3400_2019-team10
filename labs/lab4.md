@@ -261,7 +261,8 @@ Although we implemented the FFT algorithm that was able to detect 950 Hz earlier
 
 ```c
 int freq_detect( int five, int six, int seven ) {
-  return ( six > 122 && six < 137 && seven > 120 && seven < 126 && five < 100 ); // digital filter on fft output
+  // digital filter on fft output
+  return ( six > 122 && six < 137 && seven > 120 && seven < 126 && five < 100 );
 }
 ```
 
