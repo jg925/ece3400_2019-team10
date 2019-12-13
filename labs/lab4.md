@@ -295,6 +295,8 @@ In the following video, our robot accurately avoids the 'fake robot' while still
 <iframe width="560" height="315" src="https://www.youtube.com/embed/DY7_UcSpYcY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
+One could say that our robot just sees a wall and doesn't move there, but this can be disproven by watching the videos in Milestone 4; it detects the robot and doesn't send any indication of a wall to the base station. 
+
 Below is the code we added in order to implement walkBack robot avoidance.
 
 ```
@@ -317,28 +319,9 @@ void movetoLocation2 (byte location) {
     face = B00001000;
   }
 
-  // Figure out how to turn the fastest
-  int curr_dir = current.dir;
-  int i = 1;
-  for (i; i < 4; i++) {
-    curr_dir = curr_dir << 1;
-    if (curr_dir > 8) {
-      curr_dir = B00000001;
-    }
-    if (curr_dir == face) {
-      break;
-    }
-  }
+  // Figure out how to turn the fastest to face the "face" direction (long code omitted for brevity)
 
-  // Turn to face the destination
-  if (i == 1) {
-    left90Turn();
-  } else if (i == 2) {
-    right180Turn();
-  } else if (i == 3) {
-    right90Turn();
-  }
-  current.dir = face;
+  // Actually turn to face that direction (long code omitted for brevity)
 
   // Actually move to destination
   int go_on = 0;
@@ -371,37 +354,7 @@ void miniWalk() {
       } else {
         movetoLocation2(current.pos - 16);
       }
-    } else if (left) {
-      if (current.dir == B00001000) {
-        movetoLocation2(current.pos - 16);
-      } else if (current.dir == B00000100) {
-        movetoLocation2(current.pos + 1);
-      } else if (current.dir == B00000010) {
-        movetoLocation2(current.pos + 16);
-      } else {
-        movetoLocation2(current.pos - 1);
-      }
-    } else if (right) {
-      if (current.dir == B00001000) {
-        movetoLocation2(current.pos + 16);
-      } else if (current.dir == B00000100) {
-        movetoLocation2(current.pos - 1);
-      } else if (current.dir == B00000010) {
-        movetoLocation2(current.pos - 16);
-      } else {
-        movetoLocation2(current.pos + 1);
-      }
-    } else {
-      if (current.dir == B00001000) {
-        movetoLocation2(current.pos - 1);
-      } else if (current.dir == B00000100) {
-        movetoLocation2(current.pos + 16);
-      } else if (current.dir == B00000010) {
-        movetoLocation2(current.pos + 1);
-      } else {
-        movetoLocation2(current.pos - 16);
-      }
-    }
+    } // Similar for left and right readings
     path[i] = current.pos; // Add new location to path
     i++;
   }
@@ -413,28 +366,9 @@ void miniWalk() {
   }
   movetoLocation2(loc); // return to original location where we detected another robot
 
-  // Figure out how to turn the fastest
-  int curr_dir = current.dir;
-  int u = 1;
-  for (u; u < 4; u++) {
-    curr_dir = curr_dir << 1;
-    if (curr_dir > 8) {
-      curr_dir = B00000001;
-    }
-    if (curr_dir == dir) {
-      break;
-    }
-  }
+  // Figure out how to turn the fastest (long code omitted for brevity)
 
-  // Actually turn to face that direction
-  if (u == 1) {
-    left90Turn();
-  } else if (u == 2) {
-    right180Turn();
-  } else if (u == 3) {
-    right90Turn();
-  }
-  current.dir = dir;
+  // Actually turn to face that direction (long code omitted for brevity)
 }
 ...
 void walkBack() {
