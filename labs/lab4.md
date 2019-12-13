@@ -249,7 +249,13 @@ void dfs() {
 
 void loop() {
   if (beginning) { // wait for pushbutton
-    if (digitalRead(START_BUTTON)) {
+    if (digitalRead(START_BUTTON)) { 
+      for (int i=0; i<2; i++) { // for debugging purposes
+        digitalWrite(DONE_LED,HIGH);
+        delay(500);
+        digitalWrite(DONE_LED,LOW);
+        delay(500);
+      }
       dfs();
       beginning = 0; // stop calling fft if 950 Hz detected or button pressed
     }
