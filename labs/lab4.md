@@ -1,4 +1,4 @@
-# Milestone 4: Radio Communication and Full Integration
+# Lab 4: Radio Communication and Full Integration
 
 ## Overview
 One goal of lab 4 was to enable communication between the robot and video controller. After completing this lab, we were able to send information from the robot's Arduino to our basestation Arduino through a radio. This information included the robot's current position in the maze, as well as the position of walls at each square. Once our basestation Arduino received this information, we used the Verilog code from lab 3 to correctly display the maze on the screen.
@@ -262,66 +262,6 @@ void loop() {
 ```
 <p align="center">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/Tp12wUvqjX8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</p>
-The next thing that we integrated was radio communication to the base station Arduino. This was made extremely simple because we had done a lot of this in the earlier section of Lab 4. We just had to be careful with what we were sending because we used bytes, so some cleverness with bit shifting and bit-wise operations were required. The code is shown below for the final communicate method used on the robot. For reference, this gets called immediately after the determineWalls method is called in our DFS. We also update the sent bit of a location in the maze after the call to communicate is completed in DFS. There is also a video below showing our progress.
-
-```c
-void communicate() {
-  // 000swwwwxxxxyyyy is the scheme we are using
-
-  // zeroes out msg
-  uint16_t msg = 0000000000000000;
-
-  // walls already sent bit; NOTE: IF THIS IS 1, DO NOT DRAW THE WALLS AGAIN
-  msg = (msg << 1) | ((maze[int(current.pos & B00001111) * 9 
-    + int(current.pos >> 4)].vs_came & B01000000) >> 6);
-
-  // walls bits
-  msg = (msg << 4) | (maze[int(current.pos & B00001111) * 9
-    + int(current.pos >> 4)].walls_neighbors >> 4);
-
-  // x pos bits
-  msg = (msg << 4) | (current.pos >> 4);
-
-  // y pos bits
-  msg = (msg << 4) | (current.pos & B00001111);
-
-  // First, stop listening so we can talk.
-  radio.stopListening();
-  bool ok = radio.write( &msg, sizeof(uint16_t) );
-
-  // For debugging purposes:
-  if (ok)
-    printf("ok...");
-  else
-    printf("failed.\n\r");
-
-  // Now, continue listening
-  radio.startListening();
-
-  //  Wait here until we get a response, or timeout (250ms)
-  unsigned long started_waiting_at = millis();
-  //
-  bool timeout = false;
-  while ( ! radio.available() && ! timeout ) {
-    if (millis() - started_waiting_at > 250 ) {
-      timeout = true;
-    }
-  }
-
-  // Describe the results (we kept this because it didn't work when we got rid of it
-  if ( !timeout ) {
-    // Grab the response, compare, and send to debugging spew
-    uint16_t got_msg;
-    radio.read( &got_msg, sizeof(uint16_t) );
-    
-    // Spew it
-    printf("Got response %x \n\r", msg);
-  }
-}
-```
-<p align="center">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/CR6a_61peiU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
 The next thing we integrated was robot detection.
