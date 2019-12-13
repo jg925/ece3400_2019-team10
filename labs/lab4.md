@@ -428,9 +428,13 @@ void miniWalk() {
   current.dir = dir;
 }
 ...
-if (detect_robots()) {
-    robot_detected = 1;
-    miniWalk();
+void walkBack() {
+  ...
+  if (detect_robots()) {
+      robot_detected = 1;
+      miniWalk();
+  }
+  ...
 }
 ```
 
