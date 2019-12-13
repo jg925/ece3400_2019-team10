@@ -1,6 +1,6 @@
 # Introduction
 
-![Team Photo](teamphoto.jpg)
+![Team Photo](winning_teamphoto.jpg)
 A photo of the team with our robot! Back row (from left to right): Joy Thean, Ryan McMahon, Daniel Buscaglia, Jinny Gui. Front Row: Axel.
 
 [Team Contract](https://drive.google.com/file/d/1-kGICPlhbmg0IWlSnd9KlUpACal9PjoH/view?usp=sharing)
