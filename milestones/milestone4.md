@@ -63,7 +63,7 @@ In the above code snippet, we can see how pixels are only drawn when valid is hi
 
 After we were able to draw squares in different locations, we had to work on drawing several squares in succession with walls. We completed this in Lab 4, as part of our full robotic integration. A video of our Verilog code drawing a maze with synthesized data is attached below.
 
-<iframe width="560" height="315" src="https://youtu.be/Gy3Z5FCLbB4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+https://youtu.be/Gy3Z5FCLbB4
 
 ## Radio Communication
 While the scheme we selected in Lab 4 worked, we thought it over a little more and realized a lot of the information we were sending was excessive. We don't need to draw robots so we don't need to send that information, and since we only send one square at a time when we're at an intersection, the visited bit was also useless. Thus, we came up with a new and improved scheme that sends the current coordinates (XXXXYYYY), the walls (NESW), and a sent bit (S) indicating if we had already sent the walls information for a given location. This sent bit is useful because we don't want to overwrite older information if we're in a walkback of the DFS. The final scheme is shown below.
