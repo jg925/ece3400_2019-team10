@@ -31,27 +31,27 @@ if (valid && count > 5) begin
 
   ...
   
-		// Incrementing xpos and ypos
-		if (xpos >= 30) begin
-		  if (ypos < 30) begin
-				  ypos <= ypos + 5'b1;	
-		    xpos <= 5'b0;
-				  W_EN <= 1;
+  // Incrementing xpos and ypos
+  if (xpos >= 30) begin
+    if (ypos < 30) begin
+      ypos <= ypos + 5'b1;	
+      xpos <= 5'b0;
+      W_EN <= 1;
     end
-		end
+  end
 
-		else begin
-		 	W_EN <= 0;
-				ypos <= 5'b0;
-			 xpos <= 5'b0;
-				count <= 0;
-		end
+  else begin
+    W_EN <= 0;
+    ypos <= 5'b0;
+    xpos <= 5'b0;
+    count <= 0;
+  end
   
   else begin
-		 	W_EN <= 1;
-			 ypos <= ypos;
-		  xpos <= xpos + 5'b1;
-		end
+    W_EN <= 1;
+    ypos <= ypos;
+    xpos <= xpos + 5'b1;
+  end
   
   ...
   
