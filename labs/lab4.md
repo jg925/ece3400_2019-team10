@@ -263,6 +263,167 @@ fft boi fft boi
 
 # Robot detection
 
-The last thing we integrated was robot detection.
+The last thing we integrated was robot detection. After switching out the wide angle phototransistor and mounting the narrow angled one at exactly 5 inches off the ground, we re-calibrated our detector thresholds. The next part we worked on was combining robot detection with dfs. Our implementation of this was split into two parts: detecting a robot within a call to dfs and within a call to walkBack.
+
+While within a call to dfs, if we detect a robot, we stop our current move to the next node and walk back without marking the current node as visited. By not marking the node as visited, our robot will eventually re-explore that node with our dfs, just at a different point in time.
+
+```
+if (detect_robots()) {
+    robot_detected = 1;
+    return 0;
+}
+```
+
+<insert video robot_detection_take1 video>
+
+As the above video demonstrates, the robot avoids the 'fake robot' and moves to the next available node. If there were no available nodes, the robot would've turned around and backtracked.
+
+The harder part to implement was what to do when detecting a robot within a call to walkBack since we couldn't call walkBack within another walkBack call without causing serious memory issues. So in order to work around this problem, we decided to implement a hardcoded avoidance method that wouldn't mess up our dfs algorithm. After detecting a robot within walkBack, the robot finds a short 3 node path that doesn't update the maze to take that would ensure we are out of the other robot's way. Once we finish the short detour, we trace back our steps and move to the exact location where we originally detected the other robot and continue dfs. This way, we completely avoid the other robot while maintaining our position in the algorithm and our maze.
+
+```
+void movetoLocation2 (byte location) {
+  // EXACTLY THE SAME AS movetoLocation BUT DOESN'T UPDATE MAZE
+  // USEFUL FOR ROBOT DETECTION IN A WALK BACK
+
+  int diffx = int(current.pos >> 4) - int(location >> 4);
+  int diffy = int(current.pos & B00001111) - int(location & B00001111);
+  byte face;
+
+  // determine where to face based on difference of current position/position to move to
+  if (diffx == 1) {
+    face = B00000001;
+  } else if (diffx == -1) {
+    face = B00000100;
+  } else if (diffy == 1) {
+    face = B00000010;
+  } else { // diffy == -1
+    face = B00001000;
+  }
+
+  // Figure out how to turn the fastest
+  int curr_dir = current.dir;
+  int i = 1;
+  for (i; i < 4; i++) {
+    curr_dir = curr_dir << 1;
+    if (curr_dir > 8) {
+      curr_dir = B00000001;
+    }
+    if (curr_dir == face) {
+      break;
+    }
+  }
+
+  // Turn to face the destination
+  if (i == 1) {
+    left90Turn();
+  } else if (i == 2) {
+    right180Turn();
+  } else if (i == 3) {
+    right90Turn();
+  }
+  current.dir = face;
+
+  // Actually move to destination
+  int go_on = 0;
+  while ( go_on != 1 ) { // Want to navigate to next intersection at location
+    go_on = navigate();
+  }
+
+  current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
+}
+...
+void miniWalk() {
+  // Walkback used if we detect a robot during a walk back
+
+  byte loc = current.pos;
+  byte dir = current.dir;
+  byte path[3]; // Create small path for us to move to in order to avoid robots
+
+  int i = 0;
+  while (i < 3) { // Find 3 open squares and move there, adding them to path
+    int left = digitalRead(left_ir_sensor);
+    int right = digitalRead(right_ir_sensor);
+    int front = digitalRead(front_ir_sensor);
+    if (front && i > 0) { // Don't want to move straight when i=0 because that's where the robot is!
+      if (current.dir == B00001000) {
+        movetoLocation2(current.pos + 1);
+      } else if (current.dir == B00000100) {
+        movetoLocation2(current.pos + 16);
+      } else if (current.dir == B00000010) {
+        movetoLocation2(current.pos - 1);
+      } else {
+        movetoLocation2(current.pos - 16);
+      }
+    } else if (left) {
+      if (current.dir == B00001000) {
+        movetoLocation2(current.pos - 16);
+      } else if (current.dir == B00000100) {
+        movetoLocation2(current.pos + 1);
+      } else if (current.dir == B00000010) {
+        movetoLocation2(current.pos + 16);
+      } else {
+        movetoLocation2(current.pos - 1);
+      }
+    } else if (right) {
+      if (current.dir == B00001000) {
+        movetoLocation2(current.pos + 16);
+      } else if (current.dir == B00000100) {
+        movetoLocation2(current.pos - 1);
+      } else if (current.dir == B00000010) {
+        movetoLocation2(current.pos - 16);
+      } else {
+        movetoLocation2(current.pos + 1);
+      }
+    } else {
+      if (current.dir == B00001000) {
+        movetoLocation2(current.pos - 1);
+      } else if (current.dir == B00000100) {
+        movetoLocation2(current.pos + 16);
+      } else if (current.dir == B00000010) {
+        movetoLocation2(current.pos + 1);
+      } else {
+        movetoLocation2(current.pos - 16);
+      }
+    }
+    path[i] = current.pos; // Add new location to path
+    i++;
+  }
+  i--; // Decrement i by 1 to start at i=2
+  while (i > 0) { // Walk back the path
+    movetoLocation2(path[i - 1]);
+    current.pos = path[i - 1];
+    i--;
+  }
+  movetoLocation2(loc); // return to original location where we detected another robot
+
+  // Figure out how to turn the fastest
+  int curr_dir = current.dir;
+  int u = 1;
+  for (u; u < 4; u++) {
+    curr_dir = curr_dir << 1;
+    if (curr_dir > 8) {
+      curr_dir = B00000001;
+    }
+    if (curr_dir == dir) {
+      break;
+    }
+  }
+
+  // Actually turn to face that direction
+  if (u == 1) {
+    left90Turn();
+  } else if (u == 2) {
+    right180Turn();
+  } else if (u == 3) {
+    right90Turn();
+  }
+  current.dir = dir;
+}
+...
+if (detect_robots()) {
+    robot_detected = 1;
+    miniWalk();
+}
+```
 
 ## Conclusion
