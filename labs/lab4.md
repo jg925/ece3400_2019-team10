@@ -282,7 +282,9 @@ if (detect_robots()) {
 }
 ```
 
-<insert video robot_detection_take1 video>
+<p align="center">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HZp6Vme-hio" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 As the above video demonstrates, the robot avoids the 'fake robot' and moves to the next available node. If there were no available nodes, the robot would've turned around and backtracked.
 
