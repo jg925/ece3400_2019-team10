@@ -329,7 +329,8 @@ void movetoLocation2 (byte location) {
     go_on = navigate();
   }
 
-  current.pos = location; // Our current location is now location, facing same direction as we were at the time of calling this function
+  current.pos = location; // Our current location is now location, 
+                          // facing same direction as we were at the time of calling this function
 }
 ...
 void miniWalk() {
