@@ -383,3 +383,4 @@ void walkBack() {
 ```
 
 ## Conclusion
+Overall, the display and radio didn't prove to be too difficult. The integration was only tough to work out because our fast servos that we acquired made things much more touchy and inconsistent. To deal with this, we simply halted and delayed a small amount at every intersection and performance increased immediately. Things would've also been much easier if we hadn't had to rewrite our DFS, but it didn't cause us much trouble; it just took time. That's how everything in this lab went: not difficult, just time-consuming.
