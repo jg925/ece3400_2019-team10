@@ -30,3 +30,7 @@ the robot competition on 12/10/19.
 [Milestone 3](milestones/milestone3.md)
 
 [Milestone 4](milestones/milestone4.md)
+
+# Meet the Team
+
+
