@@ -134,3 +134,6 @@ void communicate() {
 The next thing we integrated was robot detection.
 
 ## Conclusion
+This milestone proved to be relatively simple because of our previous work in Lab 4 and every Lab and Milestone prior to this. For the accurate transmission of maze information, we had to make small adjustments to current code. Similarly, we knew how to receive and draw before, so we just had to make slight updates to the base station Arduino’s code in order to get everything working properly.
+
+With the completion of this Milestone, we were ready to take on the other robots at the competition, where we won first place. See our home page to see Axel performing in the final round.
