@@ -286,13 +286,17 @@ if (detect_robots()) {
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HZp6Vme-hio" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-As the above video demonstrates, the robot avoids the 'fake robot' and moves to the next available node. If there were no available nodes, the robot would've turned around and backtracked.
+As the above video demonstrates, our robot avoids the 'fake robot' and moves to the next available node. If there were no available nodes, our robot would've turned around and backtracked.
 
 The harder part to implement was what to do when detecting a robot within a call to walkBack since we couldn't call walkBack within another walkBack call without causing serious memory issues. So in order to work around this problem, we decided to implement a hardcoded avoidance method that wouldn't mess up our dfs algorithm. After detecting a robot within walkBack, the robot finds a short 3 node path that doesn't update the maze to take that would ensure we are out of the other robot's way. Once we finish the short detour, we trace back our steps and move to the exact location where we originally detected the other robot and continue dfs. This way, we completely avoid the other robot while maintaining our position in the algorithm and our maze.
+
+In the following video, our robot accurately avoids the 'fake robot' while still exploring every node in the maze.
 
 <p align="center">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/DY7_UcSpYcY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
+
+Below is the code we added in order to implement walkBack robot avoidance.
 
 ```
 void movetoLocation2 (byte location) {
