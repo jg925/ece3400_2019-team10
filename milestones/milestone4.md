@@ -1,7 +1,7 @@
 # Milestone 4: Display, Communication, and Robot Detection
 
 ## Overview
-For milestone 4, we had three requirements to fulfill. First, we had to update the base station display. We did this by simulating maze data and uploading it directly to our Arduino. Our FPGA then took this data and displayed it on the display using our Verilog code from lab 3. After this was completed, we worked on wirelessly communicating information from the robot to the base station. The radio communication that we worked on in lab 4 enabled us to do this. Once we did this, we are able to send real maze data and draw it on the screen. Finally, we worked on robot detection. This required adding several IR emitters and detectors to our robot. Since the other robots will also have emitters and detectors, we will be able to determine when other robots are nearby. When a robot is detected, we modified our DFS algorithm to avoid a collision.
+For milestone 4, we had three requirements to fulfill. First, we had to update the base station display. We did this by simulating maze data and uploading it directly to our Arduino. Our FPGA then took this data and displayed it on the display using our Verilog code from lab 3. After this was completed, we worked on wirelessly communicating information from the robot to the base station. The radio communication that we worked on in lab 4 enabled us to do this. Once we did this, we are able to send real maze data and draw it on the screen. Finally, we worked on robot detection. This required adding several IR emitters and detectors to our robot. Since the other robots will also have emitters and detectors, we will be able to determine when other robots are nearby. When a robot is detected, we modified our DFS algorithm to avoid a collision. NOTE: please view the Robot Detection section of the Lab 4 page to see our work on that topic since it would be the same information that would go on this page.
 
 ## Materials
  * 2 Nordic nRF24L01+ transceivers
@@ -79,6 +79,6 @@ void communicate() {
   <iframe width="560" height="315" src="https://www.youtube.com/embed/X9fH-sHu8DY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-The next thing we integrated was robot detection.
-
 ## Conclusion
+
+This milestone proved to be relatively simple because of our previous work in Lab 4 and every Lab and Milestone prior to this. For the accurate transmission of maze information, we had to make small adjustments to current code. Similarly, we knew how to receive and draw before, so we just had to make slight updates to the base station Arduino's code in order to get everything working properly.
