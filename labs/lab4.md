@@ -130,7 +130,55 @@ Note: This was NOT our final transmission scheme. See Milestone 4 for that. This
 
 At this point, we were able to draw 30x30 pixel tiles at any location on the screen. However, after this lab, we had to actually draw an entire maze, which required some additional work.
 
+### Receiving the Radio Data
+
+The first step was decoding the message that we were receiving from the robot's on-board radio. In the below code, we use the code from Lab 4 to determine when data is available. We used a bit-masking scheme to allow us to send less data and speed up the overall process. We had to extract the data we wanted (wall locations, x and y position) from the radio data. We then saved the relevant data as variables that could then be sent to the Arduino's output pins, to be sent to the FPGA.
+
+```c
+if ( radio.available() ){
+      // Dump the payloads until we've gotten everything
+      uint16_t info;
+      bool done = false;
+      while (!done)
+      {
+        // Fetch the payload, and see if this was the last one.
+        done = radio.read( &info, sizeof(uint16_t) );
+  
+        // Spew it
+        uint16_t xcord = (info & B11110000) >> 4 ;
+        uint16_t ycord = (info & B00001111)      ;
+        uint16_t walls = (info >> 8)  & B00001111;
+        uint16_t sent  = (info >> 12) & B00000001;
+
+        x1 = (xcord >> 3) & B00000001;
+        x2 = (xcord >> 2) & B00000001;
+        x3 = (xcord >> 1) & B00000001; 
+        x4 = xcord & B00000001;
+        
+        y1 = (ycord >> 3) & B00000001;
+        y2 = (ycord >> 2) & B00000001;
+        y3 = (ycord >> 1) & B00000001; 
+        y4 = ycord & B00000001;
+  
+        north_wall = (walls >> 3) & B00000001;
+        east_wall  = (walls >> 2) & B00000001;
+        south_wall = (walls >> 1) & B00000001; 
+        west_wall  = walls & B00000001;
+  
+        global_sent = sent;
+        
+        printf("Got payload... ");
+        printf("message: %x", info);
+        printf("\nx-coord: %d", xcord );
+        printf("\ny-coord: %d", ycord );
+        printf("\nwalls: %d",   walls );
+        printf("\nsent: %d", sent );
+        printf("\n\n");        
+      }
+```
+
 ### Drawing the Maze
+
 The next step was being able to take the data from the FPGA pins and use it to draw a full maze. At this point, we were able to draw a square in one position, but we weren't able to draw several in a row. We first had to change how we were sending the data from the Arduino to the FPGA. We found that adding a valid bit was necessary to allow the data to propagate from the Arduino to the FPGA. Without this, we found that random squares sometimes were drawn, or squares were split between several positions.
 
 ```c
@@ -142,7 +190,30 @@ if (!global_sent) {
    digitalWrite( valid, HIGH );
 }
 ```
+
 First, we wait until the data is available from the radio, then write the valid signal to low, which tells the FPGA to not draw anything. After a short delay, the drawSquare function is called, which writes the correct data to the output pins on the Arduino. After another short delay, we set the valid bit to high, which allows the FPGA to draw on the screen.
+
+```c
+void drawSquare(int x1,int x2,int x3, int x4, int y1,int y2,int y3, int y4, int N, int E, int S, int W) {
+  // x coordinates
+  digitalWrite( x_pos_1, x1 );
+  digitalWrite( x_pos_2, x2 );
+  digitalWrite( x_pos_3, x3);
+  digitalWrite( A4, x4);
+
+  // y coordinates
+  digitalWrite( y_pos_1, y1 );
+  digitalWrite( y_pos_2, y2 );
+  digitalWrite( y_pos_3, y3 );
+  digitalWrite( A5, y4 );
+
+  // WALLS
+  digitalWrite( A0, N);
+  digitalWrite( A1, E);
+  digitalWrite( A2, S);
+  digitalWrite( A3, W);
+}
+```
 
 Once the FPGA receives the data on its input pins, we use Verilog code in `DEO_NANO.v` to send this data to `IMAGE_PROCESSOR.v` to be drawn. Since we already completed this part, once we sent the data, the correct tile was drawn on the screen. Drawing a whole maze after this was simple; we just had to send data at every intersection and the display would update itself.
 
@@ -156,9 +227,10 @@ w_th <= (west)  ? lo_th : 0;
 result <= (xpos < w_th || xpos > e_th || ypos < n_th || ypos > s_th) ? RED : BLUE;
 ```
 
-
 ## Full Robotic Integration
-The last thing to do was to put it all together. 
+
+At this point, we had all of the individual pieces working. We had a wide range of sensors, hardware, circuits, and algorithms that all functioned independently. For the final competition, we had to integrate this all into one final product: a robot that traverses the maze and sends data to the FPGA, which draws the maze. This was probably the most difficult step, but it was definitely the most rewarding, as all of our hard work paid off in the end.
+
 ### Hardware
 
 We had created the pushbutton circuit in a previous lab, but for completeness, we have shown the circuit below. It's a simple pushbutton held low with a pulldown resistor until the button is pressed.
@@ -193,7 +265,7 @@ The final thing we needed to add hardware-wise was support for our fast servos. 
 
 The software proved far more difficult than anticipated despite the hardware working properly. We integrated the software incrementally in order to aid in the debugging process. 
 
-#### DFS Algorithm
+#### DFS Algorithm/Data Scheme
 
 The first thing we did was completely revamp our DFS algorithm. As noted in the previous milestone, the TAs told us that using recursion and additional data structures like a stack array would probably cause us to run out of memory and cause our robot to fail. Thus, we wrote an iterative DFS using only structs that we defined. Similar to Milestone 3, we created a node struct that holds the position and direction that we always use to keep track of our current location and orientation, and a maze struct that holds a visited bit, a sent bit (for radio communication), and the direction the robot came from in order to reach that location, as well as the location of walls and navigable neighbors around the location. All of these fields use bytes so we can save space. The maze struct is used to make an 81 element array (because the final competition has mazes that are 9x9), with each element representing the location of a square in the maze. Part of the code is shown below. 
 
