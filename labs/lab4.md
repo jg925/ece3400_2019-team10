@@ -199,7 +199,9 @@ s_th <= (south) ? hi_th : 30;
 w_th <= (west)  ? lo_th : 0;
 result <= (xpos < w_th || xpos > e_th || ypos < n_th || ypos > s_th) ? RED : BLUE;
 ```
-
+<p align="center">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/Yc4R-HhGLtU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 ## Full Robotic Integration
 The last thing to do was to put it all together. 
