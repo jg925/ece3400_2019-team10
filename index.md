@@ -12,7 +12,7 @@ A photo of the team with our robot! Back row (from left to right): Jinny Gui, Da
 
 [Lab 3](labs/lab3.md)
 
-[Lab 4](labs/lab44.md)
+[Lab 4](labs/lab4.md)
 
 # Milestones
 
