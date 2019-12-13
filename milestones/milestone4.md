@@ -26,7 +26,7 @@ pixel tile that would be mapped. `DEO_NANO.v` and `IMAGE_PROCESSOR.v` were the t
 
 Initially, we had problems writing to the memory in a way that would properly display on the screen. Eventually, we realized there were issues in the clocks we were using in `IMAGE_PROCESSOR.v` and that we needed to write to memory faster than we wrote to it. Once we set the clocks correctly, and worked through issues with memory overflow, we were able to draw a 30x30 pixel tile in any location on the screen.
 
-```c
+```verilog
 if (valid && count > 5) begin
 
   ...
