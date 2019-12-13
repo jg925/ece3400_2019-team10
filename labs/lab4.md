@@ -126,6 +126,81 @@ if (radio.available()) {
 
 Note: This was NOT our final transmission scheme. See Milestone 4 for that. This was just to prove that we could send accurate information over the radios.
 
+## Getting the Display Working 
+
+### Drawing a Tile
+After Lab 3, we continued to work on our FPGA Verilog code to map out a tile. As a first stepping stone to the final goal of 
+drawing out a full maze, we aimed to accurately draw a tile in a certain location. Since the robot sends data via 
+the radio communication at each intersection in the maze, we wanted to be able to draw a tile representing each of those 
+intersections. We set the visible screen size to be able to fit the entire 10x10 tile maze which would include 30x30 pixel 
+tiles.
+
+Our overall flow for drawing a tile at a location was to send information from the base station's Arduino about the 
+coordinates of the robot in the maze. These coordinates would then directly map to a certain top-left corner pixel of a 30x30 
+pixel tile that would be mapped. `DEO_NANO.v` and `IMAGE_PROCESSOR.v` were the two main files that were heavily modified to try different methods for mapping out the tiles. Ultimately, we had `DE0_NANO.v`, the main FPGA project module, convert the Arduino inputs indicating x and y location into its corresponding top-left corner pixel. Within `IMAGE_PROCESSOR.v`, an iterating `xpos` and `ypos` would be added on to the top-left corner x and y inputs to create the tile. Based on the current value of xpos and ypos, we drew a pixel in the correct location, and then incremented the values until the full square was drawn. We used a direct mapping between each pixels location and its memory address to keep previously drawn tiles on the screen.
+
+Initially, we had problems writing to the memory in a way that would properly display on the screen. Eventually, we realized there were issues in the clocks we were using in `IMAGE_PROCESSOR.v` and that we needed to write to memory faster than we wrote to it. Once we set the clocks correctly, and worked through issues with memory overflow, we were able to draw a 30x30 pixel tile in any location on the screen.
+
+```c
+if (valid && count > 5) begin
+
+  ...
+  
+  // Incrementing xpos and ypos
+  if (xpos >= 30) begin
+    if (ypos < 30) begin
+      ypos <= ypos + 5'b1;	
+      xpos <= 5'b0;
+      W_EN <= 1;
+    end
+  end
+
+  else begin
+    W_EN <= 0;
+    ypos <= 5'b0;
+    xpos <= 5'b0;
+    count <= 0;
+  end
+  
+  else begin
+    W_EN <= 1;
+    ypos <= ypos;
+    xpos <= xpos + 5'b1;
+  end
+  
+  ...
+  
+end
+```
+In the above code snippet, we can see how pixels are only drawn when valid is high. We also added a counter to allow the signal to propagate before we write anything. In the first if statement, we reached the end of a tile, so ypos is incremented and xpos is set back to 0, so we can start drawing in the beginning of the next row. W_EN is also set to 1 so we can draw. In the second conditonal statement, we have reached the bottom right corner of a tile, so we want to set all the values back to 0, and set W_EN to 0 so we don't draw anything outside of the defined tile. The else statement is the default case, where we are in the middle of a row, in which case we just increment xpos by 1 and draw there. 
+
+### Drawing the Maze
+The next step was being able to take the data from the FPGA pins and use it to draw a full maze. At this point, we were able to draw a square in one position, but we weren't able to draw several in a row. We first had to change how we were sending the data from the Arduino to the FPGA. We found that adding a valid bit was necessary to allow the data to propagate from the Arduino to the FPGA. Without this, we found that random squares sometimes were drawn, or squares were split between several positions.
+
+```c
+if (!global_sent) {
+   digitalWrite( valid, LOW );
+   delay(100);
+   drawSquare(x1, x2, x3, x4, y1, y2, y3, y4, north_wall, east_wall, south_wall, west_wall);
+   delay(100);
+   digitalWrite( valid, HIGH );
+}
+```
+First, we wait until the data is available from the radio, then write the valid signal to low, which tells the FPGA to not draw anything. After a short delay, the drawSquare function is called, which writes the correct data to the output pins on the Arduino. After another short delay, we set the valid bit to high, which allows the FPGA to draw on the screen.
+
+Once the FPGA receives the data on its input pins, we use Verilog code in `DEO_NANO.v` to send this data to `IMAGE_PROCESSOR.v` to be drawn. Since we already completed this part, once we sent the data, the correct tile was drawn on the screen. Drawing a whole maze after this was simple; we just had to send data at every intersection and the display would update itself.
+
+To create the walls, we set the color of the outer border of the tile to a different color than the inside of the tile. In addition to the x and y position of the top left corner of the tile, the wall orientation of each tile would be known and would indicate which sides of the tiles would be colored differently. The code seen below takes in data about where walls are located (north, east, south, west), and then draws the respective area blue if there is not a wall, or red if there is.
+
+```c
+n_th <= (north) ? lo_th : 0;
+ne_th <= (east)  ? hi_th : 30;
+s_th <= (south) ? hi_th : 30;
+w_th <= (west)  ? lo_th : 0;
+result <= (xpos < w_th || xpos > e_th || ypos < n_th || ypos > s_th) ? RED : BLUE;
+```
+
+
 ## Full Robotic Integration
 The last thing to do was to put it all together. 
 ### Hardware
