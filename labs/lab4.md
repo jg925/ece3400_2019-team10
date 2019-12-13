@@ -128,51 +128,7 @@ Note: This was NOT our final transmission scheme. See Milestone 4 for that. This
 
 ## Getting the Display Working 
 
-### Drawing a Tile
-After Lab 3, we continued to work on our FPGA Verilog code to map out a tile. As a first stepping stone to the final goal of 
-drawing out a full maze, we aimed to accurately draw a tile in a certain location. Since the robot sends data via 
-the radio communication at each intersection in the maze, we wanted to be able to draw a tile representing each of those 
-intersections. We set the visible screen size to be able to fit the entire 10x10 tile maze which would include 30x30 pixel 
-tiles.
-
-Our overall flow for drawing a tile at a location was to send information from the base station's Arduino about the 
-coordinates of the robot in the maze. These coordinates would then directly map to a certain top-left corner pixel of a 30x30 
-pixel tile that would be mapped. `DEO_NANO.v` and `IMAGE_PROCESSOR.v` were the two main files that were heavily modified to try different methods for mapping out the tiles. Ultimately, we had `DE0_NANO.v`, the main FPGA project module, convert the Arduino inputs indicating x and y location into its corresponding top-left corner pixel. Within `IMAGE_PROCESSOR.v`, an iterating `xpos` and `ypos` would be added on to the top-left corner x and y inputs to create the tile. Based on the current value of xpos and ypos, we drew a pixel in the correct location, and then incremented the values until the full square was drawn. We used a direct mapping between each pixels location and its memory address to keep previously drawn tiles on the screen.
-
-Initially, we had problems writing to the memory in a way that would properly display on the screen. Eventually, we realized there were issues in the clocks we were using in `IMAGE_PROCESSOR.v` and that we needed to write to memory faster than we wrote to it. Once we set the clocks correctly, and worked through issues with memory overflow, we were able to draw a 30x30 pixel tile in any location on the screen.
-
-```c
-if (valid && count > 5) begin
-
-  ...
-  
-  // Incrementing xpos and ypos
-  if (xpos >= 30) begin
-    if (ypos < 30) begin
-      ypos <= ypos + 5'b1;	
-      xpos <= 5'b0;
-      W_EN <= 1;
-    end
-  end
-
-  else begin
-    W_EN <= 0;
-    ypos <= 5'b0;
-    xpos <= 5'b0;
-    count <= 0;
-  end
-  
-  else begin
-    W_EN <= 1;
-    ypos <= ypos;
-    xpos <= xpos + 5'b1;
-  end
-  
-  ...
-  
-end
-```
-In the above code snippet, we can see how pixels are only drawn when valid is high. We also added a counter to allow the signal to propagate before we write anything. In the first if statement, we reached the end of a tile, so ypos is incremented and xpos is set back to 0, so we can start drawing in the beginning of the next row. W_EN is also set to 1 so we can draw. In the second conditonal statement, we have reached the bottom right corner of a tile, so we want to set all the values back to 0, and set W_EN to 0 so we don't draw anything outside of the defined tile. The else statement is the default case, where we are in the middle of a row, in which case we just increment xpos by 1 and draw there. 
+At this point, we were able to draw 30x30 pixel tiles at any location on the screen. However, after this lab, we had to actually draw an entire maze, which required some additional work.
 
 ### Drawing the Maze
 The next step was being able to take the data from the FPGA pins and use it to draw a full maze. At this point, we were able to draw a square in one position, but we weren't able to draw several in a row. We first had to change how we were sending the data from the Arduino to the FPGA. We found that adding a valid bit was necessary to allow the data to propagate from the Arduino to the FPGA. Without this, we found that random squares sometimes were drawn, or squares were split between several positions.
@@ -199,9 +155,7 @@ s_th <= (south) ? hi_th : 30;
 w_th <= (west)  ? lo_th : 0;
 result <= (xpos < w_th || xpos > e_th || ypos < n_th || ypos > s_th) ? RED : BLUE;
 ```
-<p align="center">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/Yc4R-HhGLtU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</p>
+
 
 ## Full Robotic Integration
 The last thing to do was to put it all together. 
