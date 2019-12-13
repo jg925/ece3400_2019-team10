@@ -162,7 +162,7 @@ The final thing we needed to add hardware-wise was support for our fast servos. 
 
 The software proved far more difficult than anticipated despite the hardware working properly. We integrated the software incrementally in order to aid in the debugging process. 
 
-# DFS Algorithm
+#### DFS Algorithm
 
 The first thing we did was completely revamp our DFS algorithm. As noted in the previous milestone, the TAs told us that using recursion and additional data structures like a stack array would probably cause us to run out of memory and cause our robot to fail. Thus, we wrote an iterative DFS using only structs that we defined. Similar to Milestone 3, we created a node struct that holds the position and direction that we always use to keep track of our current location and orientation, and a maze struct that holds a visited bit, a sent bit (for radio communication), and the direction the robot came from in order to reach that location, as well as the location of walls and navigable neighbors around the location. All of these fields use bytes so we can save space. The maze struct is used to make an 81 element array (because the final competition has mazes that are 9x9), with each element representing the location of a square in the maze. Part of the code is shown below. 
 
@@ -255,7 +255,7 @@ void loop() {
   <iframe width="560" height="315" src="https://www.youtube.com/embed/Tp12wUvqjX8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-# FFT Algorithm
+#### FFT Algorithm
 
 Although we implemented the FFT algorithm that was able to detect 950 Hz earlier in the semester. We found that although our robot was able to detect signals at 950 Hz, it was also very susceptible to noise, which potentially could lead to false starts in the competition. Also, we used a tone generator to collect data that allowed us to determine thresholds for each bin, and collected ambient noise data in the lab. This meant that our algorithm worked well when we used that specific tone generator in the lab in Phillips Hall, but not in other situations. To resolve this, we collected data using the same setup we expected our robot to be in during the competition. We collected data from many samples, with a 950 Hz tone, a 850 Hz tone, a 1050 Hz tone, and finally ambient noise. For the ambient noise, we collected data in Duffield Hall when students were present, since this was closer to the conditions we exppected the robot to encounter in the competition. By analyzing all of this data we were able to develop a pretty simple function to determine which tone was being played based on the values in just three FFT bins. 
 
@@ -267,7 +267,7 @@ int freq_detect( int five, int six, int seven ) {
 
 The first four parts in the return statement were threshold values we determined for the sixth and seventh FFT bin. After we ran just this code, we found that it worked very well for 950, but sometimes incorrectly detected 850 Hz. To fix this, we included data from the fifth FFT bin. Since the FFT output of 850 Hz is shifted lower than 950 Hz, we determined that if the fifth bin was above 100, we wanted to ignore it to prevent incorrect detections.
 
-# Robot detection
+#### Robot Detection
 
 The last thing we integrated was robot detection. After switching out the wide angle phototransistor and mounting the narrow angled one at exactly 5 inches off the ground, we re-calibrated our detector thresholds. The next part we worked on was combining robot detection with dfs. Our implementation of this was split into two parts: detecting a robot within a call to dfs and within a call to walkBack.
 
