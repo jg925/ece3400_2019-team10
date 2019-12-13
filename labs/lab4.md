@@ -126,11 +126,7 @@ if (radio.available()) {
   <iframe width="560" height="315" src="https://www.youtube.com/embed/IkKy2ZBJqrs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-While this scheme worked, we thought it over a little more and realized a lot of the information we were sending was excessive. We don't need to draw robots so we don't need to send that information, and since we only send one square at a time when we're at an intersection, the visited bit was also useless. Thus, we came up with a new and improved scheme that sends the current coordinates (XXXXYYYY), the walls (NESW), and a sent bit (S) indicating if we had already sent the walls information for a given location. This sent bit is useful because we don't want to overwrite older information if we're in a walkback of the DFS. The final scheme is shown below.
-
-<p align="center">
-  <img src="https://pages.github.coecis.cornell.edu/jg925/ece3400-2019-team10/labs/lab4/NewScheme.png">
-</p>
+Note: This was NOT our final transmission scheme. See Milestone 4 for that. This was just to prove that we could send accurate information over the radios.
 
 ## Drawing a Tile
 After Lab 3, we continued to work on our FPGA Verilog code to map out a tile. As a first stepping stone to the final goal, of 
