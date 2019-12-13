@@ -264,6 +264,6 @@ void loop() {
   <iframe width="560" height="315" src="https://www.youtube.com/embed/Tp12wUvqjX8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-The next thing we integrated was robot detection.
+The last thing we integrated was robot detection.
 
 ## Conclusion
