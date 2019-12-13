@@ -12,7 +12,7 @@ A photo of the team with our robot! Back row (from left to right): Joy Thean, Ry
 
 [Lab 3](labs/lab3.md)
 
-[Lab 4](milestones/milestone4.md)
+[Lab 4](labs/lab44.md)
 
 # Milestones
 
