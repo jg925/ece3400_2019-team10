@@ -131,8 +131,6 @@ void communicate() {
   <iframe width="560" height="315" src="https://www.youtube.com/embed/X9fH-sHu8DY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p>
 
-The next thing we integrated was robot detection.
-
 ## Conclusion
 This milestone proved to be relatively simple because of our previous work in Lab 4 and every Lab and Milestone prior to this. For the accurate transmission of maze information, we had to make small adjustments to current code. Similarly, we knew how to receive and draw before, so we just had to make slight updates to the base station Arduino’s code in order to get everything working properly.
 
