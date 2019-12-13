@@ -128,21 +128,6 @@ if (radio.available()) {
 
 Note: This was NOT our final transmission scheme. See Milestone 4 for that. This was just to prove that we could send accurate information over the radios.
 
-## Drawing a Tile
-After Lab 3, we continued to work on our FPGA Verilog code to map out a tile. As a first stepping stone to the final goal, of 
-drawing out a full maze. We aimed to accurately draw a tile in a certain location. Since the robot would be sending data via 
-the radio communication at each intersection in the maze, we wanted to be able to draw a tile representing each of those 
-intersections. We set our visible screen size to be able to fit the entire 10x10 tile maze which would include 30x30 pixel 
-tiles.
-
-Our overall flow for drawing a tile at a location was to send information from the base station's Arduino about the 
-coordinates of the robot in the maze. These coordinates would then correlate to a certain top-left corner pixel of a 30x30 
-pixel tile that would be mapped. `DEO_NANO.v` and `IMAGE_PROCESSOR.v` were the two main files that were heavily modified to try different methods for mapping out the tiles. Ultimately, we had `DE0_NANO.v`, the main FPGA project module, convert the Arduino inputs indicating x and y location into its corresponding top-left corner pixel. Within `IMAGE_PROCESSOR.v`, an iterating `xpos` and `ypos` would be added on to the top-left corner x and y inputs to create the tile. Each pixel corresponded to an index in the memory, and the color of that pixel would be stored. To create the walls, we set the color of the outer border of the tile to a different color than the inside of the tile. In addition to the x and y position of the top left corner of the tile, the wall orientation of each tile would be known and would indicate which sides of the tiles would be colored differently.
-
-Initially, we had problems writing to the memory in a way that would properly display on the screen. Eventually, we realized there were issues in the clocks we were using in `IMAGE_PROCESSOR.v` and that we needed to write to memory faster than we wrote to it. 
-
-## Drawing the Maze
-
 ## Full Robotic Integration
 The last thing to do was to put it all together. 
 ### Hardware
