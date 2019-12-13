@@ -267,6 +267,8 @@ int freq_detect( int five, int six, int seven ) {
 }
 ```
 
+The first four parts in the return statement were threshold values we determined for the sixth and seventh FFT bin. After we ran just this code, we found that it worked very well for 950, but sometimes incorrectly detected 850 Hz. To fix this, we included data from the fifth FFT bin. Since the FFT output of 850 Hz is shifted lower than 950 Hz, we determined that if the fifth bin was above 100, we wanted to ignore it to prevent incorrect detections.
+
 # Robot detection
 
 The last thing we integrated was robot detection. After switching out the wide angle phototransistor and mounting the narrow angled one at exactly 5 inches off the ground, we re-calibrated our detector thresholds. The next part we worked on was combining robot detection with dfs. Our implementation of this was split into two parts: detecting a robot within a call to dfs and within a call to walkBack.
