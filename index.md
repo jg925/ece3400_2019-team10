@@ -12,6 +12,8 @@ the robot competition on 12/10/19.
 
 [Team Contract](https://drive.google.com/file/d/1-kGICPlhbmg0IWlSnd9KlUpACal9PjoH/view?usp=sharing)
 
+[Robot Costs](https://docs.google.com/spreadsheets/d/144YlCE5NaA4ARov2CF0QxCeMWw6oyQKkYbUQhewY9eA/edit?usp=sharing)
+
 # Labs
 [Lab 1](labs/lab1.md)
 
